@@ -62,7 +62,7 @@ git checkout -b ${{branch_name}}
 ## 克隆GitHub私有仓库
 
 1. 需要在**用户的配置页面**中配置一个PAT（personal access token）；
-2. 在 仓库的url中配置上这个PAT ： git clone --branch master https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/vongdefu/vongdefu-dochub.git vongdefu-dochub ；
+2. 在 仓库的url中配置上这个PAT ： 见上面
 3. 如果私有仓库需要使用GitHubActions，则还需要
    1. 根据 peaceiris/actions-gh-pages@v3 的[要求](https://github.com/peaceiris/actions-gh-pages)，在**仓库的setting中**设置 action 的权限，设置为可读写
    2. 在**仓库的setting中**配置上面这个生成的 PAT ；
