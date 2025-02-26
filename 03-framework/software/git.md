@@ -68,3 +68,25 @@ git checkout -b ${{branch_name}}
    2. 在**仓库的setting中**配置上面这个生成的 PAT ；
 
 
+## 合并提交记录
+
+```
+# 1. 拉取最新代码
+git checkout master
+git pull origin master
+
+# 2. 启动交互式 rebase（假设要合并全部提交）
+git rebase -i --root
+
+# 3. 在打开的编辑器中：
+# 将第一个提交前的 "pick" 保留
+# 其他所有提交前的 "pick" 改为 "squash" 或简写 "s"
+# 保存退出编辑器
+
+# 4. 处理合并提交信息（会打开新编辑器）
+# 删除所有旧提交信息，写入新提交信息
+# 保存退出
+
+# 5. 强制推送更新（⚠️ 重要警告：这会重写历史）
+git push origin master --force
+```
