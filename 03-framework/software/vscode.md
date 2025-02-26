@@ -24,7 +24,7 @@
 
 ## 插件及其配置
 
-- markmap插件的配置： Markmap:Default Options ： {"initialExpandLevel": 2, "maxWidth": 500}
+- markmap插件的配置： `Markmap:Default Options ： {"initialExpandLevel": 2, "maxWidth": 500}`
 
 
 ## 其它

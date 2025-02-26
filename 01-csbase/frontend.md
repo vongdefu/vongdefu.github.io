@@ -1,6 +1,6 @@
 ---
 order: 1
-author: zeanzai
+author: vongdefu
 title: 前端学习
 category:
   - 计算机基础

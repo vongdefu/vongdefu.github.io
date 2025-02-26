@@ -10,7 +10,7 @@ actions:
     link: /docs/01-csbase
     type: primary
 copyright: false
-footer: 使用 <a href="https://github.com/zeanzai/cs-tips" target="_blank">Github © 2024 cs tips </a> MIT 协议, 版权所有 © 2024-present vongdefu
+footer: 使用 <a href="https://github.com/vongdefu/vongdefu.github.io" target="_blank">Github © 2024 cs tips </a> MIT 协议, 版权所有 © 2024-present vongdefu
 ---
 
 
