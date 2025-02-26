@@ -7,7 +7,7 @@ heroText: cs-tips
 tagline: Java程序员面试要点提示
 actions:
   - text: 进入学习 💡
-    link: /docs/01-csbase
+    link: /01-csbase
     type: primary
 copyright: false
 footer: 使用 <a href="https://github.com/vongdefu/vongdefu.github.io" target="_blank">Github © 2024 cs tips </a> MIT 协议, 版权所有 © 2024-present vongdefu
@@ -122,14 +122,12 @@ footer: 使用 <a href="https://github.com/vongdefu/vongdefu.github.io" target="
 
 
 
-
-
 ## 说明
 
 - master分支： 从 vongdefu-dochub@master 同步而来；
 - gh-pages分支： vongdefu-dochub@master:defu/* 与 vongdefu-dochub@vdoing 合并进行构建，最后生成的静态网页文件夹；
 - 由 vongdefu-dochub 的 workflow 控制本仓库的两个分支的维护，不需要本地维护此仓库；
 
+## :chart_with_upwards_trend: 趋势
 
-
-
+[![Star History Chart](https://api.star-history.com/svg?repos=vongdefu/vongdefu.github.io&type=Date)](https://star-history.com/#vongdefu/vongdefu.github.io&Date)
