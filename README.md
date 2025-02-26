@@ -1,4 +1,128 @@
-# vongdefu.github.io
+---
+home: true
+icon: home
+title: 主页
+heroImage: /logo.png
+heroText: cs-tips
+tagline: Java程序员面试要点提示
+actions:
+  - text: 进入学习 💡
+    link: /docs/01-csbase
+    type: primary
+copyright: false
+footer: 使用 <a href="https://github.com/zeanzai/cs-tips" target="_blank">Github © 2024 cs tips </a> MIT 协议, 版权所有 © 2024-present vongdefu
+---
+
+
+## 目录
+
+
+| 日期  | 更新日志 |
+|-------------- | -------------- |
+| 20240915    | 1. 迁移整个大纲    |
+
+
+- 01-CS基础（01-cabase）
+  - 组成原理与操作系统
+  - 数据结构与算法：智力题、加密算法
+  - 计算机网络
+  - 设计模式： [SOLID](https://pdai.tech/md/dev-spec/spec/dev-th-solid.html) 在框架中的使用，
+  - 架构设计
+- 02-Java编程语言（02-java）
+  - OOP
+  - 关键字：
+  - 集合： Java集合源码分析
+  - 异常
+  - 反射
+  - 注解
+  - 序列化
+  - 泛型
+  - JUC
+  - 函数式编程
+  - `JVM相关`：运行期内存结构、对象是否应该回收判断标准、垃圾回收算法、垃圾回收器、配置参数、分析工具、双亲委派模型、class文件、调优
+  - 新特性
+- 03-框架（03-framework）
+  - 软件构建工具：
+    - 开发环境配置
+    - Ant
+    - Maven： 私服
+    - Gradle
+  - Spring 全家桶
+    - Spring： （IOC原理、ID原理、Bean生命周期、组件架构图、MVC原理、隔离级别）；
+    - SpringBoot
+    - SpringCloud： （组件及其各自作用和原理、某些组件的源码）Feign源码剖析、Redission源码剖析、SpringCloud-Alibaba框架学习
+  - ORM 框架
+    - Hibernate
+    - Mybatis： （使用方式、基本原理、缓存）
+  - 常用类库
+    - Apache common
+    - hutool
+    - Spring 工具类
+    - Guava 工具包：Guava Cache、Ratelimiter
+    - Lombok
+    - MapStruct
+    - FastJson/Jackson
+    - [Disruptor](https://javaguide.cn/high-performance/message-queue/disruptor-questions.html#disruptor-%E6%98%AF%E4%BB%80%E4%B9%88)
+    - Ehcache
+- 04-中间件（04-middleware）
+  - 关系型数据库
+    - MySQL： 索引、事务及其特性、并发一致性问题、隔离级别、锁、MVCC、各种日志、SQL优化、Explain执行计划、分库分表
+  - NoSql
+    - Redis： 数据结构（种类、内部实现原理、应用场景、操作）、持久化机制、事务、集群、哨兵模式、cluster模式、七大经典问题（缓存击穿、缓存穿透、缓存雪崩、数据不一致、并发竞争、热点key、BigKey问题）、分布式锁、分布式限流、唯一ID、Redis调优（使用方式优化、内存优化）
+    - MongoDB
+    - ES + Kibana
+  - MQ： 基本原理、应用场景、问题解决（消息重复、消息积压、消息丢失、顺序消费）、高可用
+    - RabbitMQ
+    - Kafka
+  - 其它
+    - Nginx
+    - Zookeeper： 数据存储、应用场景、与kafka的关系、相关面试题
+- 05-分布式：（05-distribution）
+  - 基本理论：
+    - 分布式系统基本问题：[分布式系统的 8 个谬误](https://pdai.tech/md/arch/arch-z-wrong.html)
+    - CAP
+      - 一致性C，XA方案、Paxos算法、ZAB算法、Raft算法
+      - 可用性A，评判标准、心跳检测、异地多活和同城双活、gossip、隔离、限流、负载均衡
+      - 容错性P，日志复制、主备、互备、集群
+      - CP与AP权衡问题，WARO 机制、Quorum 机制
+    - BASE、
+    - 常用算法：
+      - Raft、Paxos、ZAB、 一致性 Hash、Gossip、集群、冗余（备份）
+      - [负载均衡算法 ](https://pdai.tech/md/algorithm/alg-domain-load-balance.html#google_vignette)
+      - 限流算法
+      - [容灾备份方案](https://pdai.tech/md/arch/arch-y-backup.html)
+  - 分布式应用
+    - 分布式会话： 发展历程、各自过程中遇到的问题及解决方案、分布式会话实现方案
+    - 分布式事务： （背景、实现方式、优缺点分析、具体实现【seata原理】）
+    - 分布式网关：
+    - 分库分表
+    - 分布式锁
+    - 分布式ID： **（雪花算法、**[**Leaf——美团点评分布式ID生成系统**](https://tech.meituan.com/2017/04/21/mt-leaf.html)**）**
+    - 分布式缓存
+    - 分布式工作流调度
+    - 分布式消息：应用内部各组件通信、websocket
+    - 分布式搜索
+    - 分布式服务治理： 限流、熔断、降级、注册与发现、故障恢复
+    - 分布式链路追踪
+- 06-质量管理： 包含软件生命周期的管理的相关内容（06-devops）
+  - 需求分析阶段（需求澄清、需求反讲、设计方案评审）
+  - 设计与实现阶段：代码评审规范（单元测试、统一命名规范、代码风格、静态样式检查、SDLC安全设计评审、SQM扫描）
+  - 测试阶段：测试方案（单元测试、集成测试、渗透测试、基准测试、压力测试）、测试工具（ Jmeter、AB、基准测试）
+  - 发版及上线阶段：Git 与 Gitlab、Jenkins 与 工作流、GIT提交过程规范、移交过程规范（开发分支合并到release分支）、灰度发布与回滚、监控告警、日志记录、docker + k8s
+  - 运维和监控： 日志平台、 Prometheus、Zabban、Grafana
+- 07-工程设计： 一些常见业务场景的设计与实现（结合业务场景+实战过程+原理+优缺点分析等）（07-systemdesign）
+  - 接口设计规范（安全（OWASPTop10）、超时与重试、数据脱敏、序列化与反序列化、接口风格、防重放（防刷、幂等）、限流、优化、接口文档）
+  - DDD领域模型设计（展示层、应用层、领域层、基础设施层）
+  - 多级缓存的设计与实现
+  - gate与oauth2.0
+  - 秒杀
+  - 单点登录
+  - 认证和鉴权、 JWT、RBAC
+
+
+
+
+
 
 ## 说明
 
@@ -6,5 +130,6 @@
 - gh-pages分支： vongdefu-dochub@master:defu/* 与 vongdefu-dochub@vdoing 合并进行构建，最后生成的静态网页文件夹；
 - 由 vongdefu-dochub 的 workflow 控制本仓库的两个分支的维护，不需要本地维护此仓库；
 
-## 文章列表
+
+
 
