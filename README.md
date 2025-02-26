@@ -119,15 +119,6 @@ footer: 使用 <a href="https://github.com/vongdefu/vongdefu.github.io" target="
   - 单点登录
   - 认证和鉴权、 JWT、RBAC
 
-
-
-
-## 说明
-
-- master分支： 从 vongdefu-dochub@master 同步而来；
-- gh-pages分支： vongdefu-dochub@master:defu/* 与 vongdefu-dochub@vdoing 合并进行构建，最后生成的静态网页文件夹；
-- 由 vongdefu-dochub 的 workflow 控制本仓库的两个分支的维护，不需要本地维护此仓库；
-
 ## :chart_with_upwards_trend: 趋势
 
 [![Star History Chart](https://api.star-history.com/svg?repos=vongdefu/vongdefu.github.io&type=Date)](https://star-history.com/#vongdefu/vongdefu.github.io&Date)
