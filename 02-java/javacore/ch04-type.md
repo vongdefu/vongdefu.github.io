@@ -1,6 +1,5 @@
 # 4. 泛型
 
-
 1. 这种技术出现的背景
 2. 泛型的使用方式
 3. 泛型的上下限
@@ -58,75 +57,75 @@ public <T extends Number> double add(T a, T b) {
 
 ```java
 // 例1 //////////////////////////////////////////////////////
-class Point<T>{ // 定义时： 此处表示Point类为泛型类，类中持有一个抽象类型T，T是type的简称  
-    private T var ;     // var的类型由T指定，即：由外部指定  
-    public T getVar(){  // 返回值的类型由外部决定  
-        return var ;  
-    }  
-    public void setVar(T var){  // 设置的类型也由外部决定  
-        this.var = var ;  
-    }  
-}  
-public class GenericsDemo06{  
-    public static void main(String args[]){  
+class Point<T>{ // 定义时： 此处表示Point类为泛型类，类中持有一个抽象类型T，T是type的简称
+    private T var ;     // var的类型由T指定，即：由外部指定
+    public T getVar(){  // 返回值的类型由外部决定
+        return var ;
+    }
+    public void setVar(T var){  // 设置的类型也由外部决定
+        this.var = var ;
+    }
+}
+public class GenericsDemo06{
+    public static void main(String args[]){
         Point<String> p = new Point<String>();// 使用时：传入的是String，表示具体使用时用String类型，而不是其它类型
         p.setVar("it") ;
         System.out.println(p.getVar().length()) ;
-    }  
+    }
 }
 
 
 // 例2 //////////////////////////////////////////////////////
-class Notepad<K,V>{ // 定义时： 此处表示Notepad类为泛型，类中持有两个抽象类型K和V，K表示Key，V表示value 
-    private K key ; 
-    private V value ; 
-    public K getKey(){  
-        return this.key ;  
-    }  
-    public V getValue(){  
-        return this.value ;  
-    }  
-    public void setKey(K key){  
-        this.key = key ;  
-    }  
-    public void setValue(V value){  
-        this.value = value ;  
-    }  
-} 
-public class GenericsDemo09{  
-    public static void main(String args[]){  
+class Notepad<K,V>{ // 定义时： 此处表示Notepad类为泛型，类中持有两个抽象类型K和V，K表示Key，V表示value
+    private K key ;
+    private V value ;
+    public K getKey(){
+        return this.key ;
+    }
+    public V getValue(){
+        return this.value ;
+    }
+    public void setKey(K key){
+        this.key = key ;
+    }
+    public void setValue(V value){
+        this.value = value ;
+    }
+}
+public class GenericsDemo09{
+    public static void main(String args[]){
         Notepad<String,Integer> t = new Notepad<String,Integer>(); // 使用时：传入的两个类型具体为String和Integer
         t.setKey("汤姆") ;
-        t.setValue(20) ; 
+        t.setValue(20) ;
         System.out.print("姓名；" + t.getKey()) ;
         System.out.print("，年龄；" + t.getValue()) ;
-    }  
+    }
 }
 
 ```
 
 ```java
 interface Info<T>{ // 定义时： 表示Info接口为泛型接口，持有一个抽象类型T
-    public T getVar() ; 
-}  
+    public T getVar() ;
+}
 class InfoImpl<T> implements Info<T>{ // 定义时： 表示InfoImpl接口为泛型接口，也持有一个抽象类型T，并且实现了Info<T>
     private T var ;
     public InfoImpl(T var){
-        this.setVar(var) ;    
-    }  
-    public void setVar(T var){  
-        this.var = var ;  
-    }  
-    public T getVar(){  
-        return this.var ;  
-    }  
-} 
-public class GenericsDemo24{  
-    public static void main(String arsg[]){  
+        this.setVar(var) ;
+    }
+    public void setVar(T var){
+        this.var = var ;
+    }
+    public T getVar(){
+        return this.var ;
+    }
+}
+public class GenericsDemo24{
+    public static void main(String arsg[]){
         Info<String> i = new InfoImpl<String>("汤姆") ;  // 使用时： 传入的具体类为String，而不是其它类型
-        System.out.println("内容：" + i.getVar()) ;  
-    }  
-}  
+        System.out.println("内容：" + i.getVar()) ;
+    }
+}
 
 ```
 
@@ -155,20 +154,20 @@ public static void main(String[] args){
 **本质上这些个都是占位符，没啥区别，只不过是编码时的一种约定俗成的东西**。比如上述代码中的 T ，我们可以换成 A-Z 之间的任何一个 字母都可以，并不会影响程序的正常运行，但是如果换成其他的字母代替 T ，在可读性上可能会弱一些。**通常情况下，T，E，K，V，？是这样约定的**：
 
 - ？表示不确定的 java 类型
-- T (type) 表示具体的一个java类型
-- K V (key value) 分别代表java键值中的Key Value
-- E (element) 代表Element
+- T (type) 表示具体的一个 java 类型
+- K V (key value) 分别代表 java 键值中的 Key Value
+- E (element) 代表 Element
 
 ## 3. 类型擦除
 
-Java 泛型这个特性是从JDK 1.5才开始加入的，因此为了兼容之前的版本，Java 泛型的实现采取了“**伪泛型**”的策略，即Java在语法上支持泛型，但是在编译阶段会进行所谓的“**类型擦除**”（Type Erasure），将所有的泛型表示（尖括号中的内容）都替换为具体的类型（其对应的原生态类型），就像完全没有泛型一样。理解类型擦除对于用好泛型是很有帮助的，尤其是一些看起来“疑难杂症”的问题，弄明白了类型擦除也就迎刃而解了。
+Java 泛型这个特性是从 JDK 1.5 才开始加入的，因此为了兼容之前的版本，Java 泛型的实现采取了“**伪泛型**”的策略，即 Java 在语法上支持泛型，但是在编译阶段会进行所谓的“**类型擦除**”（Type Erasure），将所有的泛型表示（尖括号中的内容）都替换为具体的类型（其对应的原生态类型），就像完全没有泛型一样。理解类型擦除对于用好泛型是很有帮助的，尤其是一些看起来“疑难杂症”的问题，弄明白了类型擦除也就迎刃而解了。
 
 一句话：Java 源代码中使用泛型，但是编译阶段会把源代码中的泛型抽象类型转化成具体的原生数据类型，这个转化过程是自动和隐式的，这就是**类型擦除**。这样做的好处在于把对具体类型的感知延迟到编译阶段，使编码更加灵活。
 
 **类型擦除原则**：
 
 - 消除类型参数声明，即删除<>及其包围的部分。
-- 根据类型参数的上下界推断并替换所有的类型参数为原生态类型：如果类型参数是无限制通配符或没有上下界限定则替换为Object，如果存在上下界限定则根据子类替换原则取类型参数的最左边限定类型（即父类）。
+- 根据类型参数的上下界推断并替换所有的类型参数为原生态类型：如果类型参数是无限制通配符或没有上下界限定则替换为 Object，如果存在上下界限定则根据子类替换原则取类型参数的最左边限定类型（即父类）。
 - 为了保证类型安全，必要时插入强制类型转换代码。
 - 自动产生“桥接方法”以保证擦除类型后的代码仍然具有泛型的“多态性”。
 
@@ -256,22 +255,22 @@ public class Client {
 
 1. 泛型类中的静态变量和静态方法，不能使用泛型类声明的抽象类型占位符进行定义；
 
-    ```java
-    public class Test2<T> {    
-        public static T one;   //编译错误，不能使用抽象类型T定义静态变量one的类型，因为one的类型到使用时才确定下来；
-        public static T show(T one){ //编译错误，不能使用抽象类型T定义show()方法的范围值类型为T，因为T的类型要等到使用时才确定下来；
-            return null;    
-        }    
-    }
+   ```java
+   public class Test2<T> {
+       public static T one;   //编译错误，不能使用抽象类型T定义静态变量one的类型，因为one的类型到使用时才确定下来；
+       public static T show(T one){ //编译错误，不能使用抽象类型T定义show()方法的范围值类型为T，因为T的类型要等到使用时才确定下来；
+           return null;
+       }
+   }
 
-    public class Test2<T> {    
+   public class Test2<T> {
 
-        public static <T> T show(T one){ //这是正确的，这个方法是泛型方法
-            return null;    
-        }    
-    }
+       public static <T> T show(T one){ //这是正确的，这个方法是泛型方法
+           return null;
+       }
+   }
 
-    ```
+   ```
 
 2. 抽象类型只能通过反射进行实例化，并且也只能通过反射来获取抽象类型的所属类型：
 3. 基本数据类型不能作为泛型，只能使用包装类型作为泛型的实参；
@@ -282,19 +281,19 @@ public class Client {
 
 1. T 可以确保泛型参数传入的抽象类型是一致的，？无法保证传入的抽象类型的一致性；
 
-    ```java
-    // 通过 T 来 确保 泛型参数的一致性
-    public <T extends Number> void test(List<T> dest, List<T> src)
+   ```java
+   // 通过 T 来 确保 泛型参数的一致性
+   public <T extends Number> void test(List<T> dest, List<T> src)
 
-    //通配符是 不确定的，所以这个方法不能保证两个 List 具有相同的元素类型
-    public void test(List<? extends Number> dest, List<? extends Number> src)
+   //通配符是 不确定的，所以这个方法不能保证两个 List 具有相同的元素类型
+   public void test(List<? extends Number> dest, List<? extends Number> src)
 
-    ```
+   ```
 
 2. T 可以进行多重限制，使 T 类型具有所有限定的方法和属性，但 ？ 不能进行多重限定；
 3. T 只能限制上限或下限中的一种，？则既可以有上限也可以有下限；
 
-总结来说，最佳实践经验是：  **通常把 T 用在泛型类和泛型方法的定义上，而 ？用到调用和形参上，不用到定义上。**
+总结来说，最佳实践经验是： **通常把 T 用在泛型类和泛型方法的定义上，而 ？用到调用和形参上，不用到定义上。**
 
 ## 5. 实际的应用场景
 
@@ -315,11 +314,11 @@ public class DeResponse implements Serializable {
  private Integer statusCode = StatusCode.SUCCESS.getStatusCode();
  private Page page;
  private Object content;
- 
+
  public static DeResponse create() {
   return new DeResponse();
  }
- 
+
  public static DeResponse create(StatusCode statusCode) {
   DeResponse response = new DeResponse();
   response.setStatusCode(statusCode.getStatusCode());
@@ -331,27 +330,27 @@ public class DeResponse implements Serializable {
   response.setContent(content);
   return response;
  }
- 
+
  public static DeResponse createEmpty() {
   return new DeResponse().addContent(Collections.EMPTY_LIST);
  }
- 
+
  @SuppressWarnings("WeakerAccess")
  public DeResponse addContent(Object content) {
   this.content = content;
   return this;
  }
- 
+
  public DeResponse addPage(Integer pageId, Integer pageSize, Long totalRecords) {
   this.page = new Page(pageId, pageSize, totalRecords);
   return this;
  }
- 
+
  @Override
  public String toString() {
   return JSON.toJSONString(this);
  }
- 
+
  @Data
  @AllArgsConstructor
  @NoArgsConstructor
