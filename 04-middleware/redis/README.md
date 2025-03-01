@@ -4,9 +4,8 @@ dir:
   link: true
 ---
 
-
 | **日期** | **迭代内容**                                                                            |
-| ---------- | ----------------------------------------------------------------------------------------- |
+| -------- | --------------------------------------------------------------------------------------- |
 | 23-11-24 | 1. 创建文档骨架，确定知识体系；2. 完成《概述》《对象系统》等篇；3. 完成《持久化》篇章； |
 
 ::: tip 导学指引
@@ -82,23 +81,18 @@ dir:
 
 ![1726158220767](./image/1726158220767.png)
 
-
-
-## 本地缓存VS分布式缓存
-
+## 本地缓存 VS 分布式缓存
 
 **本地缓存**和**分布式缓存**在架构和使用场景上存在显著区别：
 
-|  | 本地缓存 | 分布式缓存 |
-| --- | --- | --- |
-| 含义 | 与应用程序在同一台主机节点上，多是进程间访问，与JVM生命周期一致，大多不会产生网络IO，因此访问速度更快 | 大多具备独立部署的主机节点，跨进程访问，会产生网络IO，访问速度较本地缓存更慢，支持的数据结构更多 |
-| 持久性 | 大多不具备持久性，存在的生命周期与JVM的生命周期一致 | 根据分布式缓存的技术选型而定，如redis具有完善的持久化机制 |
-| 存储空间 | 受JVM堆空间大小限制 | 受部署节点的物理主机的内存大小限制 |
-| 技术选型 | 实现简单，在项目中集成相关的组件即可，如ehcache、guava等 | 实现也较为简单，如Redis、Memercached等 |
-| 适用场景 | 适用于读多写少的，变更较少的业务场景，比如数据字典等 | 支持更多的业务场景 |
-| 一致性 | - 多个应用实例之间无法共享数据，一致性较差；- 与数据库数据存在一致性问题，需在应用端进行保证； | - 可在多个应用实例之间共享数据，一致性较好；- 仍然存在与数据库数据不一致的情况，也需要在应用端进行保证； |
-
-
+|          | 本地缓存                                                                                                 | 分布式缓存                                                                                               |
+| -------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 含义     | 与应用程序在同一台主机节点上，多是进程间访问，与 JVM 生命周期一致，大多不会产生网络 IO，因此访问速度更快 | 大多具备独立部署的主机节点，跨进程访问，会产生网络 IO，访问速度较本地缓存更慢，支持的数据结构更多        |
+| 持久性   | 大多不具备持久性，存在的生命周期与 JVM 的生命周期一致                                                    | 根据分布式缓存的技术选型而定，如 redis 具有完善的持久化机制                                              |
+| 存储空间 | 受 JVM 堆空间大小限制                                                                                    | 受部署节点的物理主机的内存大小限制                                                                       |
+| 技术选型 | 实现简单，在项目中集成相关的组件即可，如 ehcache、guava 等                                               | 实现也较为简单，如 Redis、Memercached 等                                                                 |
+| 适用场景 | 适用于读多写少的，变更较少的业务场景，比如数据字典等                                                     | 支持更多的业务场景                                                                                       |
+| 一致性   | - 多个应用实例之间无法共享数据，一致性较差；- 与数据库数据存在一致性问题，需在应用端进行保证；           | - 可在多个应用实例之间共享数据，一致性较好；- 仍然存在与数据库数据不一致的情况，也需要在应用端进行保证； |
 
 ## 1. 对象系统
 
@@ -106,49 +100,36 @@ dir:
 
 ## 3. 高级特性
 
-
-
 ## 4. 内存管理
 
 ## 5. 持久化机制
 
-
 ## 6. 运行模式
-
-
-
 
 ## 7. 生产运维
 
-
-
 ## 8. 生产实践
 
-
 ## 99. 其它
-
 
 ## 资料
 
 - [Redis 核心原理与实战](https://learn.lianglianglee.com/%E4%B8%93%E6%A0%8F/Redis%20%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E6%88%98)
 - [Redis 核心技术与实战](https://learn.lianglianglee.com/%E4%B8%93%E6%A0%8F/Redis%20%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E6%88%98)
-- [Redis教程](https://pdai.tech/md/db/nosql-redis/db-redis-overview.html)
-- [图解Redis](https://xiaolincoding.com/redis/)
-- [Redis简介及常见问题处理（转） - 小雨淅淅o0 - 博客园](https://www.cnblogs.com/xiaoyuxixi/p/15483837.html)
-- [图文并貌，最强Redis详解分析](https://mp.weixin.qq.com/s/OHNkUBSFy00jQwoqrmwSwg)
-- [Redis分布式锁到底安全吗？](https://mp.weixin.qq.com/s/RnSokJxYxYDeenOP_JE3fQ)
+- [Redis 教程](https://pdai.tech/md/db/nosql-redis/db-redis-overview.html)
+- [图解 Redis](https://xiaolincoding.com/redis/)
+- [Redis 简介及常见问题处理（转） - 小雨淅淅 o0 - 博客园](https://www.cnblogs.com/xiaoyuxixi/p/15483837.html)
+- [图文并貌，最强 Redis 详解分析](https://mp.weixin.qq.com/s/OHNkUBSFy00jQwoqrmwSwg)
+- [Redis 分布式锁到底安全吗？](https://mp.weixin.qq.com/s/RnSokJxYxYDeenOP_JE3fQ)
 - [Redis 10 大性能优化策略](https://mp.weixin.qq.com/s/GWHXjVIohkK8BgW3vIUT1Q)
 - [https://mp.weixin.qq.com/s/OHNkUBSFy00jQwoqrmwSwg](https://mp.weixin.qq.com/s/OHNkUBSFy00jQwoqrmwSwg)
-1. [https://mp.weixin.qq.com/s/mGUPW9PNFi6bRqsxGpxHbQ](https://mp.weixin.qq.com/s/mGUPW9PNFi6bRqsxGpxHbQ)
-2. [https://mp.weixin.qq.com/s/jNVJHJOPUv6V9cRU8M75Hw](https://mp.weixin.qq.com/s/jNVJHJOPUv6V9cRU8M75Hw)
-3. 
-1. [https://learn.lianglianglee.com/%e4%b8%93%e6%a0%8f/Redis%20%e6%a0%b8%e5%bf%83%e5%8e%9f%e7%90%86%e4%b8%8e%e5%ae%9e%e6%88%98/16%20Redis%20%e4%ba%8b%e5%8a%a1%e6%b7%b1%e5%85%a5%e8%a7%a3%e6%9e%90.md](https://learn.lianglianglee.com/%e4%b8%93%e6%a0%8f/Redis%20%e6%a0%b8%e5%bf%83%e5%8e%9f%e7%90%86%e4%b8%8e%e5%ae%9e%e6%88%98/16%20Redis%20%e4%ba%8b%e5%8a%a1%e6%b7%b1%e5%85%a5%e8%a7%a3%e6%9e%90.md)
-2. [https://mp.weixin.qq.com/s/6C0DtcJvDDd2qXvCbqi8UA](https://mp.weixin.qq.com/s/6C0DtcJvDDd2qXvCbqi8UA)
-3. [https://blog.csdn.net/suprezheng/article/details/124560313?spm=1001.2014.3001.5501](https://blog.csdn.net/suprezheng/article/details/124560313?spm=1001.2014.3001.5501)
-4. [https://www.yuque.com/zeanzai.me/nox53r/xh82alhmr8rii1cg](https://www.yuque.com/zeanzai.me/nox53r/xh82alhmr8rii1cg)  redis 简介及常见问题处理
-
-
-
+- [https://mp.weixin.qq.com/s/mGUPW9PNFi6bRqsxGpxHbQ](https://mp.weixin.qq.com/s/mGUPW9PNFi6bRqsxGpxHbQ)
+- [https://mp.weixin.qq.com/s/jNVJHJOPUv6V9cRU8M75Hw](https://mp.weixin.qq.com/s/jNVJHJOPUv6V9cRU8M75Hw)
+- [https://learn.lianglianglee.com/%e4%b8%93%e6%a0%8f/Redis%20%e6%a0%b8%e5%bf%83%e5%8e%9f%e7%90%86%e4%b8%8e%e5%ae%9e%e6%88%98/16%20Redis%20%e4%ba%8b%e5%8a%a1%e6%b7%b1%e5%85%a5%e8%a7%a3%e6%9e%90.md](https://learn.lianglianglee.com/%e4%b8%93%e6%a0%8f/Redis%20%e6%a0%b8%e5%bf%83%e5%8e%9f%e7%90%86%e4%b8%8e%e5%ae%9e%e6%88%98/16%20Redis%20%e4%ba%8b%e5%8a%a1%e6%b7%b1%e5%85%a5%e8%a7%a3%e6%9e%90.md)
+- [https://mp.weixin.qq.com/s/6C0DtcJvDDd2qXvCbqi8UA](https://mp.weixin.qq.com/s/6C0DtcJvDDd2qXvCbqi8UA)
+- [https://blog.csdn.net/suprezheng/article/details/124560313?spm=1001.2014.3001.5501](https://blog.csdn.net/suprezheng/article/details/124560313?spm=1001.2014.3001.5501)
+- [https://www.yuque.com/zeanzai.me/nox53r/xh82alhmr8rii1cg](https://www.yuque.com/zeanzai.me/nox53r/xh82alhmr8rii1cg) redis 简介及常见问题处理
+- [🥝 从一个事故中理解 Redis（几乎）所有知识点](https://zhuanlan.zhihu.com/p/5771402221)
 
 ## 面试题
 
