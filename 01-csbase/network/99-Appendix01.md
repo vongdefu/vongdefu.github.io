@@ -1,14 +1,15 @@
+# 实验
 
-### curl简介
+### curl 简介
 
-我们知道HTTP协议属于应用层协议，所以要想查看报文格式，就需要借助应用层的软件，Windows平台上常见的能够发送http协议的应用层软件有两类：
+我们知道 HTTP 协议属于应用层协议，所以要想查看报文格式，就需要借助应用层的软件，Windows 平台上常见的能够发送 http 协议的应用层软件有两类：
 
 - 可视化操作软件，如浏览器；
-- 命令行操作软件，如curl、Telnet；
+- 命令行操作软件，如 curl、Telnet；
 
-我们这里使用curl来查看一下http报文的相关内容，之所以不用chrome等浏览器，是因为这些浏览器做了一些技术手段的优化，不利于查看报文。
+我们这里使用 curl 来查看一下 http 报文的相关内容，之所以不用 chrome 等浏览器，是因为这些浏览器做了一些技术手段的优化，不利于查看报文。
 
-Windows10平台上自带了curl工具包，我们打开cmd输入 curl -V 可以查看curl的版本：
+Windows10 平台上自带了 curl 工具包，我们打开 cmd 输入 curl -V 可以查看 curl 的版本：
 
 ```
 C:\Users\zeanzai>curl -V
@@ -18,7 +19,7 @@ Protocols: dict file ftp ftps http https imap imaps pop3 pop3s smtp smtps telnet
 Features: AsynchDNS IPv6 Largefile SSPI Kerberos SPNEGO NTLM SSL
 ```
 
-Windows10上安装了git，所以我们在git-bash里面输入 curl -V 可以查看git中自带的curl的版本：
+Windows10 上安装了 git，所以我们在 git-bash 里面输入 curl -V 可以查看 git 中自带的 curl 的版本：
 
 ```
 zeanzai@DESKTOP-BTBMQTM MINGW64 /d/00.zeanzai/Downloads
@@ -29,11 +30,11 @@ Protocols: dict file ftp ftps gopher gophers http https imap imaps ldap ldaps mq
 Features: alt-svc AsynchDNS brotli HSTS HTTPS-proxy IDN IPv6 Kerberos Largefile libz NTLM PSL SPNEGO SSL SSPI threadsafe UnixSockets zstd
 ```
 
-我们在这里【[curl tutorial](https://curl.se/docs/tutorial.html)】找到curl的一些命令能帮我们查看HTTP的报文，也可以在命令行中输入 `curl --help` 查看命令提示。
+我们在这里【[curl tutorial](https://curl.se/docs/tutorial.html)】找到 curl 的一些命令能帮我们查看 HTTP 的报文，也可以在命令行中输入 `curl --help` 查看命令提示。
 
-这里，我们使用git自带的curl进行实验。
+这里，我们使用 git 自带的 curl 进行实验。
 
-### 实验 
+### 实验
 
 ::: tabs
 
@@ -73,11 +74,10 @@ $ curl -v www.baidu.com
 
 ```
 
-1. -v, --verbose              Make the operation more talkative（ /ˈtɑː.kə.t̬ɪv/ ，爱说话的，健谈的;多嘴的，详细的）
+1. -v, --verbose Make the operation more talkative（ /ˈtɑː.kə.t̬ɪv/ ，爱说话的，健谈的;多嘴的，详细的）
 2. 输出结果
 
-![1720632185149](./experiment.snippet/image/1720632185149.png)
-
+![1720632185149](./99-Appendix01/image/1720632185149.png)
 @tab 实验二
 
 实验一报文格式并不明显，请看实验二。
@@ -97,43 +97,41 @@ $ curl --trace-ascii trace1.txt www.baidu.com
 控制台输出响应时间信息和响应结果外，还在 /d/00.zeanzai/Downloads 下生成一个文件 trace1.txt ，我们打开这个文件：
 
 ::: details trace1.txt
-@[code](./network/include/trace1.txt)
+@[code](./snippet/network/include/trace1.txt)
 :::
 
 在 trace1.txt 中我们可以清楚的看到请求和响应的报文：
 
-![1720632771541](./experiment.snippet/image/1720632771541.png)
+![1720632771541](./99-Appendix01/image/1720632771541.png)
 
 @tab 实验三
 
 我们输入 `curl --trace-ascii trace2.txt -X POST https://reqbin.com/echo/post/form -d "username=exampleuser" -d "password=examplepass"` ，同样会生成一个 trace2.txt 文件，
 
 ::: details trace2.txt
-@[code](./network/include/trace2.txt)
+@[code](./snippet/network/include/trace2.txt)
 :::
 
 同样的，我们也可以看到 请求报文 和 响应报文：
 
-![1720638581146](./experiment.snippet/image/1720638581146.png)
+![1720638581146](./99-Appendix01/image/1720638581146.png)
 
 @tab 实验四
 
 我们输入 `curl --trace-ascii trace3.txt -X POST https://postman-echo.com/post -d "name=JohnDoe" -d "email=johndoe@example.com" -i` ，同样会生成一个 trace3.txt 文件，
 
 ::: details trace3.txt
-@[code](./network/include/trace3.txt)
+@[code](./snippet/network/include/trace3.txt)
 :::
 
 同样的，我们也可以看到 请求报文 和 响应报文：
 
-![1720638581146](./experiment.snippet/image/1720638581146.png)
-
+![1720638581146](./99-Appendix01/image/1720638581146.png)
 
 :::
 
-
 ### 参考连接
 
-- [curl网站开发指南](https://www.ruanyifeng.com/blog/2011/09/curl.html)
+- [curl 网站开发指南](https://www.ruanyifeng.com/blog/2011/09/curl.html)
 - [curl tutorial](https://curl.se/docs/tutorial.html)
 - [everything curl](https://everything.curl.dev/)
