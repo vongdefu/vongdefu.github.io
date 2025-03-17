@@ -9,23 +9,21 @@
 export https_proxy=http://127.0.0.1:7897 http_proxy=http://127.0.0.1:7897 all_proxy=socks5://127.0.0.1:7897
 ```
 
-
 ### 2. Homebrew
-
 
 ::: details 安装日志
 @[code](./mac/include/homebrew.log)
 :::
 
-| 词汇 | 含义 |
-| --- | --- |
-| formula (e)  | 安装包的描述文件，formulae 为复数 |
-| cellar  | 安装好后所在的目录 |
-| keg  | 具体某个包所在的目录，keg 是 cellar 的子目录 |
-| bottle  | 预先编译好的包，不需要现场下载编译源码，速度会快很多；官方库中的包大多都是通过 bottle 方式安装 |
-| tap  | 下载源，可以类比于 Linux 下的包管理器 repository |
-| cask  | 安装 macOS native 应用的扩展，你也可以理解为有图形化界面的应用。 |
-| bundle  | 描述 Homebrew 依赖的扩展 |
+| 词汇        | 含义                                                                                           |
+| ----------- | ---------------------------------------------------------------------------------------------- |
+| formula (e) | 安装包的描述文件，formulae 为复数                                                              |
+| cellar      | 安装好后所在的目录                                                                             |
+| keg         | 具体某个包所在的目录，keg 是 cellar 的子目录                                                   |
+| bottle      | 预先编译好的包，不需要现场下载编译源码，速度会快很多；官方库中的包大多都是通过 bottle 方式安装 |
+| tap         | 下载源，可以类比于 Linux 下的包管理器 repository                                               |
+| cask        | 安装 macOS native 应用的扩展，你也可以理解为有图形化界面的应用。                               |
+| bundle      | 描述 Homebrew 依赖的扩展                                                                       |
 
 缓存目录： ~/Library/Caches/Homebrew
 
@@ -44,6 +42,10 @@ export https_proxy=http://127.0.0.1:7897 http_proxy=http://127.0.0.1:7897 all_pr
 ➜  ~ which zsh
 /bin/zsh
 
+
+# 添加 zsh 的代理
+# 复制clash终端代理命令，直接编辑 vi ~/.zshrc ，在最后添加即可。
+
 ```
 
 ::: tip .bashrc .zshrc .profile .bash_profile 的区别
@@ -51,29 +53,29 @@ export https_proxy=http://127.0.0.1:7897 http_proxy=http://127.0.0.1:7897 all_pr
 ~~实践经验： 环境变量统一配置在 .bash_profile 文件中，但是为了让 zsh 也能使用到，因此在 .zshrc 中加了下面两行。~~
 
 ```bash
-source /etc/profile 
+source /etc/profile
 source ~/.bash_profile
 
 ```
 
-一、bashrc和profile的差异
+一、bashrc 和 profile 的差异
 
-1. bashrc是在系统启动后就会自动运行。进行设置后，可运终端命令用source bashrc命令更新bashrc
-2. profile是在用户登录后才会运行。进行设置后，可运终端命令用source profile命令更新profile
-PS：通常我们修改bashrc,有些linux的发行版本不一定有profile这个文件
-3. **/etc/profile**中设定的变量(全局)的可以作用于任何用户，而~/.bashrc等中设定的变量(局部)只能继承/etc/profile中的变量，他们是"父子"关系。
+1. bashrc 是在系统启动后就会自动运行。进行设置后，可运终端命令用 source bashrc 命令更新 bashrc
+2. profile 是在用户登录后才会运行。进行设置后，可运终端命令用 source profile 命令更新 profile
+   PS：通常我们修改 bashrc,有些 linux 的发行版本不一定有 profile 这个文件
+3. **/etc/profile**中设定的变量(全局)的可以作用于任何用户，而~/.bashrc 等中设定的变量(局部)只能继承/etc/profile 中的变量，他们是"父子"关系。
 
 二、.bash_profile
 
-- ~/.bash_profile: 每个用户都可使用该文件输入专用于自己使用的shell信息，当用户登录时，该文件仅仅执行一次!默认情况下,他设置一些环境变量,执行用户的.bashrc文件。
-- ~/.bash_logout: 当每次退出系统(退出bash shell)时，执行该文件。
-- ~/.bash_profile: 是交互式、login方式进入bash运行的。
-- ~/.bashrc:是交互式non-login方式进入bash运行的，通常二者设置大致相同，所以通常前者会调用后者。
+- ~/.bash_profile: 每个用户都可使用该文件输入专用于自己使用的 shell 信息，当用户登录时，该文件仅仅执行一次!默认情况下,他设置一些环境变量,执行用户的.bashrc 文件。
+- ~/.bash_logout: 当每次退出系统(退出 bash shell)时，执行该文件。
+- ~/.bash_profile: 是交互式、login 方式进入 bash 运行的。
+- ~/.bashrc:是交互式 non-login 方式进入 bash 运行的，通常二者设置大致相同，所以通常前者会调用后者。
 
 三、.zshrc
 
-zsh终端命令工具的全局变量设置，和bashrc区别是 默认很多linux系统是bash，就配置在bashrc里
-如里是使用zsh 就配置在 zshrc里
+zsh 终端命令工具的全局变量设置，和 bashrc 区别是 默认很多 linux 系统是 bash，就配置在 bashrc 里
+如里是使用 zsh 就配置在 zshrc 里
 
 :::
 
@@ -99,7 +101,7 @@ term
 ==> Casks
 iterm2
 
-shawnvong@ShawndeMacBook-Pro ~ % brew install iterm2  
+shawnvong@ShawndeMacBook-Pro ~ % brew install iterm2
 ==> Downloading https://iterm2.com/downloads/stable/iTerm2-3_4_23.zip
 ######################################################################### 100.0%
 ==> Installing Cask iterm2
@@ -114,7 +116,7 @@ shawnvong@ShawndeMacBook-Pro ~ % brew install iterm2
 - [x] statusbar
 - [x] 终端历史行数
 
-[参考这里iterm的配置](https://zhuanlan.zhihu.com/p/550022490)
+[参考这里 iterm 的配置](https://zhuanlan.zhihu.com/p/550022490)
 
 ### 6. Oh-my-zsh
 
@@ -195,14 +197,14 @@ https://www.keka.io/en/
 
 ### 9. WPS
 
-- [x] [https://www.wps.com](https://www.wps.com) 
+- [x] [https://www.wps.com](https://www.wps.com)
 
 ### 10. JDK
 
 - [x] 安装 jdk8，注意版本的不同
-- [x] 下载安装包： [https://www.oracle.com/java/technologies/downloads/#jepp](https://www.oracle.com/java/technologies/downloads/#jepp)  438123371@qq.com / !@#Ysyyrps1003
+- [x] 下载安装包： [https://www.oracle.com/java/technologies/downloads/#jepp](https://www.oracle.com/java/technologies/downloads/#jepp) 438123371@qq.com / !@#Ysyyrps1003
 - [x] 安装教程 ： [https://docs.oracle.com/en/java/javase/21/install/installation-jdk-macos.html#GUID-C5F0BF25-3487-4F33-9275-7000C8E1C58C](https://docs.oracle.com/en/java/javase/21/install/installation-jdk-macos.html#GUID-C5F0BF25-3487-4F33-9275-7000C8E1C58C)
-- [x] 其他文档： [https://docs.oracle.com/javase/8/](https://docs.oracle.com/javase/8/)   
+- [x] 其他文档： [https://docs.oracle.com/javase/8/](https://docs.oracle.com/javase/8/)
 - [x] 更新： 不必卸载旧版本，可以直接下载新版本，直接安装即可。
 
 ### 11. Clean One Pro
@@ -282,12 +284,11 @@ export LC_CTYPE='C'
 - [ ] 设置 git
 - [ ] Sequel Ace
 
-
 ### 19. 参考
 
 1. [awesome-mac](https://github.com/jaywcjlove/)
 
-### mac上的两种使用技巧
+### mac 上的两种使用技巧
 
-1. 在录屏的时候显示小窗口；可以使用quicktime，先movie recording ，然后在screen recording；
+1. 在录屏的时候显示小窗口；可以使用 quicktime，先 movie recording ，然后在 screen recording；
 2. 设置中找到键盘选项，然后找到键盘，打开听写，就可以实现在任何输入框内进行听写了。
