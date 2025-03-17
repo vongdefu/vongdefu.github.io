@@ -1,6 +1,6 @@
 # 实验
 
-### curl 简介
+## curl 简介
 
 我们知道 HTTP 协议属于应用层协议，所以要想查看报文格式，就需要借助应用层的软件，Windows 平台上常见的能够发送 http 协议的应用层软件有两类：
 
@@ -34,7 +34,7 @@ Features: alt-svc AsynchDNS brotli HSTS HTTPS-proxy IDN IPv6 Kerberos Largefile 
 
 这里，我们使用 git 自带的 curl 进行实验。
 
-### 实验
+## 实验
 
 ::: tabs
 
@@ -130,7 +130,7 @@ $ curl --trace-ascii trace1.txt www.baidu.com
 
 :::
 
-### 参考连接
+## 参考连接
 
 - [curl 网站开发指南](https://www.ruanyifeng.com/blog/2011/09/curl.html)
 - [curl tutorial](https://curl.se/docs/tutorial.html)
