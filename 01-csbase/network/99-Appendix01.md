@@ -95,6 +95,8 @@ $ curl --trace-ascii trace1.txt www.baidu.com
 控制台输出响应时间信息和响应结果外，还在 /d/00.zeanzai/Downloads 下生成一个文件 trace1.txt ，我们打开这个文件：
 
 ::: details trace1.txt
+
+```
 == Info:   Trying 198.18.0.48:80...
 == Info: Connected to www.baidu.com (198.18.0.48) port 80
 => Send header, 76 bytes (0x4c)
@@ -172,6 +174,9 @@ $ curl --trace-ascii trace1.txt www.baidu.com
     04c0: ..........</a>&nbsp;...ICP...030173...&nbsp; <img src=//www.baid
     0500: u.com/img/gs.gif> </p> </div> </div> </div> </body> </html>
 == Info: Connection #0 to host www.baidu.com left intact
+
+```
+
 :::
 
 在 trace1.txt 中我们可以清楚的看到请求和响应的报文：
@@ -183,6 +188,8 @@ $ curl --trace-ascii trace1.txt www.baidu.com
 我们输入 `curl --trace-ascii trace2.txt -X POST https://reqbin.com/echo/post/form -d "username=exampleuser" -d "password=examplepass"` ，同样会生成一个 trace2.txt 文件，
 
 ::: details trace2.txt
+
+```
 == Info:   Trying 198.18.0.173:443...
 == Info: Connected to reqbin.com (198.18.0.173) port 443
 == Info: schannel: disabled automatic use of client certificate
@@ -522,6 +529,8 @@ $ curl --trace-ascii trace1.txt www.baidu.com
 == Info: Closing connection
 == Info: schannel: shutting down SSL/TLS connection with reqbin.com port 443
 
+```
+
 :::
 
 同样的，我们也可以看到 请求报文 和 响应报文：
@@ -534,6 +543,8 @@ $ curl --trace-ascii trace1.txt www.baidu.com
 我们输入 `curl --trace-ascii trace3.txt -X POST https://postman-echo.com/post -d "name=JohnDoe" -d "email=johndoe@example.com" -i` ，同样会生成一个 trace3.txt 文件，
 
 ::: details trace3.txt
+
+```
 == Info:   Trying 198.18.0.177:443...
 == Info: Connected to postman-echo.com (198.18.0.177) port 443
 == Info: schannel: disabled automatic use of client certificate
@@ -579,6 +590,7 @@ $ curl --trace-ascii trace1.txt www.baidu.com
 0200: nDoe",.    "email": "johndoe@example.com".  },.  "url": "https:/
 0240: /postman-echo.com/post".}
 == Info: Connection #0 to host postman-echo.com left intact
+```
 
 :::
 
