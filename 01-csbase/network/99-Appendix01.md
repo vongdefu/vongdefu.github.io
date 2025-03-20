@@ -13,20 +13,24 @@
 
 @tab cmd 查看 curl 版本
 
+```
 C:\Users\zeanzai>curl -V
 curl 7.55.1 (Windows) libcurl/7.55.1 WinSSL
 Release-Date: 2017-11-14, security patched: 2019-11-05
 Protocols: dict file ftp ftps http https imap imaps pop3 pop3s smtp smtps telnet tftp
 Features: AsynchDNS IPv6 Largefile SSPI Kerberos SPNEGO NTLM SSL
+```
 
 @tab git 查看 curl 版本
 
+```
 zeanzai@DESKTOP-BTBMQTM MINGW64 /d/00.zeanzai/Downloads
 $ curl -V
 curl 8.4.0 (x86_64-w64-mingw32) libcurl/8.4.0 Schannel zlib/1.3 brotli/1.1.0 zstd/1.5.5 libidn2/2.3.4 libpsl/0.21.2 (+libidn2/2.3.3) libssh2/1.11.0
 Release-Date: 2023-10-11
 Protocols: dict file ftp ftps gopher gophers http https imap imaps ldap ldaps mqtt pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp
 Features: alt-svc AsynchDNS brotli HSTS HTTPS-proxy IDN IPv6 Kerberos Largefile libz NTLM PSL SPNEGO SSL SSPI threadsafe UnixSockets zstd
+```
 
 :::
 
