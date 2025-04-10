@@ -1,17 +1,3 @@
----
-home: true
-icon: home
-title: 主页
-heroImage: /logo.png
-heroText: cs-tips
-tagline: Java程序员面试要点提示
-actions:
-  - text: 进入学习 💡
-    link: /01-csbase
-    type: primary
-copyright: false
-footer: 使用 <a href="https://github.com/vongdefu/vongdefu.github.io" target="_blank">Github © 2024 cs tips </a> MIT 协议, 版权所有 © 2024-present vongdefu
----
 
 ## 目录
 
@@ -116,6 +102,3 @@ footer: 使用 <a href="https://github.com/vongdefu/vongdefu.github.io" target="
   - 单点登录
   - 认证和鉴权、 JWT、RBAC
 
-## :chart_with_upwards_trend: 趋势
-
-[![Star History Chart](https://api.star-history.com/svg?repos=vongdefu/vongdefu.github.io&type=Date)](https://star-history.com/#vongdefu/vongdefu.github.io&Date)
