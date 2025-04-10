@@ -1,16 +1,14 @@
-# 2. 数据类型
+# 数据类型
 
 这里说的数据类型是指实际开发过程中，保存到 redis 的数据的类型，也就是 value 的类型，key 的类型是 string。
 
-Redis使用对象来表示每一个键值对，在Redis中创建的每一个键值对，Redis都会为我们创建至少两个RedisObject对象，一个是键对象，即key，一个是值对象，即value。键对象的数据结构为字符串，而值对象因其保存的数据内容不一样，因而其使用的数据结构也不一样。`
-`事实上，数据库中的每个键、值, 以及 Redis 本身处理的参数, 都表示为这种数据类型.
+Redis 使用对象来表示每一个键值对，在 Redis 中创建的每一个键值对，Redis 都会为我们创建至少两个 RedisObject 对象，一个是键对象，即 key，一个是值对象，即 value。键对象的数据结构为字符串，而值对象因其保存的数据内容不一样，因而其使用的数据结构也不一样。事实上，数据库中的每个键、值, 以及 Redis 本身处理的参数, 都表示为这种数据类型.
 
-
-### 2.1. redis 中的数据结构
+## redis 中的数据结构
 
 也可以说是 redis 的编码。
 
-#### 2.1.1. SDS
+### SDS
 
 ![int](./image/1716336438254.png)
 
@@ -20,39 +18,37 @@ Redis使用对象来表示每一个键值对，在Redis中创建的每一个键�
 
 ![1726157109543](./image/1726157109543.png)
 
-#### 2.1.2. ziplist
+### ziplist
 
 ![ziplist](./image/1718579791006.png)
 
 ![ziplist](./image/1718579798628.png)
 
-#### 2.1.3. quicklist
+### quicklist
 
 ![image.png](./image/1718579993174.png)
 
 ![1726157193589](./image/1726157193589.png)
 
-#### 2.1.4. hashtable
+### hashtable
 
-![image.png](./image/1718580012849.png)
+![1718580012849.png](./image/1718580012849.png)
 
 ![1726157340991](./image/1726157340991.png)
 
-#### 2.1.5. skiplist
+### skiplist
 
-![](./image/1718580114392.png)
+![1718580114392](./image/1718580114392.png)
 
-
-
-#### 其他 
+### 其他
 
 ![1726157437779](./image/1726157437779.png)
 
 ![1726157424386](./image/1726157424386.png)
 
-### 2.2. 基本数据类型
+## 基本数据类型
 
-#### 2.2.1. 字符串 string
+### 字符串 string
 
 1. **应用场景**
 
@@ -65,78 +61,77 @@ Redis使用对象来表示每一个键值对，在Redis中创建的每一个键�
    - 多键操作：mset、msetnx、mget
    - 数字操作：incr、decr、incrby、decrby、incrbyfloat、decrbyfloat
 
+   | 命令                                                 | 描述                                                                                             | 时间复杂度             |
+   | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ---------------------- |
+   | set key value [ex seconds] [px milliseconds] [nx xx] | 设置值                                                                                           | O(1)                   |
+   | get key                                              | 获取值                                                                                           | O(1)                   |
+   | del key [key ...]                                    | 删除 key                                                                                         | O(N)(N 是键的个数)     |
+   | mset key [key value ...]                             | 批量设置值                                                                                       | O(N)(N 是键的个数)     |
+   | mget key [key ...]                                   | 批量获取值                                                                                       | O(N)(N 是键的个数)     |
+   | incr key                                             | 将 key 中储存的数字值增一                                                                        | O(1)                   |
+   | decr key                                             | 将 key 中储存的数字值减一                                                                        | O(1)                   |
+   | incrby key increment                                 | 将 key 所储存的值加上给定的增量值（increment）                                                   | O(1)                   |
+   | decrby key increment key                             | 所储存的值减去给定的减量值（decrement）                                                          | O(1)                   |
+   | incrbyfloat key increment                            | 将 key 所储存的值加上给定的浮点增量值（increment）                                               | O(1)                   |
+   | append key value                                     | 如果 key 已经存在并且是一个字符串， APPEND 命令将指定的 value 追加到该 key 原来值（value）的末尾 | O(1)                   |
+   | strlen key                                           | 返回 key 所储存的字符串值的长度。                                                                | O(1)                   |
+   | setrange key offset value                            | 用 value 参数覆写给定 key 所储存的字符串值，从偏移量 offset 开始                                 | O(1)                   |
+   | getrange key start end                               | 返回 key 中字符串值的子字符                                                                      | O(N)(N 是字符串的长度) |
 
-   | 命令                                                 | 描述                                                                                             | 时间复杂度            |
-   | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------- | ----------------------- |
-   | set key value [ex seconds] [px milliseconds] [nx xx] | 设置值                                                                                           | O(1)                  |
-   | get key                                              | 获取值                                                                                           | O(1)                  |
-   | del key [key ...]                                    | 删除key                                                                                          | O(N)(N是键的个数)     |
-   | mset key [key value ...]                             | 批量设置值                                                                                       | O(N)(N是键的个数)     |
-   | mget key [key ...]                                   | 批量获取值                                                                                       | O(N)(N是键的个数)     |
-   | incr key                                             | 将 key 中储存的数字值增一                                                                        | O(1)                  |
-   | decr key                                             | 将 key 中储存的数字值减一                                                                        | O(1)                  |
-   | incrby key increment                                 | 将 key 所储存的值加上给定的增量值（increment）                                                   | O(1)                  |
-   | decrby key increment key                             | 所储存的值减去给定的减量值（decrement）                                                          | O(1)                  |
-   | incrbyfloat key increment                            | 将 key 所储存的值加上给定的浮点增量值（increment）                                               | O(1)                  |
-   | append key value                                     | 如果 key 已经存在并且是一个字符串， APPEND 命令将指定的 value 追加到该 key 原来值（value）的末尾 | O(1)                  |
-   | strlen key                                           | 返回 key 所储存的字符串值的长度。                                                                | O(1)                  |
-   | setrange key offset value                            | 用 value 参数覆写给定 key 所储存的字符串值，从偏移量 offset 开始                                 | O(1)                  |
-   | getrange key start end                               | 返回 key 中字符串值的子字符                                                                      | O(N)(N是字符串的长度) |
-
-   ::: details string实战
+   ::: details string 实战
    @[code](./include/string.log)
    :::
 
 3. **存储结构**
 
-  ```log
-    // int
-    127.0.0.1:6379> set k1 1
-    OK
-    127.0.0.1:6379> object encoding k1
-    "int"
-    127.0.0.1:6379> type k1
-    string
+```log
+// int
+127.0.0.1:6379> set k1 1
+OK
+127.0.0.1:6379> object encoding k1
+"int"
+127.0.0.1:6379> type k1
+string
 
-    127.0.0.1:6379> set k2 abcdefghijklmnopqrstuvwxyz123456789012345678
-    OK
-    127.0.0.1:6379> strlen k2
-    (integer) 44
-    127.0.0.1:6379> object encoding k2
-    "embstr"
-    127.0.0.1:6379> type k2
-    string
+127.0.0.1:6379> set k2 abcdefghijklmnopqrstuvwxyz123456789012345678
+OK
+127.0.0.1:6379> strlen k2
+(integer) 44
+127.0.0.1:6379> object encoding k2
+"embstr"
+127.0.0.1:6379> type k2
+string
 
-    127.0.0.1:6379> set k3 abcdefghijklmnopqrstuvwxyz1234567890123456789
-    OK
-    127.0.0.1:6379> strlen k3
-    (integer) 45
-    127.0.0.1:6379> object encoding k3
-    "raw"
-    127.0.0.1:6379> type k3
-    string
+127.0.0.1:6379> set k3 abcdefghijklmnopqrstuvwxyz1234567890123456789
+OK
+127.0.0.1:6379> strlen k3
+(integer) 45
+127.0.0.1:6379> object encoding k3
+"raw"
+127.0.0.1:6379> type k3
+string
 
-  ```
+```
 
-  底层数据结构为SDS，但是根据保存的数据的类型以及数据长度，分为三种：
+底层数据结构为 SDS，但是根据保存的数据的类型以及数据长度，分为三种：
 
-   - **int 编码**：保存的是可以用 long 类型表示的整数值。
-   - **embstr 编码**：保存长度小于等于44字节的字符串（redis3.2版本之前是39字节，之后是44字节）。
-   - **raw 编码**：保存长度大于44字节的字符串（redis3.2版本之前是39字节，之后是44字节）。
-   - int： 存储的是整数且长度小于20字节，保存的是可以用 long 类型表示的整数值。
-   - embstr： 存储的是字符串且长度小于等于44字节【redis3.2版本之前是39字节，之后是44字节】
-   - raw： 存储的是动态字符串，且长度大于44字节且小于512Mb
-     - redis 2.+ 是 32 字节
-     - redis 3.0-4.0 是 39 字节
-     - redis 5.0 是 44 字节
+- **int 编码**：保存的是可以用 long 类型表示的整数值。
+- **embstr 编码**：保存长度小于等于 44 字节的字符串（redis3.2 版本之前是 39 字节，之后是 44 字节）。
+- **raw 编码**：保存长度大于 44 字节的字符串（redis3.2 版本之前是 39 字节，之后是 44 字节）。
+- int： 存储的是整数且长度小于 20 字节，保存的是可以用 long 类型表示的整数值。
+- embstr： 存储的是字符串且长度小于等于 44 字节【redis3.2 版本之前是 39 字节，之后是 44 字节】
+- raw： 存储的是动态字符串，且长度大于 44 字节且小于 512Mb
+  - redis 2.+ 是 32 字节
+  - redis 3.0-4.0 是 39 字节
+  - redis 5.0 是 44 字节
 
-  其实 embstr 编码是专门用来保存短字符串的一种优化编码，raw 和 embstr 的区别： embstr与raw都使用redisObject和sds保存数据，区别在于，embstr的使用只分配一次内存空间（因此redisObject和sds是连续的），而raw需要分配两次内存空间（分别为redisObject和sds分配空间）。因此与raw相比，embstr的好处在于创建时少分配一次空间，删除时少释放一次空间，以及对象的所有数据连在一起，寻找方便。而embstr的坏处也很明显，如果字符串的长度增加需要重新分配内存时，整个redisObject和sds都需要重新分配空间，因此redis中的embstr实现为只读。
+其实 embstr 编码是专门用来保存短字符串的一种优化编码，raw 和 embstr 的区别： embstr 与 raw 都使用 redisObject 和 sds 保存数据，区别在于，embstr 的使用只分配一次内存空间（因此 redisObject 和 sds 是连续的），而 raw 需要分配两次内存空间（分别为 redisObject 和 sds 分配空间）。因此与 raw 相比，embstr 的好处在于创建时少分配一次空间，删除时少释放一次空间，以及对象的所有数据连在一起，寻找方便。而 embstr 的坏处也很明显，如果字符串的长度增加需要重新分配内存时，整个 redisObject 和 sds 都需要重新分配空间，因此 redis 中的 embstr 实现为只读。
 
-  > ps： **Redis中对于浮点数类型也是作为字符串保存的，在需要的时候再将其转换成浮点数类型**。
+> ps： **Redis 中对于浮点数类型也是作为字符串保存的，在需要的时候再将其转换成浮点数类型**。
 
 #### 2.2.2. 列表 list
 
-List的数据结构，适合保存 `可以重复的、有序的数据集合`。
+List 的数据结构，适合保存 `可以重复的、有序的数据集合`。
 
 1. **应用场景**
 
@@ -160,15 +155,15 @@ List的数据结构，适合保存 `可以重复的、有序的数据集合`。
    - lrem
 
    | 命令                                  | 描述                                                                  | 时间复杂度 |
-   | --------------------------------------- | ------------------ | ------------ |
-   | BLPOP key [key …] timeout            | 删除，并获得该列表中的第一元素，或阻塞，直到有一个可用                | O(1)       |
-   | BRPOP key [key …] timeout            | 删除，并获得该列表中的最后一个元素，或阻塞，直到有一个可用            | O(1)       |
+   | ------------------------------------- | --------------------------------------------------------------------- | ---------- |
+   | BLPOP key [key …] timeout             | 删除，并获得该列表中的第一元素，或阻塞，直到有一个可用                | O(1)       |
+   | BRPOP key [key …] timeout             | 删除，并获得该列表中的最后一个元素，或阻塞，直到有一个可用            | O(1)       |
    | BRPOPLPUSH source destination timeout | 弹出一个列表的值，将它推到另一个列表，并返回它;或阻塞，直到有一个可用 | O(1)       |
    | LINDEX key index                      | 获取一个元素，通过其索引列表                                          | O(N)       |
    | LINSERT key BEFORE AFTER pivot value  | 在列表中的另一个元素之前或之后插入一个元素                            | O(N)       |
    | LLEN key                              | 获得队列(List)的长度                                                  | O(1)       |
    | LPOP key                              | 从队列的左边出队一个元素                                              | O(1)       |
-   | LPUSH key value [value …]            | 从队列的左边入队一个或多个元素                                        | O(1)       |
+   | LPUSH key value [value …]             | 从队列的左边入队一个或多个元素                                        | O(1)       |
    | LPUSHX key value                      | 当队列存在时，从队到左边入队一个元素                                  | O(1)       |
    | LRANGE key start stop                 | 从列表中获取指定返回的元素                                            | O(S+N)     |
    | LREM key count value                  | 从列表中删除元素                                                      | O(N)       |
@@ -176,13 +171,13 @@ List的数据结构，适合保存 `可以重复的、有序的数据集合`。
    | LTRIM key start stop                  | 修剪到指定范围内的清单                                                | O(N)       |
    | RPOP key                              | 从队列的右边出队一个元                                                | O(1)       |
    | RPOPLPUSH source destination          | 删除列表中的最后一个元素，将其追加到另一个列表                        | O(1)       |
-   | RPUSH key value [value …]            | 从队列的右边入队一个元素                                              | O(1)       |
+   | RPUSH key value [value …]             | 从队列的右边入队一个元素                                              | O(1)       |
    | RPUSHX key value                      | 从队列的右边入队一个元素，仅队列存在时有效                            | O(1)       |
 
 3. **存储结构**
 
    ```log
-   
+
     127.0.0.1:6379> lpush mylist 1 2 ll ls mem
     (integer) 5
     127.0.0.1:6379> lrange mylist 0 -1
@@ -209,12 +204,12 @@ List的数据结构，适合保存 `可以重复的、有序的数据集合`。
 
    ```
 
-- Redis3.2版本以前： 内部编码方式有两种
-  - **ziplist**（压缩列表）：当列表的元素个数小于 `list-max-ziplist-entries` 配置（`默认512个`），同时列表中每个元素的值都小于 `list-max-ziplist-value` 配置时（`默认64字节`），Redis会选用ziplist来作为列表的内部实现来减少内存的使用。
-  - **linkedlist**（链表）：当列表类型无法满足ziplist的条件时，Redis会使用linkedlist作为列表的内部实现。
-- Redis3.2版本开始， 使用 quicklist 代替了 ziplist 和 linkedlist
+- Redis3.2 版本以前： 内部编码方式有两种
+  - **ziplist**（压缩列表）：当列表的元素个数小于 `list-max-ziplist-entries` 配置（`默认512个`），同时列表中每个元素的值都小于 `list-max-ziplist-value` 配置时（`默认64字节`），Redis 会选用 ziplist 来作为列表的内部实现来减少内存的使用。
+  - **linkedlist**（链表）：当列表类型无法满足 ziplist 的条件时，Redis 会使用 linkedlist 作为列表的内部实现。
+- Redis3.2 版本开始， 使用 quicklist 代替了 ziplist 和 linkedlist
 - Redis 5.0 设计了新的数据结构 listpack，沿用了压缩列表紧凑型的内存布局，最终在最新的 Redis 版本，将 Hash 对象和 Zset 对象的底层数据结构实现之一的压缩列表，替换成由 listpack 实现
-- 进一步的, 目前Redis定义的10个对象编码方式宏名中, 有两个被完全闲置了, 分别是: OBJ_ENCODING_ZIPMAP与OBJ_ENCODING_LINKEDLIST。 从Redis的演进历史上来看, 前者是后续可能会得到支持的编码值（代码还在）, 后者则应该是被彻底淘汰了)
+- 进一步的, 目前 Redis 定义的 10 个对象编码方式宏名中, 有两个被完全闲置了, 分别是: OBJ_ENCODING_ZIPMAP 与 OBJ_ENCODING_LINKEDLIST。 从 Redis 的演进历史上来看, 前者是后续可能会得到支持的编码值（代码还在）, 后者则应该是被彻底淘汰了)
 
 4. **其它**
 
@@ -228,7 +223,7 @@ List的数据结构，适合保存 `可以重复的、有序的数据集合`。
    - 求交差并补集合
    - 我关注的、关注我的
    - **标签**（tag）,给用户添加标签，或者用户给消息添加标签，这样有同一标签或者类似标签的可以给推荐关注的事或者关注的人。
-   - **点赞，或点踩，收藏等**，可以放到set中实现
+   - **点赞，或点踩，收藏等**，可以放到 set 中实现
 
 2. **命令**
 
@@ -247,24 +242,23 @@ List的数据结构，适合保存 `可以重复的、有序的数据集合`。
    - sdiff
    - sdiffstore
 
-
 | 命令                                           | 描述                                           | 时间复杂度 |
-| ------------------------------------------------ | ------------------------------------------------ | ------------ |
-| SADD key member [member …]                    | 添加一个或者多个元素到集合(set)里              | O(N)       |
+| ---------------------------------------------- | ---------------------------------------------- | ---------- |
+| SADD key member [member …]                     | 添加一个或者多个元素到集合(set)里              | O(N)       |
 | SCARD key                                      | 获取集合里面的元素数量                         | O(1)       |
-| SDIFF key [key …]                             | 获得队列不存在的元素                           | O(N)       |
-| SDIFFSTORE destination key [key …]            | 获得队列不存在的元素，并存储在一个关键的结果集 | O(N)       |
-| SINTER key [key …]                            | 获得两个集合的交集                             | O(N*M)     |
-| SINTERSTORE destination key [key …]           | 获得两个集合的交集，并存储在一个关键的结果集   | O(N*M)     |
+| SDIFF key [key …]                              | 获得队列不存在的元素                           | O(N)       |
+| SDIFFSTORE destination key [key …]             | 获得队列不存在的元素，并存储在一个关键的结果集 | O(N)       |
+| SINTER key [key …]                             | 获得两个集合的交集                             | O(N\*M)    |
+| SINTERSTORE destination key [key …]            | 获得两个集合的交集，并存储在一个关键的结果集   | O(N\*M)    |
 | SISMEMBER key member                           | 确定一个给定的值是一个集合的成员               | O(1)       |
 | SMEMBERS key                                   | 获取集合里面的所有元素                         | O(N)       |
 | SMOVE source destination member                | 移动集合里面的一个元素到另一个集合             | O(1)       |
 | SPOP key [count]                               | 删除并获取一个集合里面的元素                   | O(1)       |
 | SRANDMEMBER key [count]                        | 从集合里面随机获取一个元素                     |            |
-| SREM key member [member …]                    | 从集合里删除一个或多个元素                     | O(N)       |
-| SUNION key [key …]                            | 添加多个set元素                                | O(N)       |
-| SUNIONSTORE destination key [key …]           | 合并set元素，并将结果存入新的set里面           | O(N)       |
-| SSCAN key cursor [MATCH pattern] [COUNT count] | 迭代set里面的元素                              | O(1)       |
+| SREM key member [member …]                     | 从集合里删除一个或多个元素                     | O(N)       |
+| SUNION key [key …]                             | 添加多个 set 元素                              | O(N)       |
+| SUNIONSTORE destination key [key …]            | 合并 set 元素，并将结果存入新的 set 里面       | O(N)       |
+| SSCAN key cursor [MATCH pattern] [COUNT count] | 迭代 set 里面的元素                            | O(1)       |
 
 3. **存储结构**
 
@@ -285,8 +279,8 @@ List的数据结构，适合保存 `可以重复的、有序的数据集合`。
 
    ```
 
-   - `intset` ： 当【**集合中的元素都是整数】**且【**元素个数小于 **`**set-maxintset-entries**`** 配置（默认512个）】**时，Redis会选用intset来作为集合的内部实现，从而减少内存的使用。
-   - `hashtable` ： 集合类型无法满足intset的条件时，Redis会使用hashtable作为集合的内部实现。
+   - `intset` ： 当【**集合中的元素都是整数】**且【**元素个数小于 **`**set-maxintset-entries**`** 配置（默认 512 个）】**时，Redis 会选用 intset 来作为集合的内部实现，从而减少内存的使用。
+   - `hashtable` ： 集合类型无法满足 intset 的条件时，Redis 会使用 hashtable 作为集合的内部实现。
 
 4. **其它**
 
@@ -316,25 +310,24 @@ List的数据结构，适合保存 `可以重复的、有序的数据集合`。
    - zinterstore
    - zunionstore
 
-
    | 命令                                                           | 描述                                                                       | 时间复杂度       |
-   | ---------------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------ |
-   | BZPOPMAX key [key …] timeout                                  | 从一个或多个排序集中删除并返回得分最高的成员，或阻塞，直到其中一个可用为止 | O(log(N))        |
-   | BZPOPMIN key [key …] timeout                                  | 从一个或多个排序集中删除并返回得分最低的成员，或阻塞，直到其中一个可用为止 | O(log(N))        |
-   | ZADD key [NXXX] [CH] [INCR] score member [score member …]     | 添加到有序set的一个或多个成员，或更新的分数，如果它已经存在                | O(log(N))        |
+   | -------------------------------------------------------------- | -------------------------------------------------------------------------- | ---------------- |
+   | BZPOPMAX key [key …] timeout                                   | 从一个或多个排序集中删除并返回得分最高的成员，或阻塞，直到其中一个可用为止 | O(log(N))        |
+   | BZPOPMIN key [key …] timeout                                   | 从一个或多个排序集中删除并返回得分最低的成员，或阻塞，直到其中一个可用为止 | O(log(N))        |
+   | ZADD key [NXXX] [CH] [INCR] score member [score member …]      | 添加到有序 set 的一个或多个成员，或更新的分数，如果它已经存在              | O(log(N))        |
    | ZCARD key                                                      | 获取一个排序的集合中的成员数量                                             | O(1)             |
    | ZCOUNT key min max                                             | 返回分数范围内的成员数量                                                   | O(log(N))        |
    | ZINCRBY key increment member                                   | 增量的一名成员在排序设置的评分                                             | O(log(N))        |
    | ZINTERSTORE                                                    | 相交多个排序集，导致排序的设置存储在一个新的关键                           | O(NK)+O(Mlog(M)) |
    | ZLEXCOUNT key min max                                          | 返回成员之间的成员数量                                                     | O(log(N))        |
-   | ZPOPMAX key [count]                                            | 删除并返回排序集中得分最高的成员                                           | O(log(N)*M)      |
-   | ZPOPMIN key [count]                                            | 删除并返回排序集中得分最低的成员                                           | O(log(N)*M)      |
-   | ZRANGE key start stop [WITHSCORES]                             | 根据指定的index返回，返回sorted set的成员列表                              | O(log(N)+M)      |
+   | ZPOPMAX key [count]                                            | 删除并返回排序集中得分最高的成员                                           | O(log(N)\*M)     |
+   | ZPOPMIN key [count]                                            | 删除并返回排序集中得分最低的成员                                           | O(log(N)\*M)     |
+   | ZRANGE key start stop [WITHSCORES]                             | 根据指定的 index 返回，返回 sorted set 的成员列表                          | O(log(N)+M)      |
    | ZRANGEBYLEX key min max [LIMIT offset count]                   | 返回指定成员区间内的成员，按字典正序排列, 分数必须相同。                   | O(log(N)+M)      |
    | ZREVRANGEBYLEX key max min [LIMIT offset count]                | 返回指定成员区间内的成员，按字典倒序排列, 分数必须相同                     | O(log(N)+M)      |
    | ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]    | 返回有序集合中指定分数区间内的成员，分数由低到高排序。                     | O(log(N)+M)      |
    | ZRANK key member                                               | 确定在排序集合成员的索引                                                   | O(log(N))        |
-   | ZREM key member [member …]                                    | 从排序的集合中删除一个或多个成员                                           | O(M*log(N))      |
+   | ZREM key member [member …]                                     | 从排序的集合中删除一个或多个成员                                           | O(M\*log(N))     |
    | ZREMRANGEBYLEX key min max                                     | 删除名称按字典由低到高排序成员之间所有成员。                               | O(log(N)+M)      |
    | ZREMRANGEBYRANK key start stop                                 | 在排序设置的所有成员在给定的索引中删除                                     | O(log(N)+M)      |
    | ZREMRANGEBYSCORE key min max                                   | 删除一个排序的设置在给定的分数所有成员                                     | O(log(N)+M)      |
@@ -343,7 +336,7 @@ List的数据结构，适合保存 `可以重复的、有序的数据集合`。
    | ZREVRANK key member                                            | 确定指数在排序集的成员，下令从分数高到低                                   | O(log(N))        |
    | ZSCORE key member                                              | 获取成员在排序设置相关的比分                                               | O(1)             |
    | ZUNIONSTORE                                                    | 添加多个排序集和导致排序的设置存储在一个新的关键                           | O(N)+O(M log(M)) |
-   | ZSCAN key cursor [MATCH pattern] [COUNT count]                 | 迭代sorted sets里面的元素                                                  | O(1)             |
+   | ZSCAN key cursor [MATCH pattern] [COUNT count]                 | 迭代 sorted sets 里面的元素                                                | O(1)             |
 
 3. **存储结构**
 
@@ -389,24 +382,23 @@ List的数据结构，适合保存 `可以重复的、有序的数据集合`。
    - hexists
    - hlen
 
-
-   | 命令                                           | 描述                                           | 时间复杂度                 |
-   | ------------------------------------------------ | ------------------------------------------------ | ---------------------------- |
-   | HDEL key field [field …]                      | 删除一个或多个Hash的field                      | O(N) N是被删除的字段数量。 |
-   | HEXISTS key field                              | 判断field是否存在于hash中                      | O(1)                       |
-   | HGET key field                                 | 获取hash中field的值                            | O(1)                       |
-   | HGETALL key                                    | 从hash中读取全部的域和值                       | O(N) N是Hash的长度         |
-   | HINCRBY key field increment                    | 将hash中指定域的值增加给定的数字               | O(1)                       |
-   | HINCRBYFLOAT key field increment               | 将hash中指定域的值增加给定的浮点数             | O(1)                       |
-   | HKEYS key                                      | 获取hash的所有字段                             | O(N) N是Hash的长度         |
-   | HLEN key                                       | 获取hash里所有字段的数量                       | O(1)                       |
-   | HMGET key field [field …]                     | 获取hash里面指定字段的值                       | O(N) N是请求的字段数       |
-   | HMSET key field value [field value …]         | 设置hash字段值                                 | O(N) N是设置的字段数       |
-   | HSET key field value                           | 设置hash里面一个字段的值                       | O(1)                       |
-   | HSETNX key field value                         | 设置hash的一个字段，只有当这个字段不存在时有效 | O(1)                       |
-   | HSTRLEN key field                              | 获取hash里面指定field的长度                    | O(1)                       |
-   | HVALS key                                      | 获得hash的所有值                               | O(N) N是Hash的长度         |
-   | HSCAN key cursor [MATCH pattern] [COUNT count] | 迭代hash里面的元素                             |                            |
+   | 命令                                           | 描述                                             | 时间复杂度                  |
+   | ---------------------------------------------- | ------------------------------------------------ | --------------------------- |
+   | HDEL key field [field …]                       | 删除一个或多个 Hash 的 field                     | O(N) N 是被删除的字段数量。 |
+   | HEXISTS key field                              | 判断 field 是否存在于 hash 中                    | O(1)                        |
+   | HGET key field                                 | 获取 hash 中 field 的值                          | O(1)                        |
+   | HGETALL key                                    | 从 hash 中读取全部的域和值                       | O(N) N 是 Hash 的长度       |
+   | HINCRBY key field increment                    | 将 hash 中指定域的值增加给定的数字               | O(1)                        |
+   | HINCRBYFLOAT key field increment               | 将 hash 中指定域的值增加给定的浮点数             | O(1)                        |
+   | HKEYS key                                      | 获取 hash 的所有字段                             | O(N) N 是 Hash 的长度       |
+   | HLEN key                                       | 获取 hash 里所有字段的数量                       | O(1)                        |
+   | HMGET key field [field …]                      | 获取 hash 里面指定字段的值                       | O(N) N 是请求的字段数       |
+   | HMSET key field value [field value …]          | 设置 hash 字段值                                 | O(N) N 是设置的字段数       |
+   | HSET key field value                           | 设置 hash 里面一个字段的值                       | O(1)                        |
+   | HSETNX key field value                         | 设置 hash 的一个字段，只有当这个字段不存在时有效 | O(1)                        |
+   | HSTRLEN key field                              | 获取 hash 里面指定 field 的长度                  | O(1)                        |
+   | HVALS key                                      | 获得 hash 的所有值                               | O(N) N 是 Hash 的长度       |
+   | HSCAN key cursor [MATCH pattern] [COUNT count] | 迭代 hash 里面的元素                             |                             |
 
 3. **存储结构**
 
@@ -459,7 +451,7 @@ List的数据结构，适合保存 `可以重复的、有序的数据集合`。
 
 4. **其它**
 
-  ::: tip 思考题
+::: tip 思考题
 
     1. redis中存储对象有几种方式？
       - 第一种：
@@ -471,25 +463,25 @@ List的数据结构，适合保存 `可以重复的、有序的数据集合`。
         - hset user:1 name zhangsan age 12
     2. 假如hashtable数组上的链表元素有很多，那么rehash过程中，这些链表元素是怎么rehash到ht[1]上的？
     3. hashtable扩容时，为什么 BGSAVE 或 BGREWRITEAOF 命令执行时的负载因子要比没有执行这两个命令时的负载因子大？
-  :::
+
+:::
 
 #### 2.2.6. 流 stream
 
-
-Redis5.0 中还增加了一个数据结构Stream，从字面上看是流类型，但其实从功能上看，应该是Redis对消息队列（MQ，Message Queue）的完善实现。`
-`就是Redis实现的一种消息中间件的数据结构。先了解一下消息中间件的概念：
+Redis5.0 中还增加了一个数据结构 Stream，从字面上看是流类型，但其实从功能上看，应该是 Redis 对消息队列（MQ，Message Queue）的完善实现。`
+`就是 Redis 实现的一种消息中间件的数据结构。先了解一下消息中间件的概念：
 
 ::: tip 消息中间件的准备知识
 
 1. 为什么会有消息中间件？`
 `解耦、削峰、异步、高性能；
 2. 有哪些概念？`
-`消息、生产者、消费者、主题、channel等；`
+`消息、生产者、消费者、主题、channel 等；`
 `:::
 
-1. **应用场景**
+3. **应用场景**
 
-2. **命令**
+4. **命令**
 
    - xadd
    - xread： 循环阻塞读取消息
@@ -510,7 +502,7 @@ Redis5.0 中还增加了一个数据结构Stream，从字面上看是流类型�
 
    ```
    // 往消息队列中插入消息
-   > XADD mymsgqueue * name zeanzai 
+   > XADD mymsgqueue * name zeanzai
    "1654254953808-0"
 
 
@@ -579,7 +571,7 @@ Redis5.0 中还增加了一个数据结构Stream，从字面上看是流类型�
          2) "1"
 
 
-   消息确认消费的原理： Redis会把每一个消费过的消息保存到PENDING list中，直到消费者使用XACK命令确认消息消费成功。  
+   消息确认消费的原理： Redis会把每一个消费过的消息保存到PENDING list中，直到消费者使用XACK命令确认消息消费成功。
 
    ```
 
@@ -650,9 +642,9 @@ Redis5.0 中还增加了一个数据结构Stream，从字面上看是流类型�
     127.0.0.1:6379> del codehole  # 删除整个Stream
     (integer) 1
 
-    ```
+   ```
 
-3. **存储结构**
+5. **存储结构**
 
    ```
    127.0.0.1:6379> XADD mymsgqueue * name zeanzai
@@ -663,35 +655,35 @@ Redis5.0 中还增加了一个数据结构Stream，从字面上看是流类型�
 
    ```
 
-4. **其它**
+6. **其它**
 
-Stream与主流MQ对比
+Stream 与主流 MQ 对比
 
 可从消息的可靠性、持久性、有序性、解决重复消费、高可用、消息积压等方面去理解。
 
 - 有序性： 单个消费者时，消费顺序天然有序；多个消费组时，在消费组内有序，消费组间无序；
-- 持久性： Redis对Stream具有有序性；
-- 解决重复消费问题： Stream为每一个消息都设置了全局唯一id，保证消息的唯一性，重复消费问题可以通过ack机制及消费端应用自行处理；
-- 高可用问题（消息丢失问题）： 生产者由生产者端应用自行处理；消息队列则由Redis保证，可能会出现消息丢失问题，因为AOF每秒写盘、主从切换时也可能会丢失部分数据；消费者可以通过确认机制达到高可用性；
-- 消息积压问题： Stream可以设置固定长度，当消息队列超过最大长度后，redis会删除旧消息数据，这样是有可能造成消息丢失的；
+- 持久性： Redis 对 Stream 具有有序性；
+- 解决重复消费问题： Stream 为每一个消息都设置了全局唯一 id，保证消息的唯一性，重复消费问题可以通过 ack 机制及消费端应用自行处理；
+- 高可用问题（消息丢失问题）： 生产者由生产者端应用自行处理；消息队列则由 Redis 保证，可能会出现消息丢失问题，因为 AOF 每秒写盘、主从切换时也可能会丢失部分数据；消费者可以通过确认机制达到高可用性；
+- 消息积压问题： Stream 可以设置固定长度，当消息队列超过最大长度后，redis 会删除旧消息数据，这样是有可能造成消息丢失的；
 
-选择Redis作为消息中间件的应用场景：业务比较简单、对丢失数据不够敏感、且消息积压概率较小，可以使用Redis作为消息中间件。其他情况，还是建议使用专门的消息中间件产品。
+选择 Redis 作为消息中间件的应用场景：业务比较简单、对丢失数据不够敏感、且消息积压概率较小，可以使用 Redis 作为消息中间件。其他情况，还是建议使用专门的消息中间件产品。
 
-使用Redis早期版本作为消息中间件
+使用 Redis 早期版本作为消息中间件
 
 - 发布订阅机制
   - publish
-    - 返回0~n的整数，表示有多少个消费者接收到了消息
+    - 返回 0~n 的整数，表示有多少个消费者接收到了消息
   - subscribe
-    - 可以订阅多个channel
+    - 可以订阅多个 channel
     - 命令会一直阻塞，等待接收消息
   - psubscribe
     - 可以订阅主题，只能订阅一个主题
     - 发布订阅模式，
   - 这种方式有两个问题
-    - 无法持久化消息，Redis重启后，消息会丢失；
+    - 无法持久化消息，Redis 重启后，消息会丢失；
     - 发后即忘的，如果消费者没有收到消息，就会再也接受不到消息了；
-- List ： 就是使用lpush+rpop来完成
+- List ： 就是使用 lpush+rpop 来完成
   - 比发布订阅机制的：
     - 优点
       - 可以持久化消息
@@ -705,7 +697,7 @@ Stream与主流MQ对比
   - 比发布订阅机制的：
     - 优点
       - 支持持久化
-      - 比list查询更方便，可以使用score属性来完成遍历
+      - 比 list 查询更方便，可以使用 score 属性来完成遍历
     - 缺点
       - 不能存储相同消息，也就是消息不能重复
       - 不能完成消息队列的有序性
@@ -719,7 +711,7 @@ Stream与主流MQ对比
 
 1. **应用场景**
 
-   可以 `保存地理位置信息`并 `对地理位置信息进行操作`，是**3.2以后提供的新特性**。可以完成类似于“搜索附近”的功能，如在地图上定位到某一个景点，GEO这种数据结构可以完成搜索附近美食的功能。
+   可以 `保存地理位置信息`并 `对地理位置信息进行操作`，是**3.2 以后提供的新特性**。可以完成类似于“搜索附近”的功能，如在地图上定位到某一个景点，GEO 这种数据结构可以完成搜索附近美食的功能。
 
 2. **命令**
 
@@ -771,7 +763,7 @@ Stream与主流MQ对比
    以 110,30 这个坐标为中心, 寻找半径为1000km的城市
    参数 key 经度 纬度 半径 单位 [显示结果的经度和纬度] [显示结果的距离] [显示的结果的数量]
 
-   127.0.0.1:6379> georadius china:city 110 30 1000 km 
+   127.0.0.1:6379> georadius china:city 110 30 1000 km
    1) "xian"
    2) "hangzhou"
    3) "manjing"
@@ -852,16 +844,16 @@ Stream与主流MQ对比
    - geopos： 获取指定的成员的经度和纬度
    - geodist： 如果不存在, 返回空
    - georadius： 附近的人 ==> 获得所有附近的人的地址, 定位, 通过半径来查询
-   - geohash： 该命令返回11个字符的hash字符串，将二维的经纬度转换为一维的字符串, 如果两个字符串越接近, 则距离越近
+   - geohash： 该命令返回 11 个字符的 hash 字符串，将二维的经纬度转换为一维的字符串, 如果两个字符串越接近, 则距离越近
    - georadisubymember： 显示与指定成员一定半径范围内的其他成员
    - zrem
 
 3. **存储结构**
 
-   - 并没有设计新的底层数据结构，而是直接使用SortedSet作为底层实现；
+   - 并没有设计新的底层数据结构，而是直接使用 SortedSet 作为底层实现；
    - 具体实现：
-     - 先对二维地图做区间划分，并对区间进行编码；之后判断实际的地理位置在哪一个区间上，然后使用这个区间的编码作为SortedSet的权重信息；
-     - 举例说明： 如 某一个地理位置为（112.23E，32.89N），它在划分后的编码为5的区间上，那么就把5作为SortedSet的权重；
+     - 先对二维地图做区间划分，并对区间进行编码；之后判断实际的地理位置在哪一个区间上，然后使用这个区间的编码作为 SortedSet 的权重信息；
+     - 举例说明： 如 某一个地理位置为（112.23E，32.89N），它在划分后的编码为 5 的区间上，那么就把 5 作为 SortedSet 的权重；
 
 4. 其它
 
@@ -869,11 +861,10 @@ Stream与主流MQ对比
 
 1. **应用场景**
 
-   HyperLogLog 是 Redis 2.8.9 版本添加的数据结构，它用于高性能的基数（去重）统计功能，也就是说，这种数据结构**可以统计一个集合内所有不重复的元素个数**。它的缺点就是存在0.81% 的误差。但是误差可以通过设置辅助计算因子进行降低。
+   HyperLogLog 是 Redis 2.8.9 版本添加的数据结构，它用于高性能的基数（去重）统计功能，也就是说，这种数据结构**可以统计一个集合内所有不重复的元素个数**。它的缺点就是存在 0.81% 的误差。但是误差可以通过设置辅助计算因子进行降低。
 
    > 什么是基数？
    > 举个例子，A = {1, 2, 3, 4, 5}， B = {3, 5, 6, 7, 9}；那么基数（不重复的元素）= 1, 2, 4, 6, 7, 9； （允许容错，即可以接受一定误差）
-   >
 
 2. **命令**
 
@@ -908,17 +899,17 @@ Stream与主流MQ对比
 
 3. **存储结构**
 
-   HyperLogLog存储数据时，相当于使用一个或多个hash算法，把计算出的hash值保存成类似位图的数据结构，然后在使用时，只需要利用同样的算法计算出所有的key即可。使用位图的方式让Redis使用更少的内存空间来存储大量的key。这种方式比使用set、list等要非常节省空间。
+   HyperLogLog 存储数据时，相当于使用一个或多个 hash 算法，把计算出的 hash 值保存成类似位图的数据结构，然后在使用时，只需要利用同样的算法计算出所有的 key 即可。使用位图的方式让 Redis 使用更少的内存空间来存储大量的 key。这种方式比使用 set、list 等要非常节省空间。
 
 4. **其它**
 
-   可以用于统计诸如PV、UV的业务场景中。
+   可以用于统计诸如 PV、UV 的业务场景中。
 
-   一个大型的网站，每天 IP 比如有 100 万，粗算一个 IP 消耗 15 字节，那么 100 万个 IP 就是 15M。而 HyperLogLog 在 Redis 中每个键占用的内容都是 12K，理论存储近似接近 2^64 个值，不管存储的内容是什么，它一个基于基数估算的算法，只能比较准确的估算出基数，可以使用少量固定的内存去存储并识别集合中的唯一元素。而且这个估算的基数并不一定准确，是一个带有 0.81% 标准错误的近似值（对于可以接受一定容错的业务场景，比如IP数统计，UV等，是可以忽略不计的）。
+   一个大型的网站，每天 IP 比如有 100 万，粗算一个 IP 消耗 15 字节，那么 100 万个 IP 就是 15M。而 HyperLogLog 在 Redis 中每个键占用的内容都是 12K，理论存储近似接近 2^64 个值，不管存储的内容是什么，它一个基于基数估算的算法，只能比较准确的估算出基数，可以使用少量固定的内存去存储并识别集合中的唯一元素。而且这个估算的基数并不一定准确，是一个带有 0.81% 标准错误的近似值（对于可以接受一定容错的业务场景，比如 IP 数统计，UV 等，是可以忽略不计的）。
 
 #### 2.3.3. bitmap
 
-Bitmap即位图，是一串连续的二进制数组（只有0和1），可以通过偏移量定位元素。适用于数据量大且使用二值统计的场景。是基于String类型实现的，只不过是String的值为二进制字节数组。
+Bitmap 即位图，是一串连续的二进制数组（只有 0 和 1），可以通过偏移量定位元素。适用于数据量大且使用二值统计的场景。是基于 String 类型实现的，只不过是 String 的值为二进制字节数组。
 
 1. 统计考勤
 
@@ -927,43 +918,43 @@ Bitmap即位图，是一串连续的二进制数组（只有0和1），可以通
    - 需要统计某一用户在某一月份的出勤情况；
    - 统计某一用户的全年出勤情况
 
-   具体实现可能是这样的： 以具有月份意义的字符串作为key，然后以这个月份具有的天数作为偏移量，出勤为1，缺勤为0。这样就相当于为每一个用户都创建12个key，每一个key所使用的Bit位不超过31个（一个月份最多有31天），也就是说最多使用365个bit位就可以表示一个用户的全年出勤情况。如下图表示用户id=28的用户全年的出勤情况：
+   具体实现可能是这样的： 以具有月份意义的字符串作为 key，然后以这个月份具有的天数作为偏移量，出勤为 1，缺勤为 0。这样就相当于为每一个用户都创建 12 个 key，每一个 key 所使用的 Bit 位不超过 31 个（一个月份最多有 31 天），也就是说最多使用 365 个 bit 位就可以表示一个用户的全年出勤情况。如下图表示用户 id=28 的用户全年的出勤情况：
 
    ![image.png](./image/1699927569604.png)
 
-   下图表示用户id=32的用户的全年出勤情况：
+   下图表示用户 id=32 的用户的全年出勤情况：
 
    ![image.png](./image/1699927602387.png)
 
-   如，id=13的用户在202206月份的25日出勤了，那么就可以：
+   如，id=13 的用户在 202206 月份的 25 日出勤了，那么就可以：
 
    ```
    SETBIT uuid:sign:13:202206 24 1
 
    ```
 
-   同样地，id=26的用户在202207月份的18日缺勤，则可以记录为：
+   同样地，id=26 的用户在 202207 月份的 18 日缺勤，则可以记录为：
 
    ```
    SETBIT uuid:sign:26:202207 17 0
 
    ```
 
-   那么获取id=20的用户在202209月份8日的出勤情况，则可以使用命令：
+   那么获取 id=20 的用户在 202209 月份 8 日的出勤情况，则可以使用命令：
 
    ```
    GETBIT uuid:sign:20:202209 7
 
    ```
 
-   也可以统计id=20的用户在202209月份的出勤天数：
+   也可以统计 id=20 的用户在 202209 月份的出勤天数：
 
    ```
    BITCOUNT uuid:sign:20:202209
 
    ```
 
-   甚至可以统计id=100的用户在202206月份的首次打卡情况【1表示弹出第一个元素】：
+   甚至可以统计 id=100 的用户在 202206 月份的首次打卡情况【1 表示弹出第一个元素】：
 
    ```
    BITPOS uuid:sign:100:202206 1
@@ -974,11 +965,11 @@ Bitmap即位图，是一串连续的二进制数组（只有0和1），可以通
 
 2. 统计登陆情况
 
-   在很多web应用中，有时会遇到要统计用户登陆情况的业务场景，我们就可以把日期作为key，把用户的id作为偏移量。
+   在很多 web 应用中，有时会遇到要统计用户登陆情况的业务场景，我们就可以把日期作为 key，把用户的 id 作为偏移量。
 
    ![image.png](./image/1699927635027.png)
 
-   例如，userid=4的用户在20220521这一天登陆了，就使用下面的命令在Redis中记录一下：
+   例如，userid=4 的用户在 20220521 这一天登陆了，就使用下面的命令在 Redis 中记录一下：
 
    ```
    SETBIT 20220521 3 1
@@ -987,18 +978,18 @@ Bitmap即位图，是一串连续的二进制数组（只有0和1），可以通
 
    说明：
 
-   - 20220521 为key；
-   - 3为偏移量，具有业务意义，表示userid=4的偏移量；
-   - 1为字节数组中的元素，表示登陆；
+   - 20220521 为 key；
+   - 3 为偏移量，具有业务意义，表示 userid=4 的偏移量；
+   - 1 为字节数组中的元素，表示登陆；
 
-   同样的，可以使用下面命令获取userid=6的用户在20220522这一天的登陆情况：
+   同样的，可以使用下面命令获取 userid=6 的用户在 20220522 这一天的登陆情况：
 
    ```
    GETBIT 20220522 5
 
    ```
 
-   比如统计id=45的用户，在七日内的登陆情况，就相当于统计七个bitmap中偏移量为45的位置上的值，我们只需要把这七个bitmap中偏移量为45的bit值统计出来，然后再创建一个bitmap专门存放这个结果即可实现业务需求。
+   比如统计 id=45 的用户，在七日内的登陆情况，就相当于统计七个 bitmap 中偏移量为 45 的位置上的值，我们只需要把这七个 bitmap 中偏移量为 45 的 bit 值统计出来，然后再创建一个 bitmap 专门存放这个结果即可实现业务需求。
 
 ### 2.4. 总结
 
@@ -1017,6 +1008,5 @@ Bitmap即位图，是一串连续的二进制数组（只有0和1），可以通
   - 直接查看配置文件
   - 使用 `config get #{key}` 命令查询
 - 修改配置文件方式
-  - 直接修改config文件，但是需要重启才可以生效，永远生效
+  - 直接修改 config 文件，但是需要重启才可以生效，永远生效
   - 使用 `config set #{key}` 命令进行修改，不需要重启即可生效，但是下次启动后失效
-
