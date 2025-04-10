@@ -1,7 +1,4 @@
----
-order: 7
-title: 分布式存储
----
+# 分布式存储
 
 
 - [实战彻底搞清分库分表（垂直分库，垂直分表，水平分库，水平分表）](https://cloud.tencent.com/developer/article/1819045)

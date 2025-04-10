@@ -1,7 +1,4 @@
----
-order: 1
-title: 基础理论
----
+# 基础理论
 
 [https://dunwu.github.io/blog/pages/80055a/](https://dunwu.github.io/blog/pages/80055a/)
 
