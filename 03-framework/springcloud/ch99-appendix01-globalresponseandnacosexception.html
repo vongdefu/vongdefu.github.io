@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="generator" content="VuePress 2.0.0-beta.61" />
+    <meta name="theme" content="VuePress Theme Hope" />
+    <meta property="og:url" content="https://vongdefu.github.io/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html"><meta property="og:site_name" content="cs-tips"><meta property="og:title" content="附录 01 统一响应体+Nacos可配置全局异常"><meta property="og:description" content="1. 背景 我们知道接口的返回，一般情况下就只有三种状态，成功、失败和超时响应，而接口的方法调用结果可能会出现很多异常信息。在实际的业务开发过程中，我们要求接口的异常信息是一定要处理掉的，不能直接把一个堆栈信息返回给前端用户的。这样要求的原因是： 1. 一大堆的异常信息会影响用户体验。用户是不懂技术的，接口返回一大堆异常信息，用户本能的就认为系统出了问..."><meta property="og:type" content="article"><meta property="og:image" content="https://vongdefu.github.io/"><meta property="og:locale" content="zh-CN"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image:alt" content="附录 01 统一响应体+Nacos可配置全局异常"><meta property="article:author" content="vongdefu"><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"附录 01 统一响应体+Nacos可配置全局异常","image":["https://vongdefu.github.io/"],"dateModified":null,"author":[{"@type":"Person","name":"vongdefu","url":"https://github.com/vongdefu"}]}</script><link rel="icon" href="/favicon.ico"><link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials"><meta name="theme-color" content="#46bd87"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"><title>附录 01 统一响应体+Nacos可配置全局异常 | cs-tips</title><meta name="description" content="1. 背景 我们知道接口的返回，一般情况下就只有三种状态，成功、失败和超时响应，而接口的方法调用结果可能会出现很多异常信息。在实际的业务开发过程中，我们要求接口的异常信息是一定要处理掉的，不能直接把一个堆栈信息返回给前端用户的。这样要求的原因是： 1. 一大堆的异常信息会影响用户体验。用户是不懂技术的，接口返回一大堆异常信息，用户本能的就认为系统出了问...">
+    <style>
+      :root {
+        --bg-color: #fff;
+      }
+
+      html[data-theme="dark"] {
+        --bg-color: #1d1e1f;
+      }
+
+      html,
+      body {
+        background: var(--bg-color);
+      }
+    </style>
+    <script>
+      const userMode = localStorage.getItem("vuepress-theme-hope-scheme");
+      const systemDarkMode =
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+      if (userMode === "dark" || (userMode !== "light" && systemDarkMode)) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    </script>
+    <link rel="preload" href="/assets/style-8909e15b.css" as="style"><link rel="stylesheet" href="/assets/style-8909e15b.css">
+    <link rel="modulepreload" href="/assets/app-fb6938a2.js"><link rel="modulepreload" href="/assets/framework-16b96b76.js"><link rel="modulepreload" href="/assets/ch99-appendix01-globalresponseandnacosexception.html-732f21e2.js"><link rel="modulepreload" href="/assets/ch99-appendix01-globalresponseandnacosexception.html-2527b101.js">
+  </head>
+  <body>
+    <div id="app"><!--[--><!--[--><!--[--><span tabindex="-1"></span><a href="#main-content" class="skip-link sr-only">跳至主要內容</a><!--]--><div class="theme-container has-toc"><!--[--><header class="navbar" id="navbar"><div class="navbar-start"><button type="button" class="toggle-sidebar-button" title="Toggle Sidebar"><span class="icon"></span></button><!--[--><!----><!--]--><a href="/" class="brand"><img class="logo" src="/logo.svg" alt="cs-tips"><!----><span class="site-name hide-in-pad">cs-tips</span></a><!--[--><!----><!--]--></div><div class="navbar-center"><!--[--><!----><!--]--><nav class="nav-links"><div class="nav-item hide-in-mobile"><a href="/" class="nav-link" aria-label="主页"><span class="font-icon icon iconfont icon-home" style=""></span>主页<!----></a></div><div class="nav-item hide-in-mobile"><a href="/01-csbase" class="nav-link" aria-label="要点提示"><span class="font-icon icon iconfont icon-ability" style=""></span>要点提示<!----></a></div><div class="nav-item hide-in-mobile"><a href="https://github.com/vongdefu/vongdefu.github.io/issues" rel="noopener noreferrer" target="_blank" aria-label="问题反馈" class="nav-link"><span class="font-icon icon iconfont icon-note" style=""></span>问题反馈<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span><!----></a></div></nav><!--[--><!----><!--]--></div><div class="navbar-end"><!--[--><!----><!--]--><!----><div class="nav-item"><a class="repo-link" href="https://github.com/vongdefu/vongdefu.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" class="icon github-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="github icon" style="width:1.25rem;height:1.25rem;vertical-align:middle;"><path d="M511.957 21.333C241.024 21.333 21.333 240.981 21.333 512c0 216.832 140.544 400.725 335.574 465.664 24.49 4.395 32.256-10.07 32.256-23.083 0-11.69.256-44.245 0-85.205-136.448 29.61-164.736-64.64-164.736-64.64-22.315-56.704-54.4-71.765-54.4-71.765-44.587-30.464 3.285-29.824 3.285-29.824 49.195 3.413 75.179 50.517 75.179 50.517 43.776 75.008 114.816 53.333 142.762 40.79 4.523-31.66 17.152-53.377 31.19-65.537-108.971-12.458-223.488-54.485-223.488-242.602 0-53.547 19.114-97.323 50.517-131.67-5.035-12.33-21.93-62.293 4.779-129.834 0 0 41.258-13.184 134.912 50.346a469.803 469.803 0 0 1 122.88-16.554c41.642.213 83.626 5.632 122.88 16.554 93.653-63.488 134.784-50.346 134.784-50.346 26.752 67.541 9.898 117.504 4.864 129.834 31.402 34.347 50.474 78.123 50.474 131.67 0 188.586-114.73 230.016-224.042 242.09 17.578 15.232 33.578 44.672 33.578 90.454v135.85c0 13.142 7.936 27.606 32.854 22.87C862.25 912.597 1002.667 728.747 1002.667 512c0-271.019-219.648-490.667-490.71-490.667z"></path></svg></a></div><!----><!--[--><button type="button" class="search-pro-button" role="search" aria-label="搜索"><svg xmlns="http://www.w3.org/2000/svg" class="icon search-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="search icon"><path d="M192 480a256 256 0 1 1 512 0 256 256 0 0 1-512 0m631.776 362.496-143.2-143.168A318.464 318.464 0 0 0 768 480c0-176.736-143.264-320-320-320S128 303.264 128 480s143.264 320 320 320a318.016 318.016 0 0 0 184.16-58.592l146.336 146.368c12.512 12.48 32.768 12.48 45.28 0 12.48-12.512 12.48-32.768 0-45.28"></path></svg><div class="placeholder">搜索</div><div class="key-hints"><kbd class="key">Ctrl</kbd><kbd class="key">K</kbd></div></button><!--]--><!--[--><!----><!--]--><button type="button" class="toggle-navbar-button" aria-label="Toggle Navbar" aria-expanded="false" aria-controls="nav-screen"><span class="button-container"><span class="button-top"></span><span class="button-middle"></span><span class="button-bottom"></span></span></button></div></header><!----><!--]--><!----><div class="toggle-sidebar-wrapper"><span class="arrow start"></span></div><aside class="sidebar" id="sidebar"><!--[--><!----><!--]--><ul class="sidebar-links"><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><!----><span class="title">面渣</span><span class="arrow end"></span></button><!----></section></li><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><span class="font-icon icon iconfont icon-computer" style=""></span><span class="title">01-CS基础</span><span class="arrow end"></span></button><!----></section></li><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><span class="font-icon icon iconfont icon-java" style=""></span><span class="title">02-Java编程语言</span><span class="arrow end"></span></button><!----></section></li><li><section class="sidebar-group"><button class="sidebar-heading clickable active" type="button"><span class="font-icon icon iconfont icon-layout" style=""></span><span class="title">03-框架</span><span class="arrow down"></span></button><ul class="sidebar-links"><li><!--[--><a href="/03-framework/docker.html" class="nav-link sidebar-link sidebar-page" aria-label="docker"><!---->docker<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><!--[--><a href="/03-framework/maven.html" class="nav-link sidebar-link sidebar-page" aria-label="maven"><!---->maven<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><!----><span class="title">工具</span><span class="arrow end"></span></button><!----></section></li><li><!--[--><a href="/03-framework/spring.html" class="nav-link sidebar-link sidebar-page" aria-label="spring"><!---->spring<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><!--[--><a href="/03-framework/springboot.html" class="nav-link sidebar-link sidebar-page" aria-label="springboot"><!---->springboot<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><section class="sidebar-group"><button class="sidebar-heading clickable active" type="button"><!----><a href="/03-framework/springcloud/" class="title">SpringCloud实战</a><span class="arrow down"></span></button><ul class="sidebar-links"><li><!--[--><a href="/03-framework/springcloud/ch01-eureka.html" class="nav-link sidebar-link sidebar-page" aria-label="1. eureka服务治理"><!---->1. eureka服务治理<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><!--[--><a href="/03-framework/springcloud/ch02-apollo.html" class="nav-link sidebar-link sidebar-page" aria-label="2. 使用Apollo作为配置中心"><!---->2. 使用Apollo作为配置中心<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><!--[--><a href="/03-framework/springcloud/ch03-nacos-register.html" class="nav-link sidebar-link sidebar-page" aria-label="3. nacos服务注册"><!---->3. nacos服务注册<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><!--[--><a href="/03-framework/springcloud/ch04-nacos-config.html" class="nav-link sidebar-link sidebar-page" aria-label="4. nacos服务配置"><!---->4. nacos服务配置<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><!--[--><a href="/03-framework/springcloud/ch05-openfeign.html" class="nav-link sidebar-link sidebar-page" aria-label="5. openfeign远程调用"><!---->5. openfeign远程调用<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><!--[--><a href="/03-framework/springcloud/ch06-gateway.html" class="nav-link sidebar-link sidebar-page" aria-label="6. gateway分布式网关"><!---->6. gateway分布式网关<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><!--[--><a href="/03-framework/springcloud/ch07-sentinel.html" class="nav-link sidebar-link sidebar-page" aria-label="7. sentinel分布式限流"><!---->7. sentinel分布式限流<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><!--[--><a href="/03-framework/springcloud/ch08-seata.html" class="nav-link sidebar-link sidebar-page" aria-label="8. seata分布式事务"><!---->8. seata分布式事务<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><!--[--><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html" class="router-link-active router-link-exact-active nav-link active sidebar-link sidebar-page active" aria-label="附录 01 统一响应体+Nacos可配置全局异常"><!---->附录 01 统一响应体+Nacos可配置全局异常<!----></a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_1-背景" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="1. 背景"><!---->1. 背景<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_2-全局统一响应" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="2. 全局统一响应"><!---->2. 全局统一响应<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_3-实战过程" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="3. 实战过程"><!---->3. 实战过程<!----></a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_3-1-重写语言解析器" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="3.1. 重写语言解析器"><!---->3.1. 重写语言解析器<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_3-2-构建配置信息" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="3.2. 构建配置信息"><!---->3.2. 构建配置信息<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_3-3-构建统一响应消息体" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="3.3. 构建统一响应消息体"><!---->3.3. 构建统一响应消息体<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_3-4-构建统一异常处理" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="3.4. 构建统一异常处理"><!---->3.4. 构建统一异常处理<!----></a><ul class="sidebar-sub-headers"></ul></li></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_4-使用" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="4. 使用"><!---->4. 使用<!----></a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_4-1-集成validation" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="4.1. 集成Validation"><!---->4.1. 集成Validation<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_4-2-测试" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="4.2. 测试"><!---->4.2. 测试<!----></a><ul class="sidebar-sub-headers"></ul></li></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_5-参考" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="5. 参考"><!---->5. 参考<!----></a><ul class="sidebar-sub-headers"></ul></li></ul><!--]--></li><li><!--[--><a href="/03-framework/springcloud/ch99-appendix02-managedependence.html" class="nav-link sidebar-link sidebar-page" aria-label="附录 02 统一管理依赖"><!---->附录 02 统一管理依赖<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><!--[--><a href="/03-framework/springcloud/ch99-appendix03-una_saas.html" class="nav-link sidebar-link sidebar-page" aria-label="附录 03 多租户SaaS实战"><!---->附录 03 多租户SaaS实战<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li></ul></section></li><li><!--[--><a href="/03-framework/vagrant.html" class="nav-link sidebar-link sidebar-page" aria-label="vagrant"><!---->vagrant<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li></ul></section></li><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><span class="font-icon icon iconfont icon-api" style=""></span><span class="title">04-中间件</span><span class="arrow end"></span></button><!----></section></li><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><span class="font-icon icon iconfont icon-structure" style=""></span><span class="title">05-分布式</span><span class="arrow end"></span></button><!----></section></li><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><span class="font-icon icon iconfont icon-like" style=""></span><span class="title">06-软件质量管理</span><span class="arrow end"></span></button><!----></section></li><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><span class="font-icon icon iconfont icon-editor" style=""></span><span class="title">07-工程设计</span><span class="arrow end"></span></button><!----></section></li></ul><!--[--><!----><!--]--></aside><!--[--><main class="page" id="main-content"><!--[--><!----><nav class="breadcrumb disable"></nav><div class="page-title"><h1><!---->附录 01 统一响应体+Nacos可配置全局异常</h1><!----><hr></div><div class="toc-place-holder"><aside id="toc"><!--[--><!----><!--]--><div class="toc-header">此页内容<button type="button" class="print-button" title="打印"><svg xmlns="http://www.w3.org/2000/svg" class="icon print-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="print icon"><path d="M819.2 364.8h-44.8V128c0-17.067-14.933-32-32-32H281.6c-17.067 0-32 14.933-32 32v236.8h-44.8C145.067 364.8 96 413.867 96 473.6v192c0 59.733 49.067 108.8 108.8 108.8h44.8V896c0 17.067 14.933 32 32 32h460.8c17.067 0 32-14.933 32-32V774.4h44.8c59.733 0 108.8-49.067 108.8-108.8v-192c0-59.733-49.067-108.8-108.8-108.8zM313.6 160h396.8v204.8H313.6V160zm396.8 704H313.6V620.8h396.8V864zM864 665.6c0 25.6-19.2 44.8-44.8 44.8h-44.8V588.8c0-17.067-14.933-32-32-32H281.6c-17.067 0-32 14.933-32 32v121.6h-44.8c-25.6 0-44.8-19.2-44.8-44.8v-192c0-25.6 19.2-44.8 44.8-44.8h614.4c25.6 0 44.8 19.2 44.8 44.8v192z"></path></svg></button></div><div class="toc-wrapper"><ul class="toc-list"><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_1-背景" class="router-link-active router-link-exact-active toc-link level3">1. 背景</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_2-全局统一响应" class="router-link-active router-link-exact-active toc-link level3">2. 全局统一响应</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_3-实战过程" class="router-link-active router-link-exact-active toc-link level3">3. 实战过程</a></li><li><ul class="toc-list"><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_3-1-重写语言解析器" class="router-link-active router-link-exact-active toc-link level4">3.1. 重写语言解析器</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_3-2-构建配置信息" class="router-link-active router-link-exact-active toc-link level4">3.2. 构建配置信息</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_3-3-构建统一响应消息体" class="router-link-active router-link-exact-active toc-link level4">3.3. 构建统一响应消息体</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_3-4-构建统一异常处理" class="router-link-active router-link-exact-active toc-link level4">3.4. 构建统一异常处理</a></li><!----><!--]--></ul></li><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_4-使用" class="router-link-active router-link-exact-active toc-link level3">4. 使用</a></li><li><ul class="toc-list"><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_4-1-集成validation" class="router-link-active router-link-exact-active toc-link level4">4.1. 集成Validation</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_4-2-测试" class="router-link-active router-link-exact-active toc-link level4">4.2. 测试</a></li><!----><!--]--></ul></li><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.html#_5-参考" class="router-link-active router-link-exact-active toc-link level3">5. 参考</a></li><!----><!--]--></ul></div><!--[--><!----><!--]--></aside></div><!----><div class="theme-hope-content"><h1 id="附录-01-统一响应体-nacos可配置全局异常" tabindex="-1"><a class="header-anchor" href="#附录-01-统一响应体-nacos可配置全局异常" aria-hidden="true">#</a> 附录 01 统一响应体+Nacos可配置全局异常</h1><h3 id="_1-背景" tabindex="-1"><a class="header-anchor" href="#_1-背景" aria-hidden="true">#</a> 1. 背景</h3><p>我们知道接口的返回，一般情况下就只有三种状态，成功、失败和超时响应，而接口的方法调用结果可能会出现很多异常信息。在实际的业务开发过程中，我们要求接口的异常信息是一定要处理掉的，不能直接把一个堆栈信息返回给前端用户的。这样要求的原因是：</p><ol><li>一大堆的异常信息会影响用户体验。用户是不懂技术的，接口返回一大堆异常信息，用户本能的就认为系统出了问题，这影响用户体验；但是返回能够被用户所理解的信息，则是可以接受的。</li><li>暴露异常信息影响系统可用性评价。接口返回一大堆异常信息，除了用户本能的认为系统出了问题，业务部门也会觉得系统此时不可用。</li><li>异常信息千奇百怪，不利于前端处理。</li></ol><p>事实上，一个架构优良的系统，是需要前端开发和后端开发相互配合的。前端和后端开发约定好接口的响应格式，然后再根据这个格式完成前后端的公共模块的开发。这个过程中后端对应的业务功能就是<code>全局统一响应</code>。</p><h3 id="_2-全局统一响应" tabindex="-1"><a class="header-anchor" href="#_2-全局统一响应" aria-hidden="true">#</a> 2. 全局统一响应</h3><p>实际上，我们可以把异常也归类为一种特殊的返回结果。全局统一响应有什么业务要求或业务特点呢？</p><p>对异常的要求：</p><ol><li>支持代码中抛出异常信息，并且抛出的异常信息的格式要求统一；</li><li>异常信息的格式应与接口正常响应或失败响应的消息体格式保持一致；</li><li>异常信息要支持国际化；</li><li>异常信息编码要具有业务含义；</li></ol><p>对响应的要求：</p><ol><li>支持默认的响应成功或响应失败的结果；</li><li>响应信息支持国际化；</li><li>与异常信息的格式保持一致；</li></ol><p>除了这些以外，还会有其他细化的需求。以下是几个常用的场景：</p><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>// 遇到业务出现异常时，直接抛出异常信息
+
+// 有些前端传过来的请求参数需要做校验，遇到校验不通过的直接抛出异常信息
+
+// 接口正常响应时，返回正常响应消息体
+
+// 接口响应失败时，返回默认的响应失败消息体
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>根据上面的业务特点，我们明确实现目标：</p><ol><li>Nacos作为配置中心，但是需要我们自行编写工具类，最终达到的目的是，同一个异常编码对应多国语言的异常信息，并且能够自动刷新（即修改Nacos立即生效）；</li><li>配合Validation使用时，对业务主流程侵入性达到最小，最好是零侵入；</li><li>统一响应体消息格式，并且可以直接使用success和error方法；</li><li>业务代码中抛出异常的方式与jdk抛出异常方式在使用方式上一致，但是业务中抛出的异常信息的响应结果与自定义的响应消息体格式保持一致；</li></ol><h3 id="_3-实战过程" tabindex="-1"><a class="header-anchor" href="#_3-实战过程" aria-hidden="true">#</a> 3. 实战过程</h3><p>主要包括三个方面：</p><ol><li>重写语言解析器。这个步骤是可选的，主要目的是改变请求头里面语言的属性名。</li><li>构建配置信息。这个步骤是把国际化的配置信息配置到配置中心，然后监听数据变更，并构建一个工具类让统一响应功能和统一异常处理功能使用。</li><li>构建统一响应消息体。这个步骤是格式化接口的响应信息，需要利用到上一步编写的工具类。</li><li>构建统一异常处理。这个步骤是格式化异常信息的响应信息，需要利用到第二步编写的工具类。</li></ol><h4 id="_3-1-重写语言解析器" tabindex="-1"><a class="header-anchor" href="#_3-1-重写语言解析器" aria-hidden="true">#</a> 3.1. 重写语言解析器</h4><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>public class LanguageResolver implements LocaleResolver {
+    /**
+     * 请求header字段
+     */
+    private static final String LANG = &quot;lang&quot;;
+
+    /**
+     * session
+     */
+    private static final String LANG_SESSION = &quot;lang_session&quot;;
+    @Override
+    public Locale resolveLocale(HttpServletRequest request) {
+        String lang = request.getHeader(LANG);
+        Locale locale = Locale.getDefault();
+        if (StringUtils.isNotBlank(lang)){
+            String[] language = lang.split(&quot;_&quot;);
+            locale = new Locale(language[0], language[1]);
+
+            HttpSession session = request.getSession();
+            session.setAttribute(LANG_SESSION, locale);
+        }else{
+            HttpSession session = request.getSession();
+            Locale localeInSession = (Locale) session.getAttribute(LANG_SESSION);
+            if (localeInSession != null){
+                locale = localeInSession;
+            }
+        }
+        return locale;
+    }
+
+    @Override
+    public void setLocale(HttpServletRequest request, HttpServletResponse response, Locale locale) {
+
+    }
+}
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>@Configuration
+public class MessageConfig {
+
+    @Bean
+    public LocaleResolver localeResolver(){
+        return new LanguageResolver();
+    }
+
+}
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h4 id="_3-2-构建配置信息" tabindex="-1"><a class="header-anchor" href="#_3-2-构建配置信息" aria-hidden="true">#</a> 3.2. 构建配置信息</h4><p>这里我们选用Alibaba-Nacos组件。</p><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-config&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>server:
+  port: 10300
+spring:
+  application:
+    name: global-exception
+  cloud:
+    nacos:
+      config:
+        # nacos的服务端地址
+        server-addr: 192.168.1.150:8848
+        # 应用接入的命名空间的id
+        namespace: 8d269024-f215-4195-be82-f6343cafde9c
+        # 命名分组
+        group: DEV
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>配置一个枚举类，枚举出所有的国际化的异常码表。</p><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>public enum NacosJson2ObjEnum {
+
+    MESSAGE_ZH_CN(&quot;message_zh_cn&quot;, &quot;业务异常码表（简中）&quot;, Map.class),
+    MESSAGE_EN_US(&quot;message_en_us&quot;, &quot;业务异常码表（英文）&quot;, Map.class)
+    ;
+
+    private String dataId;
+    private String desc;
+    private Class clz;
+
+    NacosJson2ObjEnum(String dataId, String desc, Class clz) {
+        this.dataId = dataId;
+        this.desc=desc;
+        this.clz =clz;
+    }
+
+    public String getDataId(){
+        return dataId;
+    }
+
+    public String getDesc(){
+        return desc;
+    }
+
+    public Class getClz(){
+        return clz;
+    }
+}
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>利用Spring初始化Bean机制，把国际化异常码表信息加载本地内存中，并设置监听器监听Nacos上面的配置变化。</p><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>@Slf4j
+@Component
+public class NacosConfig implements InitializingBean {
+    @Autowired
+    private NacosConfigProperties nacosConfigProperties;
+
+    @Value(&quot;${spring.cloud.nacos.config.group}&quot;)
+    private String group;
+
+    private ConfigService configService;
+    private Map&lt;String, Object&gt; localCatchMap = new HashMap&lt;&gt;();
+
+    private static ThreadPoolExecutor executor =
+            new ThreadPoolExecutor(
+                    2,
+                    4,
+                    1,
+                    TimeUnit.SECONDS,
+                    new LinkedBlockingDeque&lt;&gt;(100),
+                    new ThreadPoolExecutor.CallerRunsPolicy()
+            );
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        // 获取 Nacos 服务端 具体配置
+        String serverAddr = nacosConfigProperties.getServerAddr();
+        String namespace = nacosConfigProperties.getNamespace();
+
+        // 封装 Nacos server 配置参数
+        Properties properties = new Properties();
+        properties.put(PropertyKeyConst.SERVER_ADDR, serverAddr);
+        properties.put(PropertyKeyConst.NAMESPACE, namespace);
+        if (configService == null) {
+            configService = NacosFactory.createConfigService(properties);
+        }
+
+        NacosJson2ObjEnum[] nacosJson2ObjEnums = NacosJson2ObjEnum.values();
+        for (NacosJson2ObjEnum nacosJson2ObjEnum : nacosJson2ObjEnums) {
+            String dataId = nacosJson2ObjEnum.getDataId();
+            String config = configService.getConfig(dataId, group, 1000);
+
+            // 把获取到的配置信息放到本地map中
+            jsonToObject(config, nacosJson2ObjEnum);
+
+            // 设置监听器，监听配置变化
+            configService.addListener(
+                    nacosJson2ObjEnum.getDataId(),
+                    group,
+                    new NacosJsonConfigDataListener(nacosJson2ObjEnum)
+            );
+        }
+
+    }
+
+    public void jsonToObject(String json, NacosJson2ObjEnum eNacosJsonDefinition) {
+        Object data = JSON.parseObject(json, eNacosJsonDefinition.getClz());
+        log.info(&quot;Get Nacos Config Data, dataId = {} --- data = {}&quot;,
+                eNacosJsonDefinition.getDataId(), data);
+        localCatchMap.put(eNacosJsonDefinition.getDataId(), data);
+    }
+
+    public class NacosJsonConfigDataListener implements Listener {
+        private NacosJson2ObjEnum nacosJson2ObjEnum;
+
+        private NacosJsonConfigDataListener(NacosJson2ObjEnum nacosJson2ObjEnum) {
+            this.nacosJson2ObjEnum = nacosJson2ObjEnum;
+        }
+
+        @Override
+        public Executor getExecutor() {
+            return executor;
+        }
+
+        @Override
+        public void receiveConfigInfo(String configInfo) {
+            jsonToObject(configInfo, nacosJson2ObjEnum);
+        }
+    }
+
+    public &lt;T&gt; T getNacosJson2Object(NacosJson2ObjEnum nacosJson2ObjEnum, Class&lt;? extends T&gt; clz) {
+        Object data = localCatchMap.get(nacosJson2ObjEnum.getDataId());
+        if (clz.isInstance(data)) {
+            return (T)data;
+        }
+        throw new IllegalArgumentException(&quot;转换类型失败&quot;);
+    }
+}
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>对外提供一个工具类，获取国际化的异常信息。</p><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>@Component
+public class MessageNacosUtil {
+
+    @Autowired
+    private static NacosConfig nacosConfig;
+
+    @Autowired
+    public void setNacosConfig(NacosConfig nacosConfig) {
+        MessageNacosUtil.nacosConfig = nacosConfig;
+    }
+
+    public static String getExcptMsg(String excptCode) {
+        return StrFormatter.format(getMessageMap().get(excptCode), null);
+    }
+
+    public static String getExcptMsg(String excptCode, String... args) {
+        return StrFormatter.format(getMessageMap().get(excptCode), args);
+    }
+
+    public static Map&lt;String, String&gt; getMessageMap(){
+        Map&lt;String, String&gt; messageMap = null;
+        String language = LocaleContextHolder.getLocale().getLanguage();
+        if (&quot;&quot;.equals(language) || &quot;zh&quot;.equals(language)) {
+            messageMap = nacosConfig.getNacosJson2Object(NacosJson2ObjEnum.MESSAGE_ZH_CN, Map.class);
+        } else {
+            messageMap = nacosConfig.getNacosJson2Object(NacosJson2ObjEnum.MESSAGE_EN_US, Map.class);
+        }
+        return messageMap;
+    }
+}
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h4 id="_3-3-构建统一响应消息体" tabindex="-1"><a class="header-anchor" href="#_3-3-构建统一响应消息体" aria-hidden="true">#</a> 3.3. 构建统一响应消息体</h4><div class="language-java line-numbers-mode" data-ext="java"><pre class="language-java"><code><span class="token annotation punctuation">@Data</span>
+<span class="token annotation punctuation">@AllArgsConstructor</span>
+<span class="token annotation punctuation">@NoArgsConstructor</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">BaseResponse</span><span class="token punctuation">{</span>
+
+    <span class="token keyword">protected</span> <span class="token class-name">String</span> code<span class="token punctuation">;</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">String</span> message<span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span>
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><div class="language-java line-numbers-mode" data-ext="java"><pre class="language-java"><code><span class="token annotation punctuation">@Data</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">DataResponse</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> <span class="token keyword">extends</span> <span class="token class-name">BaseResponse</span><span class="token punctuation">{</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">T</span> data<span class="token punctuation">;</span>
+
+    <span class="token doc-comment comment">/**
+     * 如果响应结果中只给了code，那么msg就去nacos中查询
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> <span class="token class-name">DataResponse</span> <span class="token function">response</span><span class="token punctuation">(</span><span class="token class-name">String</span> code<span class="token punctuation">,</span> <span class="token class-name">T</span> data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">DataResponse</span> dataResponse <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DataResponse</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        dataResponse<span class="token punctuation">.</span><span class="token function">setCode</span><span class="token punctuation">(</span>code<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        dataResponse<span class="token punctuation">.</span><span class="token function">setMessage</span><span class="token punctuation">(</span><span class="token class-name">MessageNacosUtil</span><span class="token punctuation">.</span><span class="token function">getExcptMsg</span><span class="token punctuation">(</span>code<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        dataResponse<span class="token punctuation">.</span><span class="token function">setData</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> dataResponse<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> <span class="token class-name">DataResponse</span> <span class="token function">response</span><span class="token punctuation">(</span><span class="token class-name">String</span> code<span class="token punctuation">,</span> <span class="token class-name">String</span> msg<span class="token punctuation">,</span> <span class="token class-name">T</span> data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">DataResponse</span> dataResponse <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DataResponse</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        dataResponse<span class="token punctuation">.</span><span class="token function">setCode</span><span class="token punctuation">(</span>code<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        dataResponse<span class="token punctuation">.</span><span class="token function">setMessage</span><span class="token punctuation">(</span>msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        dataResponse<span class="token punctuation">.</span><span class="token function">setData</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> dataResponse<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token doc-comment comment">/**
+     * 响应成功的消息进行固定并统一
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> <span class="token class-name">DataResponse</span> <span class="token function">success</span><span class="token punctuation">(</span><span class="token class-name">T</span> data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token function">response</span><span class="token punctuation">(</span><span class="token class-name">ResponseStatusCode</span><span class="token punctuation">.</span><span class="token constant">OK</span><span class="token punctuation">,</span> data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token doc-comment comment">/**
+     * 响应失败支持自定义code和msg
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">DataResponse</span> <span class="token function">error</span><span class="token punctuation">(</span><span class="token class-name">String</span> code<span class="token punctuation">,</span> <span class="token class-name">String</span> msg<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token function">response</span><span class="token punctuation">(</span>code<span class="token punctuation">,</span> msg<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token doc-comment comment">/**
+     * 默认的响应失败结果
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">DataResponse</span> <span class="token function">error</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token function">response</span><span class="token punctuation">(</span><span class="token class-name">ResponseStatusCode</span><span class="token punctuation">.</span><span class="token constant">ERROR</span><span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+<span class="token punctuation">}</span>
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h4 id="_3-4-构建统一异常处理" tabindex="-1"><a class="header-anchor" href="#_3-4-构建统一异常处理" aria-hidden="true">#</a> 3.4. 构建统一异常处理</h4><div class="language-java line-numbers-mode" data-ext="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">BaseException</span> <span class="token keyword">extends</span> <span class="token class-name">RuntimeException</span> <span class="token keyword">implements</span> <span class="token class-name">Serializable</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token class-name">BaseException</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">BaseException</span><span class="token punctuation">(</span><span class="token class-name">String</span> message<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">BaseException</span><span class="token punctuation">(</span><span class="token class-name">Throwable</span> cause<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">(</span>cause<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">BaseException</span><span class="token punctuation">(</span><span class="token class-name">String</span> message<span class="token punctuation">,</span> <span class="token class-name">Throwable</span> cause<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">(</span>message<span class="token punctuation">,</span> cause<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><div class="language-java line-numbers-mode" data-ext="java"><pre class="language-java"><code><span class="token annotation punctuation">@Data</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">BizException</span> <span class="token keyword">extends</span> <span class="token class-name">BaseException</span><span class="token punctuation">{</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">BaseResponse</span> baseResponse <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">BaseResponse</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">BizException</span><span class="token punctuation">(</span><span class="token class-name">BaseResponse</span> baseResponse<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">(</span>baseResponse<span class="token punctuation">.</span><span class="token function">getCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">&quot;, &quot;</span><span class="token operator">+</span> baseResponse<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>baseResponse <span class="token operator">=</span> baseResponse<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">BizException</span><span class="token punctuation">(</span><span class="token class-name">BaseResponse</span> baseResponse<span class="token punctuation">,</span> <span class="token class-name">Throwable</span> throwable<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">(</span>baseResponse<span class="token punctuation">.</span><span class="token function">getCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">&quot;, &quot;</span> <span class="token operator">+</span> baseResponse<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> throwable<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>baseResponse <span class="token operator">=</span> baseResponse<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token doc-comment comment">/**
+     * 抛出异常支持多个msg进行组合拼装
+     */</span>
+    <span class="token keyword">public</span> <span class="token class-name">BizException</span><span class="token punctuation">(</span><span class="token class-name">String</span> code<span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> msg<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">(</span>code<span class="token operator">+</span> <span class="token string">&quot;, &quot;</span><span class="token operator">+</span>msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>baseResponse<span class="token punctuation">.</span><span class="token function">setCode</span><span class="token punctuation">(</span>code<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> excptMsg <span class="token operator">=</span> <span class="token class-name">MessageNacosUtil</span><span class="token punctuation">.</span><span class="token function">getExcptMsg</span><span class="token punctuation">(</span>code<span class="token punctuation">,</span> msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>baseResponse<span class="token punctuation">.</span><span class="token function">setMessage</span><span class="token punctuation">(</span>excptMsg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+
+    <span class="token keyword">public</span> <span class="token class-name">BizException</span><span class="token punctuation">(</span><span class="token class-name">String</span> code<span class="token punctuation">,</span> <span class="token class-name">String</span> msg<span class="token punctuation">,</span> <span class="token class-name">Throwable</span> throwable<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">(</span>code<span class="token operator">+</span> <span class="token string">&quot;, &quot;</span><span class="token operator">+</span>msg<span class="token punctuation">,</span> throwable<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>baseResponse<span class="token punctuation">.</span><span class="token function">setCode</span><span class="token punctuation">(</span>code<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>baseResponse<span class="token punctuation">.</span><span class="token function">setMessage</span><span class="token punctuation">(</span>msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+<span class="token punctuation">}</span>
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>关键一步，重写自定义的异常信息。</p><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(value = BizException.class)   // 项目中遇到 BizException 时的处理逻辑
+    public ResponseEntity bizExceptionHandler(BizException bizException) {
+        BaseResponse baseResponse = bizException.getBaseResponse();
+        return new ResponseEntity(baseResponse, HttpStatus.OK);
+    }
+}
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="_4-使用" tabindex="-1"><a class="header-anchor" href="#_4-使用" aria-hidden="true">#</a> 4. 使用</h3><p>开发过程中还涉及到请求参数的校验过程，这里我们选用Validation的工具类。下面是集成过程。</p><h4 id="_4-1-集成validation" tabindex="-1"><a class="header-anchor" href="#_4-1-集成validation" aria-hidden="true">#</a> 4.1. 集成Validation</h4><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-validation&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(value = BizException.class)
+    public ResponseEntity bizExceptionHandler(BizException bizException) {
+        BaseResponse baseResponse = bizException.getBaseResponse();
+        return new ResponseEntity(baseResponse, HttpStatus.OK);
+    }
+
+    // 遇到 参数校验时的异常处理
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public ResponseEntity methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException methodArgumentNotValidException) {
+        BindingResult bindingResult = methodArgumentNotValidException.getBindingResult();
+        if (bindingResult.getFieldErrors() != null) {
+            // 如果校验结果中有多个异常，就只返回第一个异常信息
+            String excptCode = bindingResult.getFieldErrors().get(0).getDefaultMessage();
+            String excptMsg = MessageNacosUtil.getExcptMsg(excptCode);
+            BizException bizException = new BizException(excptCode, excptMsg);
+            return new ResponseEntity(bizException.getBaseResponse(), HttpStatus.OK);
+        }
+        return new ResponseEntity(null, HttpStatus.OK);
+    }
+}
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h4 id="_4-2-测试" tabindex="-1"><a class="header-anchor" href="#_4-2-测试" aria-hidden="true">#</a> 4.2. 测试</h4><p>我们在nacos上添加配置文件，并填充内容。</p><figure><img src="/assets/1699933284574-31aee14d.png" alt="" tabindex="0" loading="lazy"><figcaption></figcaption></figure><figure><img src="/assets/1699933284668-16dd1828.png" alt="" tabindex="0" loading="lazy"><figcaption></figcaption></figure><figure><img src="/assets/1699933284751-826aa480.png" alt="" tabindex="0" loading="lazy"><figcaption></figcaption></figure><p>我们编写一个controller进行测试：</p><ol><li>直接抛出业务异常</li></ol><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>@GetMapping(&quot;/throw2_01&quot;)
+public OperationResponse test02_01() {
+
+    if (&quot;0&quot;.equals(&quot;0&quot;)) {
+        throw new BizException(ResponseStatusCode.EE1001);
+    }
+    return OperationResponse.success(MessageNacosUtil.getExcptMsg(ResponseStatusCode.OK));
+}
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><figure><img src="/assets/1699933284829-e2fd1942.png" alt="" tabindex="0" loading="lazy"><figcaption></figcaption></figure><figure><img src="/assets/1699933284968-c31aba61.png" alt="" tabindex="0" loading="lazy"><figcaption></figcaption></figure><ol start="2"><li>抛出校验异常</li></ol><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>
+@Data
+public class UserDTO {
+
+    // 校验注解的message直接为一个常量字符串
+    @NotEmpty(message = ResponseStatusCode.EE2001)
+    private String name;
+
+    @NotBlank(message = ResponseStatusCode.EE2002)
+    private String address;
+
+
+    private String sex;
+    private Integer age;
+    private Long phonenum;
+}
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>@PostMapping(&quot;/throw2_02&quot;)
+public DataResponse&lt;UserDTO&gt; test02_02(
+        @RequestBody @Validated UserDTO userDTO
+) {
+    return DataResponse.success(userDTO);
+}
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><figure><img src="/assets/1699933285089-69c0ce02.png" alt="" tabindex="0" loading="lazy"><figcaption></figcaption></figure><figure><img src="/assets/1699933285186-c76086bb.png" alt="" tabindex="0" loading="lazy"><figcaption></figcaption></figure><figure><img src="/assets/1699933285280-ffddb9b2.png" alt="" tabindex="0" loading="lazy"><figcaption></figcaption></figure><p>原理解读： <a href="/NotBlank">@NotBlank </a> 和 <a href="/NotEmpty">@NotEmpty </a> 注解校验不通过时，会抛出 MethodArgumentNotValidException 异常信息，而我们在 GlobalExceptionHandler 中捕获这个异常信息之后做了自定义处理逻辑，大概逻辑就是先获取到抛出异常信息的message信息，拿到异常码，之后利用工具类和语言信息从Nacos中获取异常码的描述信息。</p><p>注意： 上面的捕获MethodArgumentNotValidException后的处理逻辑中只处理了所抛出的第一个异常信息，自测多次同一个请求类，由于是多个字段校验，可能会抛出不同的异常信息，这里需要做自定义实现。</p><ol start="3"><li>抛出组合后的异常信息</li></ol><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>@PostMapping(&quot;/throw2_03&quot;)
+public DataResponse&lt;UserDTO&gt; test02_03(
+        @RequestBody @Validated UserDTO userDTO
+) {
+    if (&quot;female&quot;.equals(userDTO.getSex())) {
+        throw new BizException(ResponseStatusCode.EE3001, userDTO.getName());
+    }
+    return DataResponse.success(userDTO);
+}
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><figure><img src="/assets/1699933285373-50f23a6d.png" alt="" tabindex="0" loading="lazy"><figcaption></figcaption></figure><ol start="4"><li>抛出多个参数组成的异常信息</li></ol><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>@PostMapping(&quot;/throw2_04&quot;)
+public DataResponse&lt;UserDTO&gt; test02_04(
+        @RequestBody @Validated UserDTO userDTO
+) {
+    if (&quot;female&quot;.equals(userDTO.getSex()) &amp;&amp; userDTO.getPhonenum()&lt;138000) {
+        throw new BizException(ResponseStatusCode.EE3002, userDTO.getName(), String.valueOf(userDTO.getPhonenum()));
+    }
+    return DataResponse.success(userDTO);
+}
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><figure><img src="/assets/1699933285482-cb4607a9.png" alt="" tabindex="0" loading="lazy"><figcaption></figcaption></figure><figure><img src="/assets/1699933285602-d3d8c42a.png" alt="" tabindex="0" loading="lazy"><figcaption></figcaption></figure><ol start="5"><li>返回默认的响应失败消息体</li></ol><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>@PostMapping(&quot;/throw2_05&quot;)
+public DataResponse&lt;UserDTO&gt; test02_05(
+        @RequestBody @Validated UserDTO userDTO
+) {
+    return DataResponse.error();
+
+}
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><figure><img src="/assets/1699933285711-a6d28d94.png" alt="" tabindex="0" loading="lazy"><figcaption></figcaption></figure><h3 id="_5-参考" tabindex="-1"><a class="header-anchor" href="#_5-参考" aria-hidden="true">#</a> 5. 参考</h3><ul><li><a href="https://blog.csdn.net/qq_15898739/article/details/104680114" target="_blank" rel="noopener noreferrer">Nacos实现SpringBoot国际化的增强<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a></li><li><a href="https://mp.weixin.qq.com/s/XE4R2wOj08qNivo8Ms5ZRQ" target="_blank" rel="noopener noreferrer">Java统一异常处理(配置文件集中化定义)<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a></li><li><a href="https://developer.aliyun.com/article/1180037" target="_blank" rel="noopener noreferrer">三种手段：通过Apollo和nacos的能力进行国际化动态配置实现热更新<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a></li></ul></div><!----><footer class="page-meta"><div class="meta-item edit-link"><a href="https://github.com/vongdefu/vongdefu.github.io/edit/main/demo/theme-docs/src/03-framework/springcloud/ch99-appendix01-globalresponseandnacosexception.md" rel="noopener noreferrer" target="_blank" aria-label="编辑此页" class="nav-link label"><!--[--><svg xmlns="http://www.w3.org/2000/svg" class="icon edit-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="edit icon"><path d="M430.818 653.65a60.46 60.46 0 0 1-50.96-93.281l71.69-114.012 7.773-10.365L816.038 80.138A60.46 60.46 0 0 1 859.225 62a60.46 60.46 0 0 1 43.186 18.138l43.186 43.186a60.46 60.46 0 0 1 0 86.373L588.879 565.55l-8.637 8.637-117.466 68.234a60.46 60.46 0 0 1-31.958 11.229z"></path><path d="M728.802 962H252.891A190.883 190.883 0 0 1 62.008 771.98V296.934a190.883 190.883 0 0 1 190.883-192.61h267.754a60.46 60.46 0 0 1 0 120.92H252.891a69.962 69.962 0 0 0-69.098 69.099V771.98a69.962 69.962 0 0 0 69.098 69.098h475.911A69.962 69.962 0 0 0 797.9 771.98V503.363a60.46 60.46 0 1 1 120.922 0V771.98A190.883 190.883 0 0 1 728.802 962z"></path></svg><!--]-->编辑此页<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span><!----></a></div><div class="meta-item git-info"><!----><!----></div></footer><nav class="page-nav"><a href="/03-framework/springcloud/ch08-seata.html" class="nav-link prev" aria-label="8. seata分布式事务"><div class="hint"><span class="arrow start"></span>上一页</div><div class="link"><!---->8. seata分布式事务</div></a><a href="/03-framework/springcloud/ch99-appendix02-managedependence.html" class="nav-link next" aria-label="附录 02 统一管理依赖"><div class="hint">下一页<span class="arrow end"></span></div><div class="link">附录 02 统一管理依赖<!----></div></a></nav><div class="giscus-wrapper input-top" id="comment" style="display:block;"><div class="loading-icon-wrapper" style="display:flex;align-items:center;justify-content:center;height:96px"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" preserveAspectRatio="xMidYMid" viewBox="25 25 50 50"><animateTransform attributeName="transform" type="rotate" dur="2s" keyTimes="0;1" repeatCount="indefinite" values="0;360"></animateTransform><circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><animate attributeName="stroke-dasharray" dur="1.5s" keyTimes="0;0.5;1" repeatCount="indefinite" values="1,200;90,200;1,200"></animate><animate attributeName="stroke-dashoffset" dur="1.5s" keyTimes="0;0.5;1" repeatCount="indefinite" values="0;-35px;-125px"></animate></circle></svg></div></div><!----><!--]--></main><!--]--><footer class="footer-wrapper"><div class="footer">浪漫骑士的二流键盘</div><div class="copyright">Copyright © 2025 vongdefu</div></footer></div><!--]--><!----><!----><!----><!--]--></div>
+    <script type="module" src="/assets/app-fb6938a2.js" defer></script>
+  </body>
+</html>

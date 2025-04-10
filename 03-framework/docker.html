@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="generator" content="VuePress 2.0.0-beta.61" />
+    <meta name="theme" content="VuePress Theme Hope" />
+    <meta property="og:url" content="https://vongdefu.github.io/03-framework/docker.html"><meta property="og:site_name" content="cs-tips"><meta property="og:title" content="docker"><meta property="og:description" content="1. 背景 1. 虚拟化技术的发展； 2. 基于虚拟化技术的扩展性应用； 2. 架构 dockeronlinux 1725685088427 Docker 使用 Google 公司推出的 Go 语言 (https://golang.google.cn/) 进行开发实现，基于 Linux 内核的 cgroup (https://zh.wikipedia...."><meta property="og:type" content="article"><meta property="og:image" content="https://vongdefu.github.io/"><meta property="og:locale" content="zh-CN"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image:alt" content="docker"><meta property="article:author" content="vongdefu"><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"docker","image":["https://vongdefu.github.io/"],"dateModified":null,"author":[{"@type":"Person","name":"vongdefu","url":"https://github.com/vongdefu"}]}</script><link rel="icon" href="/favicon.ico"><link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials"><meta name="theme-color" content="#46bd87"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"><title>docker | cs-tips</title><meta name="description" content="1. 背景 1. 虚拟化技术的发展； 2. 基于虚拟化技术的扩展性应用； 2. 架构 dockeronlinux 1725685088427 Docker 使用 Google 公司推出的 Go 语言 (https://golang.google.cn/) 进行开发实现，基于 Linux 内核的 cgroup (https://zh.wikipedia....">
+    <style>
+      :root {
+        --bg-color: #fff;
+      }
+
+      html[data-theme="dark"] {
+        --bg-color: #1d1e1f;
+      }
+
+      html,
+      body {
+        background: var(--bg-color);
+      }
+    </style>
+    <script>
+      const userMode = localStorage.getItem("vuepress-theme-hope-scheme");
+      const systemDarkMode =
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+      if (userMode === "dark" || (userMode !== "light" && systemDarkMode)) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    </script>
+    <link rel="preload" href="/assets/style-8909e15b.css" as="style"><link rel="stylesheet" href="/assets/style-8909e15b.css">
+    <link rel="modulepreload" href="/assets/app-fb6938a2.js"><link rel="modulepreload" href="/assets/framework-16b96b76.js"><link rel="modulepreload" href="/assets/docker.html-d48062a0.js"><link rel="modulepreload" href="/assets/docker.html-771de9ff.js">
+  </head>
+  <body>
+    <div id="app"><!--[--><!--[--><!--[--><span tabindex="-1"></span><a href="#main-content" class="skip-link sr-only">跳至主要內容</a><!--]--><div class="theme-container has-toc"><!--[--><header class="navbar" id="navbar"><div class="navbar-start"><button type="button" class="toggle-sidebar-button" title="Toggle Sidebar"><span class="icon"></span></button><!--[--><!----><!--]--><a href="/" class="brand"><img class="logo" src="/logo.svg" alt="cs-tips"><!----><span class="site-name hide-in-pad">cs-tips</span></a><!--[--><!----><!--]--></div><div class="navbar-center"><!--[--><!----><!--]--><nav class="nav-links"><div class="nav-item hide-in-mobile"><a href="/" class="nav-link" aria-label="主页"><span class="font-icon icon iconfont icon-home" style=""></span>主页<!----></a></div><div class="nav-item hide-in-mobile"><a href="/01-csbase" class="nav-link" aria-label="要点提示"><span class="font-icon icon iconfont icon-ability" style=""></span>要点提示<!----></a></div><div class="nav-item hide-in-mobile"><a href="https://github.com/vongdefu/vongdefu.github.io/issues" rel="noopener noreferrer" target="_blank" aria-label="问题反馈" class="nav-link"><span class="font-icon icon iconfont icon-note" style=""></span>问题反馈<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span><!----></a></div></nav><!--[--><!----><!--]--></div><div class="navbar-end"><!--[--><!----><!--]--><!----><div class="nav-item"><a class="repo-link" href="https://github.com/vongdefu/vongdefu.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" class="icon github-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="github icon" style="width:1.25rem;height:1.25rem;vertical-align:middle;"><path d="M511.957 21.333C241.024 21.333 21.333 240.981 21.333 512c0 216.832 140.544 400.725 335.574 465.664 24.49 4.395 32.256-10.07 32.256-23.083 0-11.69.256-44.245 0-85.205-136.448 29.61-164.736-64.64-164.736-64.64-22.315-56.704-54.4-71.765-54.4-71.765-44.587-30.464 3.285-29.824 3.285-29.824 49.195 3.413 75.179 50.517 75.179 50.517 43.776 75.008 114.816 53.333 142.762 40.79 4.523-31.66 17.152-53.377 31.19-65.537-108.971-12.458-223.488-54.485-223.488-242.602 0-53.547 19.114-97.323 50.517-131.67-5.035-12.33-21.93-62.293 4.779-129.834 0 0 41.258-13.184 134.912 50.346a469.803 469.803 0 0 1 122.88-16.554c41.642.213 83.626 5.632 122.88 16.554 93.653-63.488 134.784-50.346 134.784-50.346 26.752 67.541 9.898 117.504 4.864 129.834 31.402 34.347 50.474 78.123 50.474 131.67 0 188.586-114.73 230.016-224.042 242.09 17.578 15.232 33.578 44.672 33.578 90.454v135.85c0 13.142 7.936 27.606 32.854 22.87C862.25 912.597 1002.667 728.747 1002.667 512c0-271.019-219.648-490.667-490.71-490.667z"></path></svg></a></div><!----><!--[--><button type="button" class="search-pro-button" role="search" aria-label="搜索"><svg xmlns="http://www.w3.org/2000/svg" class="icon search-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="search icon"><path d="M192 480a256 256 0 1 1 512 0 256 256 0 0 1-512 0m631.776 362.496-143.2-143.168A318.464 318.464 0 0 0 768 480c0-176.736-143.264-320-320-320S128 303.264 128 480s143.264 320 320 320a318.016 318.016 0 0 0 184.16-58.592l146.336 146.368c12.512 12.48 32.768 12.48 45.28 0 12.48-12.512 12.48-32.768 0-45.28"></path></svg><div class="placeholder">搜索</div><div class="key-hints"><kbd class="key">Ctrl</kbd><kbd class="key">K</kbd></div></button><!--]--><!--[--><!----><!--]--><button type="button" class="toggle-navbar-button" aria-label="Toggle Navbar" aria-expanded="false" aria-controls="nav-screen"><span class="button-container"><span class="button-top"></span><span class="button-middle"></span><span class="button-bottom"></span></span></button></div></header><!----><!--]--><!----><div class="toggle-sidebar-wrapper"><span class="arrow start"></span></div><aside class="sidebar" id="sidebar"><!--[--><!----><!--]--><ul class="sidebar-links"><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><!----><span class="title">面渣</span><span class="arrow end"></span></button><!----></section></li><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><span class="font-icon icon iconfont icon-computer" style=""></span><span class="title">01-CS基础</span><span class="arrow end"></span></button><!----></section></li><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><span class="font-icon icon iconfont icon-java" style=""></span><span class="title">02-Java编程语言</span><span class="arrow end"></span></button><!----></section></li><li><section class="sidebar-group"><button class="sidebar-heading clickable active" type="button"><span class="font-icon icon iconfont icon-layout" style=""></span><span class="title">03-框架</span><span class="arrow down"></span></button><ul class="sidebar-links"><li><!--[--><a aria-current="page" href="/03-framework/docker.html" class="router-link-active router-link-exact-active nav-link active sidebar-link sidebar-page active" aria-label="docker"><!---->docker<!----></a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_1-背景" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="1. 背景"><!---->1. 背景<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_2-架构" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="2. 架构"><!---->2. 架构<!----></a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_2-1-docker-daemon" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="2.1. Docker Daemon"><!---->2.1. Docker Daemon<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_2-2-docker-client" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="2.2. Docker Client"><!---->2.2. Docker Client<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_2-3-todo" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="2.3. todo"><!---->2.3. todo<!----></a><ul class="sidebar-sub-headers"></ul></li></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_3-概念" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="3. 概念"><!---->3. 概念<!----></a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_3-1-镜像" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="3.1. 镜像"><!---->3.1. 镜像<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_3-2-容器" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="3.2. 容器"><!---->3.2. 容器<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_3-3-仓库" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="3.3. 仓库"><!---->3.3. 仓库<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_3-4-卷" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="3.4. 卷"><!---->3.4. 卷<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_3-5-网络" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="3.5. 网络"><!---->3.5. 网络<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_3-6-容器编排" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="3.6. 容器编排"><!---->3.6. 容器编排<!----></a><ul class="sidebar-sub-headers"></ul></li></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_4-实践" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="4. 实践"><!---->4. 实践<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_5-常用软件的安装" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="5. 常用软件的安装"><!---->5. 常用软件的安装<!----></a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#redis" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="redis"><!---->redis<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_5-2-mysql" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="5.2. mysql"><!---->5.2. mysql<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_5-3-nexus" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="5.3. nexus"><!---->5.3. nexus<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_5-4-rocketmq" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="5.4. rocketmq"><!---->5.4. rocketmq<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_5-5-rabbitmq" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="5.5. rabbitmq"><!---->5.5. rabbitmq<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_5-6-sentinel" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="5.6. sentinel"><!---->5.6. sentinel<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_5-7-nginx" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="5.7. nginx"><!---->5.7. nginx<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_5-8-elasticsearch" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="5.8. elasticsearch"><!---->5.8. elasticsearch<!----></a><ul class="sidebar-sub-headers"></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_5-9-kinaba" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="5.9. kinaba"><!---->5.9. kinaba<!----></a><ul class="sidebar-sub-headers"></ul></li></ul></li><li class="sidebar-sub-header"><a aria-current="page" href="/03-framework/docker.html#_6-参考" class="router-link-active router-link-exact-active nav-link sidebar-link heading" aria-label="6. 参考"><!---->6. 参考<!----></a><ul class="sidebar-sub-headers"></ul></li></ul><!--]--></li><li><!--[--><a href="/03-framework/maven.html" class="nav-link sidebar-link sidebar-page" aria-label="maven"><!---->maven<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><!----><span class="title">工具</span><span class="arrow end"></span></button><!----></section></li><li><!--[--><a href="/03-framework/spring.html" class="nav-link sidebar-link sidebar-page" aria-label="spring"><!---->spring<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><!--[--><a href="/03-framework/springboot.html" class="nav-link sidebar-link sidebar-page" aria-label="springboot"><!---->springboot<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><!----><a href="/03-framework/springcloud/" class="title">SpringCloud实战</a><span class="arrow end"></span></button><!----></section></li><li><!--[--><a href="/03-framework/vagrant.html" class="nav-link sidebar-link sidebar-page" aria-label="vagrant"><!---->vagrant<!----></a><ul class="sidebar-sub-headers"></ul><!--]--></li></ul></section></li><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><span class="font-icon icon iconfont icon-api" style=""></span><span class="title">04-中间件</span><span class="arrow end"></span></button><!----></section></li><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><span class="font-icon icon iconfont icon-structure" style=""></span><span class="title">05-分布式</span><span class="arrow end"></span></button><!----></section></li><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><span class="font-icon icon iconfont icon-like" style=""></span><span class="title">06-软件质量管理</span><span class="arrow end"></span></button><!----></section></li><li><section class="sidebar-group"><button class="sidebar-heading clickable" type="button"><span class="font-icon icon iconfont icon-editor" style=""></span><span class="title">07-工程设计</span><span class="arrow end"></span></button><!----></section></li></ul><!--[--><!----><!--]--></aside><!--[--><main class="page" id="main-content"><!--[--><!----><nav class="breadcrumb disable"></nav><div class="page-title"><h1><!---->docker</h1><!----><hr></div><div class="toc-place-holder"><aside id="toc"><!--[--><!----><!--]--><div class="toc-header">此页内容<button type="button" class="print-button" title="打印"><svg xmlns="http://www.w3.org/2000/svg" class="icon print-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="print icon"><path d="M819.2 364.8h-44.8V128c0-17.067-14.933-32-32-32H281.6c-17.067 0-32 14.933-32 32v236.8h-44.8C145.067 364.8 96 413.867 96 473.6v192c0 59.733 49.067 108.8 108.8 108.8h44.8V896c0 17.067 14.933 32 32 32h460.8c17.067 0 32-14.933 32-32V774.4h44.8c59.733 0 108.8-49.067 108.8-108.8v-192c0-59.733-49.067-108.8-108.8-108.8zM313.6 160h396.8v204.8H313.6V160zm396.8 704H313.6V620.8h396.8V864zM864 665.6c0 25.6-19.2 44.8-44.8 44.8h-44.8V588.8c0-17.067-14.933-32-32-32H281.6c-17.067 0-32 14.933-32 32v121.6h-44.8c-25.6 0-44.8-19.2-44.8-44.8v-192c0-25.6 19.2-44.8 44.8-44.8h614.4c25.6 0 44.8 19.2 44.8 44.8v192z"></path></svg></button></div><div class="toc-wrapper"><ul class="toc-list"><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_1-背景" class="router-link-active router-link-exact-active toc-link level2">1. 背景</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_2-架构" class="router-link-active router-link-exact-active toc-link level2">2. 架构</a></li><li><ul class="toc-list"><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_2-1-docker-daemon" class="router-link-active router-link-exact-active toc-link level3">2.1. Docker Daemon</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_2-2-docker-client" class="router-link-active router-link-exact-active toc-link level3">2.2. Docker Client</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_2-3-todo" class="router-link-active router-link-exact-active toc-link level3">2.3. todo</a></li><!----><!--]--></ul></li><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_3-概念" class="router-link-active router-link-exact-active toc-link level2">3. 概念</a></li><li><ul class="toc-list"><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_3-1-镜像" class="router-link-active router-link-exact-active toc-link level3">3.1. 镜像</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_3-2-容器" class="router-link-active router-link-exact-active toc-link level3">3.2. 容器</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_3-3-仓库" class="router-link-active router-link-exact-active toc-link level3">3.3. 仓库</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_3-4-卷" class="router-link-active router-link-exact-active toc-link level3">3.4. 卷</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_3-5-网络" class="router-link-active router-link-exact-active toc-link level3">3.5. 网络</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_3-6-容器编排" class="router-link-active router-link-exact-active toc-link level3">3.6. 容器编排</a></li><!----><!--]--></ul></li><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_4-实践" class="router-link-active router-link-exact-active toc-link level2">4. 实践</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_5-常用软件的安装" class="router-link-active router-link-exact-active toc-link level2">5. 常用软件的安装</a></li><li><ul class="toc-list"><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#redis" class="router-link-active router-link-exact-active toc-link level3">redis</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_5-2-mysql" class="router-link-active router-link-exact-active toc-link level3">5.2. mysql</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_5-3-nexus" class="router-link-active router-link-exact-active toc-link level3">5.3. nexus</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_5-4-rocketmq" class="router-link-active router-link-exact-active toc-link level3">5.4. rocketmq</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_5-5-rabbitmq" class="router-link-active router-link-exact-active toc-link level3">5.5. rabbitmq</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_5-6-sentinel" class="router-link-active router-link-exact-active toc-link level3">5.6. sentinel</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_5-7-nginx" class="router-link-active router-link-exact-active toc-link level3">5.7. nginx</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_5-8-elasticsearch" class="router-link-active router-link-exact-active toc-link level3">5.8. elasticsearch</a></li><!----><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_5-9-kinaba" class="router-link-active router-link-exact-active toc-link level3">5.9. kinaba</a></li><!----><!--]--></ul></li><!--]--><!--[--><li class="toc-item"><a aria-current="page" href="/03-framework/docker.html#_6-参考" class="router-link-active router-link-exact-active toc-link level2">6. 参考</a></li><!----><!--]--></ul></div><!--[--><!----><!--]--></aside></div><!----><div class="theme-hope-content"><h1 id="docker" tabindex="-1"><a class="header-anchor" href="#docker" aria-hidden="true">#</a> docker</h1><h2 id="_1-背景" tabindex="-1"><a class="header-anchor" href="#_1-背景" aria-hidden="true">#</a> 1. 背景</h2><ol><li>虚拟化技术的发展；</li><li>基于虚拟化技术的扩展性应用；</li></ol><h2 id="_2-架构" tabindex="-1"><a class="header-anchor" href="#_2-架构" aria-hidden="true">#</a> 2. 架构</h2><figure><img src="/assets/docker-on-linux-2fec43bd.png" alt="dockeronlinux" tabindex="0" loading="lazy"><figcaption>dockeronlinux</figcaption></figure><figure><img src="/assets/1725685088427-3c0b0954.png" alt="1725685088427" tabindex="0" loading="lazy"><figcaption>1725685088427</figcaption></figure><p><strong>Docker</strong> 使用 Google 公司推出的 <a href="https://golang.google.cn/" target="_blank" rel="noopener noreferrer">Go 语言<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a> 进行开发实现，基于 Linux 内核的 <a href="https://zh.wikipedia.org/wiki/Cgroups" target="_blank" rel="noopener noreferrer">cgroup<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a>，<a href="https://en.wikipedia.org/wiki/Linux_namespaces" target="_blank" rel="noopener noreferrer">namespace<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a>，以及 <a href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/" target="_blank" rel="noopener noreferrer">OverlayFS<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a> 类的 <a href="https://en.wikipedia.org/wiki/Union_mount" target="_blank" rel="noopener noreferrer">Union FS<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a> 等技术，对进程进行封装隔离，属于 <a href="https://en.wikipedia.org/wiki/Operating-system-level_virtualization" target="_blank" rel="noopener noreferrer">操作系统层面的虚拟化技术<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a>。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。最初实现是基于 <a href="https://linuxcontainers.org/lxc/introduction/" target="_blank" rel="noopener noreferrer">LXC<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a>，从 0.7 版本以后开始去除 LXC，转而使用自行开发的 <a href="https://github.com/docker/libcontainer" target="_blank" rel="noopener noreferrer">libcontainer<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a>，从 1.11 版本开始，则进一步演进为使用 <a href="https://github.com/opencontainers/runc" target="_blank" rel="noopener noreferrer">runC<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a> 和 <a href="https://github.com/containerd/containerd" target="_blank" rel="noopener noreferrer">containerd<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a>。</p><blockquote><p>runc 是一个 Linux 命令行工具，用于根据 <a href="https://github.com/opencontainers/runtime-spec" target="_blank" rel="noopener noreferrer">OCI容器运行时规范<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a> 创建和运行容器。 containerd 是一个守护程序，它管理容器生命周期，提供了在一个节点上执行容器和管理镜像的最小功能集。</p></blockquote><p><strong>Docker</strong> 在容器的基础上，进行了进一步的封装，从文件系统、网络互联到进程隔离等等，极大的简化了容器的创建和维护。使得 Docker 技术比虚拟机技术更为轻便、快捷。</p><figure><img src="/assets/1725685135928-3164df25.png" alt="1725685135928" tabindex="0" loading="lazy"><figcaption>1725685135928</figcaption></figure><h3 id="_2-1-docker-daemon" tabindex="-1"><a class="header-anchor" href="#_2-1-docker-daemon" aria-hidden="true">#</a> 2.1. Docker Daemon</h3><h3 id="_2-2-docker-client" tabindex="-1"><a class="header-anchor" href="#_2-2-docker-client" aria-hidden="true">#</a> 2.2. Docker Client</h3><h3 id="_2-3-todo" tabindex="-1"><a class="header-anchor" href="#_2-3-todo" aria-hidden="true">#</a> 2.3. todo</h3><h2 id="_3-概念" tabindex="-1"><a class="header-anchor" href="#_3-概念" aria-hidden="true">#</a> 3. 概念</h2><h3 id="_3-1-镜像" tabindex="-1"><a class="header-anchor" href="#_3-1-镜像" aria-hidden="true">#</a> 3.1. 镜像</h3><p><strong>Docker 镜像</strong> 是一个特殊的文件系统，除了提供容器运行时所需的程序、库、资源、配置等文件外，还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。镜像 <strong>不包含</strong> 任何动态数据，其内容在构建之后也不会被改变。</p><p>因为镜像包含操作系统完整的 root 文件系统，其体积往往是庞大的，因此在 Docker 设计时，就充分利用 <a href="https://en.wikipedia.org/wiki/Union_mount" target="_blank" rel="noopener noreferrer">Union FS<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a> 的技术，将其设计为分层存储的架构。所以严格来说，镜像并非是像一个 ISO 那样的打包文件，镜像只是一个虚拟的概念，其实际体现并非由一个文件组成，而是由一组文件系统组成，或者说，由多层文件系统联合组成。</p><p>镜像构建时，会一层层构建，前一层是后一层的基础。每一层构建完就不会再发生改变，后一层上的任何改变只发生在自己这一层。比如，删除前一层文件的操作，实际不是真的删除前一层的文件，而是仅在当前层标记为该文件已删除。在最终容器运行的时候，虽然不会看到这个文件，但是实际上该文件会一直跟随镜像。因此，<strong>在构建镜像的时候，需要额外小心，每一层尽量只包含该层需要添加的东西，任何额外的东西应该在该层构建结束前清理掉</strong>。</p><p>分层存储的特征还使得镜像的复用、定制变的更为容易。甚至可以用之前构建好的镜像作为基础层，然后进一步添加新的层，以定制自己所需的内容，构建新的镜像。</p><blockquote><p><strong>Docker 镜像本质上是一组文件系统</strong>，除了包含容器运行时所需要的程序、库、资源、配置等文件，还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。 为了更好的复用、定制和扩展，镜像技术使用了分层存储技术，它的主要原理是：每一层构建完成后就不会发生改变，新的一层的构建内容只发生在当前层，后一层的构建可以依赖前一层，也就是说可以在前一层的基础上进行再构建。因此，构建镜像的最佳实践就是尽可能保证不添加任何不需要的内容。由此，也产生了 compose 技术。</p></blockquote><figure><img src="/assets/1725685186337-d60ff51a.png" alt="1725685186337" tabindex="0" loading="lazy"><figcaption>1725685186337</figcaption></figure><h3 id="_3-2-容器" tabindex="-1"><a class="header-anchor" href="#_3-2-容器" aria-hidden="true">#</a> 3.2. 容器</h3><p>镜像（Image）和容器（Container）的关系，就像是面向对象程序设计中的 类 和 实例 一样，镜像是静态的定义，容器是镜像运行时的实体。容器可以被创建、启动、停止、删除、暂停等。</p><p>容器的实质是进程，但与直接在宿主执行的进程不同，容器进程运行于属于自己的独立的 <a href="https://en.wikipedia.org/wiki/Linux_namespaces" target="_blank" rel="noopener noreferrer">命名空间<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a>。因此容器可以拥有自己的 root 文件系统、自己的网络配置、自己的进程空间，甚至自己的用户 ID 空间。容器内的进程是运行在一个隔离的环境里，使用起来，就好像是在一个独立于宿主的系统下操作一样。这种特性使得容器封装的应用比直接在宿主运行更加安全。也因为这种隔离的特性，很多人初学 Docker 时常常会混淆容器和虚拟机。</p><p>前面讲过镜像使用的是分层存储，容器也是如此。每一个容器运行时，是以镜像为基础层，在其上创建一个当前容器的存储层，我们可以称这个为容器运行时读写而准备的存储层为 <strong>容器存储层</strong>。</p><p>容器存储层的生存周期和容器一样，容器消亡时，容器存储层也随之消亡。因此，任何保存于容器存储层的信息都会随容器删除而丢失。</p><p>按照 Docker 最佳实践的要求，容器不应该向其存储层内写入任何数据，容器存储层要保持无状态化。所有的文件写入操作，都应该使用 <a href="/docker_practice/data_management/volume">数据卷（Volume）</a>、或者 <a href="/docker_practice/data_management/bind-mounts">绑定宿主目录</a>，在这些位置的读写会跳过容器存储层，直接对宿主（或网络存储）发生读写，其性能和稳定性更高。 数据卷的生存周期独立于容器，容器消亡，数据卷不会消亡。因此，使用数据卷后，容器删除或者重新运行之后，数据却不会丢失。</p><blockquote><p>Docker 容器的本质是进程，这个进程拥有自己的 root 文件系统、自己的网络配置、自己的进程空间，甚至自己的用户 ID 空间。并且，多个容器运行时，能够相互隔离。 Docker 容器在运行时，实际上是以镜像为基础层，然后在它上面创建一个存储层，但这个存储层是无状态的，也就是说用户对容器的任何操作都不会被保留，可以理解为这个存储层只是一个媒介，用户对容器的读写都是通过这个媒介来完成的，并且用户产生的数据也是通过这个媒介<strong>直接操作数据卷或是绑定的宿主目录</strong>的。 思考：容器在运行时，为什么不采用在原有基础上再次添加一个存储分层？</p><ol><li>如果采用再添加一个存储分层的方式，那么就会导致每次操作容器都会产生一个新的存储层，这就会使得单个容器占用的存储空间越来越大；</li><li>采用直接读写在数据卷或绑定的宿主目录的方式，也是遵循了“职责分离”的原则，此时就可以把容器看作是生产产品的工厂，而用户的数据就是这个工厂的产品，把工厂和产品分隔开，也有利于工厂的复用。</li></ol></blockquote><h3 id="_3-3-仓库" tabindex="-1"><a class="header-anchor" href="#_3-3-仓库" aria-hidden="true">#</a> 3.3. 仓库</h3><p>镜像构建完成后，可以很容易的在当前宿主机上运行，但是，如果需要在其它服务器上使用这个镜像，我们就需要一个集中的存储、分发镜像的服务，<a href="/docker_practice/repository/registry">Docker Registry</a> 就是这样的服务。</p><p>一个 <strong>Docker Registry</strong> 中可以包含多个 <strong>仓库</strong>（Repository）；每个仓库可以包含多个 <strong>标签</strong>（Tag）；每个标签对应一个镜像。</p><p>通常，一个仓库会包含同一个软件不同版本的镜像，而标签就常用于对应该软件的各个版本。我们可以通过 &lt;仓库名&gt;:&lt;标签&gt; 的格式来指定具体是这个软件哪个版本的镜像。如果不给出标签，将以 latest 作为默认标签。</p><p>我们可以使用公开服务，也可以使用私有服务。</p><p>由于某些原因，在国内访问这些服务可能会比较慢。</p><p>国内的一些云服务商提供了针对 Docker Hub 的镜像服务（Registry Mirror），这些镜像服务被称为 <strong>加速器</strong>。</p><p>常见的有 <a href="https://www.aliyun.com/product/acr?source=5176.11533457&amp;userCode=8lx5zmtu" target="_blank" rel="noopener noreferrer">阿里云加速器<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a>、<a href="https://www.daocloud.io/mirror#accelerator-doc" target="_blank" rel="noopener noreferrer">DaoCloud 加速器<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a> 等</p><h3 id="_3-4-卷" tabindex="-1"><a class="header-anchor" href="#_3-4-卷" aria-hidden="true">#</a> 3.4. 卷</h3><h3 id="_3-5-网络" tabindex="-1"><a class="header-anchor" href="#_3-5-网络" aria-hidden="true">#</a> 3.5. 网络</h3><h3 id="_3-6-容器编排" tabindex="-1"><a class="header-anchor" href="#_3-6-容器编排" aria-hidden="true">#</a> 3.6. 容器编排</h3><h2 id="_4-实践" tabindex="-1"><a class="header-anchor" href="#_4-实践" aria-hidden="true">#</a> 4. 实践</h2><ul><li>centos 平台上的安装过程</li></ul><h2 id="_5-常用软件的安装" tabindex="-1"><a class="header-anchor" href="#_5-常用软件的安装" aria-hidden="true">#</a> 5. 常用软件的安装</h2><h3 id="redis" tabindex="-1"><a class="header-anchor" href="#redis" aria-hidden="true">#</a> redis</h3><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>
+docker pull redis
+
+
+docker run -p 6379:6379 --name redis \
+-v /mydata/redis/data:/data \
+-v /mydata/redis/conf/redis.conf:/etc/redis/redis.conf \
+-d redis redis-server /etc/redis/redis.conf
+
+docker update redis --restart=always
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="_5-2-mysql" tabindex="-1"><a class="header-anchor" href="#_5-2-mysql" aria-hidden="true">#</a> 5.2. mysql</h3><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code># 拉取镜像
+docker pull mysql:5.7
+
+# 把镜像中的配置文件拷贝到本地
+docker cp mysql:/etc/mysql/my.cnf /mydata/mysql/conf/my.cnf
+
+# 启动
+docker run -p 3306:3306 --name mysql \
+--restart always \
+-v /mydata/mysql/log:/var/log/mysql \
+-v /mydata/mysql/data:/var/lib/mysql \
+-v /mydata/mysql/conf/my.cnf:/etc/mysql/my.cnf \
+-v /etc/localtime:/etc/localtime \
+-e MYSQL_ROOT_PASSWORD=root \
+-d mysql:5.7
+
+
+// 拉取镜像
+[root@home docker]# docker pull mysql:5.7
+
+5.7: Pulling from library/mysql
+72a69066d2fe: Pull complete 
+93619dbc5b36: Pull complete 
+99da31dd6142: Pull complete 
+626033c43d70: Pull complete 
+37d5d7efb64e: Pull complete 
+ac563158d721: Pull complete 
+d2ba16033dad: Pull complete 
+0ceb82207cd7: Pull complete 
+37f2405cae96: Pull complete 
+e2482e017e53: Pull complete 
+70deed891d42: Pull complete 
+Digest: sha256:f2ad209efe9c67104167fc609cca6973c8422939491c9345270175a300419f94
+Status: Downloaded newer image for mysql:5.7
+docker.io/library/mysql:5.7
+
+// 安装 
+[root@home docker]# docker run -p 3306:3306 --name mysql \
+&gt; -v /mnt/doc/docker/mysql/log:/var/log/mysql \
+&gt; -v /mnt/doc/docker/mysql/data:/var/lib/mysql \
+&gt; -v /mnt/doc/docker/mysql/conf:/etc/mysql \
+&gt; -e MYSQL_ROOT_PASSWORD=root \
+&gt; -d mysql:5.7
+0a4457b1eac5dbfdba0f483db94aeb4fd42652d9f893094cf34daa0f4877116d
+[root@home docker]# docker ps -a
+CONTAINER ID   IMAGE       COMMAND                   CREATED         STATUS         PORTS                                                  NAMES
+0a4457b1eac5   mysql:5.7   &quot;docker-entrypoint.s…&quot;   6 seconds ago   Up 5 seconds   0.0.0.0:3306-&gt;3306/tcp, :::3306-&gt;3306/tcp, 33060/tcp   mysql
+[root@home docker]# cd /mnt/doc/docker/
+[root@home mysql]# cd conf/
+[root@home conf]# ll
+总用量 0
+
+// 创建配置文件
+[root@home conf]# vi my.cnf
+
+[client]
+default-character-set=utf8mb4
+[mysql]
+default-character-set=utf8mb4
+[mysqld]
+init_connect=&#39;SET collation_connection = utf8mb4_unicode_ci&#39;
+init_connect=&#39;SET NAMES utf8mb4&#39;
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+skip-character-set-client-handshake
+skip-name-resolve
+
+// 重启mysql
+[root@home conf]# docker restart mysql
+mysql
+[root@home conf]# docker ps
+CONTAINER ID   IMAGE       COMMAND                   CREATED         STATUS          PORTS                                                  NAMES
+0a4457b1eac5   mysql:5.7   &quot;docker-entrypoint.s…&quot;   6 minutes ago   Up 10 seconds   0.0.0.0:3306-&gt;3306/tcp, :::3306-&gt;3306/tcp, 33060/tcp   mysql
+
+// 设置开机自启
+[root@home conf]# docker update mysql --restart=always
+mysql
+
+// 解决时间问题
+[root@home conf]# docker exec -it mysql bash
+root@0a4457b1eac5:/# date
+Sat Oct  7 12:58:45 UTC 2023
+root@0a4457b1eac5:/# ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+root@0a4457b1eac5:/# date
+Sat Oct  7 20:58:57 CST 2023
+root@0a4457b1eac5:/# exit
+exit
+
+// 最后重启
+[root@home conf]# docker restart mysql
+mysql
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h4 id="_5-2-1-解决时间差8小时的问题" tabindex="-1"><a class="header-anchor" href="#_5-2-1-解决时间差8小时的问题" aria-hidden="true">#</a> 5.2.1. 解决时间差8小时的问题</h4><ol><li>在客户端输入 select now(); 发现查了8小时</li><li>进入 mysql 服务端： docker exec -it mysql bash</li><li>查看mysql服务端当前时间： date ，发现差了8小时</li><li>直接修改时区为上海： ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime ，再次输入 date，发现时间已经正常</li><li>重启mysql服务端</li></ol><h4 id="_5-2-2-主从分离" tabindex="-1"><a class="header-anchor" href="#_5-2-2-主从分离" aria-hidden="true">#</a> 5.2.2. 主从分离</h4><blockquote><p>说明： 由于实验过程要求创建千万级别的数据，为了避免在主从同步的过程中出现问题。我们采用现在单例数据库上面上创建一个千万级数据，之后备份下来。再搭建三个数据库实例，之后把数据依次恢复到三个实例上，然后再建立主从关系，最后开启主从复制的过程。 <strong>当然如果不需要关注千万级数据，那么我们只需要依次创建三个实例，之后建立主从关系，最后开启主从复制过程即可。也就是只需要执行「执行创建过程」、「开启主从复制过程」两个步骤即可。</strong></p></blockquote><h5 id="_5-2-2-1-生成千万级数据的备份sql" tabindex="-1"><a class="header-anchor" href="#_5-2-2-1-生成千万级数据的备份sql" aria-hidden="true">#</a> 5.2.2.1. 生成千万级数据的备份SQL</h5><div class="language-bash line-numbers-mode" data-ext="sh"><pre class="language-bash"><code>// 把之前的单例mysql中已经生成的千万级数据备份成sql语句
+<span class="token function">docker</span> <span class="token builtin class-name">exec</span> mysql <span class="token function">sh</span> <span class="token parameter variable">-c</span> <span class="token string">&#39;exec mysqldump --databases monomer_order -uroot -proot&#39;</span> <span class="token operator">&gt;</span> /mydata/backupsqls/mysql/monomer_order.sql
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h5 id="_5-2-2-2-三个单例mysql的搭建过程" tabindex="-1"><a class="header-anchor" href="#_5-2-2-2-三个单例mysql的搭建过程" aria-hidden="true">#</a> 5.2.2.2. 三个单例mysql的搭建过程</h5><h6 id="_5-2-2-2-1-master搭建过程" tabindex="-1"><a class="header-anchor" href="#_5-2-2-2-1-master搭建过程" aria-hidden="true">#</a> 5.2.2.2.1. master搭建过程</h6><blockquote><p>让主机的3307端口映射出去。注意： binlog_format 推荐使用row，具体参考【<a href="https://help.aliyun.com/document_detail/67809.html" target="_blank" rel="noopener noreferrer">这里<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a>】。</p></blockquote><div class="language-bash line-numbers-mode" data-ext="sh"><pre class="language-bash"><code>// 创建容器
+<span class="token function">docker</span> run <span class="token parameter variable">-p</span> <span class="token number">3307</span>:3306 <span class="token parameter variable">--name</span> mysql-master <span class="token punctuation">\</span>
+<span class="token parameter variable">-v</span> /mydata/mysql-master/log:/var/log/mysql <span class="token punctuation">\</span>
+<span class="token parameter variable">-v</span> /mydata/mysql-master/data:/var/lib/mysql <span class="token punctuation">\</span>
+<span class="token parameter variable">-v</span> /mydata/mysql-master/conf:/etc/mysql <span class="token punctuation">\</span>
+<span class="token parameter variable">-e</span> <span class="token assign-left variable">MYSQL_ROOT_PASSWORD</span><span class="token operator">=</span>root <span class="token punctuation">\</span>
+<span class="token parameter variable">-d</span> mysql:5.7
+
+// 创建配置文件
+<span class="token function">vi</span> /mydata/mysql-master/conf/my.cnf
+
+<span class="token punctuation">[</span>client<span class="token punctuation">]</span>
+default-character-set<span class="token operator">=</span>utf8mb4
+<span class="token punctuation">[</span>mysql<span class="token punctuation">]</span>
+default-character-set<span class="token operator">=</span>utf8mb4
+<span class="token punctuation">[</span>mysqld<span class="token punctuation">]</span>
+character-set-server<span class="token operator">=</span>utf8mb4
+default-time_zone<span class="token operator">=</span><span class="token string">&#39;+8:00&#39;</span>
+<span class="token assign-left variable">server_id</span><span class="token operator">=</span><span class="token number">100</span>
+<span class="token assign-left variable">log_bin</span><span class="token operator">=</span>master-bin
+<span class="token assign-left variable">binlog_format</span><span class="token operator">=</span>ROW
+slow-query-log-file<span class="token operator">=</span>/var/log/mysql/slow-query.log
+<span class="token assign-left variable">long_query_time</span><span class="token operator">=</span><span class="token number">1</span>
+
+// 设置开机自启动，并重启
+<span class="token function">docker</span> update mysql-master <span class="token parameter variable">--restart</span><span class="token operator">=</span>always
+<span class="token function">docker</span> restart mysql-master
+
+// 创建主从复制的用户信息
+<span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> mysql-master /bin/bash
+mysql <span class="token parameter variable">-uroot</span> <span class="token parameter variable">-proot</span>
+CREATE <span class="token environment constant">USER</span> <span class="token string">&#39;slave&#39;</span>@<span class="token string">&#39;%&#39;</span> IDENTIFIED BY <span class="token string">&#39;123456&#39;</span><span class="token punctuation">;</span>
+
+GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO <span class="token string">&#39;slave&#39;</span>@<span class="token string">&#39;%&#39;</span><span class="token punctuation">;</span>
+
+flush privileges<span class="token punctuation">;</span>
+
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h6 id="_5-2-2-2-2-slave01搭建过程" tabindex="-1"><a class="header-anchor" href="#_5-2-2-2-2-slave01搭建过程" aria-hidden="true">#</a> 5.2.2.2.2. slave01搭建过程</h6><blockquote><p>让主机的3308端口映射出去。</p></blockquote><div class="language-bash line-numbers-mode" data-ext="sh"><pre class="language-bash"><code>// 创建容器
+<span class="token function">docker</span> run <span class="token parameter variable">-p</span> <span class="token number">3308</span>:3306 <span class="token parameter variable">--name</span> mysql-slave01 <span class="token punctuation">\</span>
+<span class="token parameter variable">-v</span> /mydata/mysql-slave01/log:/var/log/mysql <span class="token punctuation">\</span>
+<span class="token parameter variable">-v</span> /mydata/mysql-slave01/data:/var/lib/mysql <span class="token punctuation">\</span>
+<span class="token parameter variable">-v</span> /mydata/mysql-slave01/conf:/etc/mysql <span class="token punctuation">\</span>
+<span class="token parameter variable">-e</span> <span class="token assign-left variable">MYSQL_ROOT_PASSWORD</span><span class="token operator">=</span>root <span class="token punctuation">\</span>
+<span class="token parameter variable">-d</span> mysql:5.7
+
+// 创建配置文件
+<span class="token function">vi</span> /mydata/mysql-slave01/conf/my.cnf
+
+<span class="token punctuation">[</span>client<span class="token punctuation">]</span>
+default-character-set<span class="token operator">=</span>utf8mb4
+<span class="token punctuation">[</span>mysql<span class="token punctuation">]</span>
+default-character-set<span class="token operator">=</span>utf8mb4
+<span class="token punctuation">[</span>mysqld<span class="token punctuation">]</span>
+character-set-server<span class="token operator">=</span>utf8mb4
+default-time_zone<span class="token operator">=</span><span class="token string">&#39;+8:00&#39;</span>
+<span class="token assign-left variable">server_id</span><span class="token operator">=</span><span class="token number">101</span>
+<span class="token assign-left variable">log_bin</span><span class="token operator">=</span>slave01-bin
+<span class="token assign-left variable">relay_log</span><span class="token operator">=</span>mysql-relay-bin
+
+// 设置开机自启动，并重启
+<span class="token function">docker</span> update mysql-slave01 <span class="token parameter variable">--restart</span><span class="token operator">=</span>always
+<span class="token function">docker</span> restart mysql-slave01
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h6 id="_5-2-2-2-3-slave02搭建过程" tabindex="-1"><a class="header-anchor" href="#_5-2-2-2-3-slave02搭建过程" aria-hidden="true">#</a> 5.2.2.2.3. slave02搭建过程</h6><blockquote><p>让主机的3309端口映射出去。</p></blockquote><div class="language-bash line-numbers-mode" data-ext="sh"><pre class="language-bash"><code>// 创建容器
+<span class="token function">docker</span> run <span class="token parameter variable">-p</span> <span class="token number">3309</span>:3306 <span class="token parameter variable">--name</span> mysql-slave02 <span class="token punctuation">\</span>
+<span class="token parameter variable">-v</span> /mydata/mysql-slave02/log:/var/log/mysql <span class="token punctuation">\</span>
+<span class="token parameter variable">-v</span> /mydata/mysql-slave02/data:/var/lib/mysql <span class="token punctuation">\</span>
+<span class="token parameter variable">-v</span> /mydata/mysql-slave02/conf:/etc/mysql <span class="token punctuation">\</span>
+<span class="token parameter variable">-e</span> <span class="token assign-left variable">MYSQL_ROOT_PASSWORD</span><span class="token operator">=</span>root <span class="token punctuation">\</span>
+<span class="token parameter variable">-d</span> mysql:5.7
+
+// 创建配置文件
+<span class="token function">vi</span> /mydata/mysql-slave02/conf/my.cnf
+
+<span class="token punctuation">[</span>client<span class="token punctuation">]</span>
+default-character-set<span class="token operator">=</span>utf8mb4
+<span class="token punctuation">[</span>mysql<span class="token punctuation">]</span>
+default-character-set<span class="token operator">=</span>utf8mb4
+<span class="token punctuation">[</span>mysqld<span class="token punctuation">]</span>
+character-set-server<span class="token operator">=</span>utf8mb4
+default-time_zone<span class="token operator">=</span><span class="token string">&#39;+8:00&#39;</span>
+<span class="token assign-left variable">server_id</span><span class="token operator">=</span><span class="token number">102</span>
+<span class="token assign-left variable">log_bin</span><span class="token operator">=</span>slave01-bin
+<span class="token assign-left variable">relay_log</span><span class="token operator">=</span>mysql-relay-bin
+
+// 设置开机自启动，并重启
+<span class="token function">docker</span> update mysql-slave02 <span class="token parameter variable">--restart</span><span class="token operator">=</span>always
+<span class="token function">docker</span> restart mysql-slave02
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h5 id="_5-2-2-3-恢复数据到三个实例中" tabindex="-1"><a class="header-anchor" href="#_5-2-2-3-恢复数据到三个实例中" aria-hidden="true">#</a> 5.2.2.3. 恢复数据到三个实例中</h5><blockquote><p>由于数据量很大，我们采用先恢复数据到库里面的方式，让三个数据库实例的数据保持一致，之后再进行主从复制。</p></blockquote><div class="language-bash line-numbers-mode" data-ext="sh"><pre class="language-bash"><code><span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-i</span> mysql-master <span class="token function">sh</span> <span class="token parameter variable">-c</span> <span class="token string">&#39;exec mysql -uroot -proot&#39;</span> <span class="token operator">&lt;</span> /mydata/backupsqls/mysql/monomer_order.sql
+<span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-i</span> mysql-slave01 <span class="token function">sh</span> <span class="token parameter variable">-c</span> <span class="token string">&#39;exec mysql -uroot -proot&#39;</span> <span class="token operator">&lt;</span> /mydata/backupsqls/mysql/monomer_order.sql
+<span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-i</span> mysql-slave02 <span class="token function">sh</span> <span class="token parameter variable">-c</span> <span class="token string">&#39;exec mysql -uroot -proot&#39;</span> <span class="token operator">&lt;</span> /mydata/backupsqls/mysql/monomer_order.sql
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h5 id="_5-2-2-4-开启从数据库实例的主从复制过程" tabindex="-1"><a class="header-anchor" href="#_5-2-2-4-开启从数据库实例的主从复制过程" aria-hidden="true">#</a> 5.2.2.4. 开启从数据库实例的主从复制过程</h5><blockquote><p>主要分两个步骤：</p><ol><li>记录主库的位置信息；</li><li>设置从库与主库的通信的相关信息，并在主库中开启主从复制过程；</li></ol></blockquote><div class="language-bash line-numbers-mode" data-ext="sh"><pre class="language-bash"><code>
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////// <span class="token number">1</span>. 获取master的数据位置
+////////////////////////////////////////////////////////////////////////////////////////////////////
+<span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> mysql-master /bin/bash
+mysql <span class="token parameter variable">-uroot</span> <span class="token parameter variable">-proot</span>
+show master status<span class="token punctuation">;</span>
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////// <span class="token number">2</span>. 配置slave01
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// <span class="token number">1</span>. 进入slave01内部命令行
+<span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> mysql-slave01 /bin/bash
+mysql <span class="token parameter variable">-uroot</span> <span class="token parameter variable">-proot</span>
+
+// <span class="token number">2</span>. 设置主从复制的起始位置
+CHANGE MASTER TO <span class="token assign-left variable">MASTER_HOST</span><span class="token operator">=</span><span class="token string">&#39;192.168.1.150&#39;</span>,MASTER_USER<span class="token operator">=</span><span class="token string">&#39;slave&#39;</span>,MASTER_PASSWORD<span class="token operator">=</span><span class="token string">&#39;123456&#39;</span>, <span class="token punctuation">\</span>
+<span class="token assign-left variable">MASTER_PORT</span><span class="token operator">=</span><span class="token number">3307</span>,MASTER_LOG_FILE<span class="token operator">=</span><span class="token string">&#39;master-bin.000005&#39;</span>,MASTER_LOG_POS<span class="token operator">=</span><span class="token number">145291152</span><span class="token punctuation">;</span>
+
+// <span class="token number">3</span>. 开始主从复制，并查看主从复制的状态
+start slave<span class="token punctuation">;</span>
+show slave status<span class="token punctuation">\</span>G
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////// <span class="token number">3</span>. 配置slave02
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// <span class="token number">1</span>. 进入slave02内部命令行
+<span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> mysql-slave02 /bin/bash
+mysql <span class="token parameter variable">-uroot</span> <span class="token parameter variable">-proot</span>
+
+
+// <span class="token number">2</span>. 设置主从复制的起始位置
+CHANGE MASTER TO <span class="token assign-left variable">MASTER_HOST</span><span class="token operator">=</span><span class="token string">&#39;192.168.1.150&#39;</span>,MASTER_USER<span class="token operator">=</span><span class="token string">&#39;slave&#39;</span>,MASTER_PASSWORD<span class="token operator">=</span><span class="token string">&#39;123456&#39;</span>, <span class="token punctuation">\</span>
+<span class="token assign-left variable">MASTER_PORT</span><span class="token operator">=</span><span class="token number">3307</span>,MASTER_LOG_FILE<span class="token operator">=</span><span class="token string">&#39;master-bin.000005&#39;</span>,MASTER_LOG_POS<span class="token operator">=</span><span class="token number">145291152</span><span class="token punctuation">;</span>
+
+// <span class="token number">3</span>. 开始主从复制，并查看主从复制的状态
+start slave<span class="token punctuation">;</span>
+show slave status<span class="token punctuation">\</span>G
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////// <span class="token number">4</span>. 测试并验证
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// 成功！！！done！！！
+
+
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="_5-3-nexus" tabindex="-1"><a class="header-anchor" href="#_5-3-nexus" aria-hidden="true">#</a> 5.3. nexus</h3><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>docker pull sonatype/nexus3
+
+mkdir -p /mydata/nexus/data
+chmod 777 -R /mydata/nexus
+
+docker run -d --name nexus -p 8081:8081 \
+--restart always \
+-v /mydata/nexus/data:/nexus-data sonatype/nexus3
+
+# 查看日志，看是否启动完成
+docker logs -f nexus
+
+# 启动后，查看自动生成的admin的密码
+cat /mydata/nexus/data/admin.password
+
+# 浏览器访问，然后登陆，用户名admin
+修改密码： root1003 
+设置为可以匿名访问
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="_5-4-rocketmq" tabindex="-1"><a class="header-anchor" href="#_5-4-rocketmq" aria-hidden="true">#</a> 5.4. rocketmq</h3><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>https://blog.csdn.net/qq_28410283/article/details/115855940
+https://juejin.cn/post/7045944869642043422
+
+# 使用docker安装
+https://github.com/apache/rocketmq-docker
+
+
+## 在mac上下载
+git clone https://github.com/apache/rocketmq-docker.git
+
+## 上传到服务器上
+scp -r rocketmq-docker root@192.168.1.150:/home/resource
+
+
+## 在服务器上打开，并执行
+cd image-build
+sh build-image.sh 4.5.0 centos
+sh build-image-dashboard.sh 1.0.0 centos
+
+
+## 创建docker挂载的卷
+mkdir -p /mydata/rocketmq/data/namesrv/logs \
+/mydata/rocketmq/data/namesrv/store \
+/mydata/rocketmq/data/broker/logs \
+/mydata/rocketmq/data/broker/store \
+/mydata/rocketmq/etc/broker
+
+## 创建配置文件
+vi /mydata/rocketmq/etc/broker/broker.conf
+
+brokerClusterName = DefaultCluster
+brokerName = broker-a
+brokerId = 0
+deleteWhen = 04
+fileReservedTime = 48
+brokerRole = ASYNC_MASTER
+flushDiskType = ASYNC_FLUSH
+# Docker环境需要设置成宿主机IP
+#brokerIP1 = {docker宿主机IP}
+brokerIP1 = 192.168.56.10
+
+## 创建compose构建文件的目录
+mkdir /mydata/rocketmq/docker-compose
+
+## 创建compose文件，【注意】，创建之前需要先查看一下上面操作步骤构建的镜像及其版本，不同时期的版本不一样，需要保持compose文件中的镜像版本与自己构建的版本的一致性；
+vi docker-compose.yml
+
+version: &#39;3&#39;
+services:
+  #Service for nameserver
+  namesrv:
+    image: apache/rocketmq:4.5.0
+    container_name: rmqnamesrv
+    restart: always
+    ports:
+      - 9876:9876
+    volumes:
+      - /mydata/rocketmq/data/namesrv/logs:/root/logs
+    command: sh mqnamesrv
+
+  #Service for broker
+  broker:
+    image: apache/rocketmq:4.5.0
+    container_name: rmqbroker
+    restart: always
+    links:
+      - namesrv
+    depends_on:
+      - namesrv
+    ports:
+      - 10909:10909
+      - 10911:10911
+      - 10912:10912
+    volumes:
+      - /mydata/rocketmq/data/broker/logs:/home/rocketmq/logs
+      - /mydata/rocketmq/data/broker/store:/home/rocketmq/store
+      - /mydata/rocketmq/etc/broker/broker.conf:/home/rocketmq/conf/broker.conf
+    command: sh mqbroker -c /home/rocketmq/conf/broker.conf
+
+  #Service for rocketmq-dashboard
+  dashboard:
+    image: apache/rocketmq-dashboard:1.0.0-centos
+    container_name: rmqdashboard
+    restart: always
+    ports:
+      - 8080:8080
+    links:
+      - namesrv
+    depends_on:
+      - namesrv
+    environment:
+      - NAMESRV_ADDR=namesrv:9876
+
+## 启动
+cd /mydata/rocketmq/docker-compose
+docker-compose up -d
+
+## 验证
+
+http://192.168.1.150:8080/#/
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="_5-5-rabbitmq" tabindex="-1"><a class="header-anchor" href="#_5-5-rabbitmq" aria-hidden="true">#</a> 5.5. rabbitmq</h3><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>
+docker search rabbitmq
+
+docker pull rabbitmq
+
+mkdir -p /mydata/rabbimq/
+
+docker run -p 5672:5672 -p 15672:15672 --name rabbitmq \
+-v /mydata/rabbitmq:/var/lib/rabbitmq \
+-v /mydata/rabbitmq/logs:/var/log/rabbitmq \
+-e RABBITMQ_DEFAULT_USER=admin \
+-e RABBITMQ_DEFAULT_PASS=admin \
+-e RABBITMQ_LOG_BASE=/var/log/rabbitmq \
+-d rabbitmq
+
+docker exec -it rabbitmq /bin/bash
+
+rabbitmq-plugins enable rabbitmq_management
+
+## 开机自启动
+docker update rabbitmq --restart=always
+
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><figure><img src="/assets/1726243665825-6e521cb9.png" alt="image.png" tabindex="0" loading="lazy"><figcaption>image.png</figcaption></figure><h3 id="_5-6-sentinel" tabindex="-1"><a class="header-anchor" href="#_5-6-sentinel" aria-hidden="true">#</a> 5.6. sentinel</h3><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>
+docker pull bladex/sentinel-dashboard:1.7.1
+
+docker run --name sentinel -p 8858:8858 -d bladex/sentinel-dashboard:1.7.1
+
+docker update sentinel --restart=always
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="_5-7-nginx" tabindex="-1"><a class="header-anchor" href="#_5-7-nginx" aria-hidden="true">#</a> 5.7. nginx</h3><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>
+docker run -p 80:80 -p 443:443 --name nginx \
+-v /mnt/e/backup/html:/usr/share/nginx/html \
+-v /mydata/nginx/logs:/var/log/nginx \
+-v /mydata/nginx/conf:/etc/nginx \
+-d nginx
+
+
+docker update nginx --restart=always
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><figure><img src="/assets/1726243717228-38c8dc78.png" alt="安装nginx" tabindex="0" loading="lazy"><figcaption>安装nginx</figcaption></figure><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>
+需求： 下载了极客时间的课程，每一套课程里面的每一课都有mp3、pdf、html三种文件，复制到服务器上的挂载的ntfs硬盘上了，
+现在想要在mac电脑上访问这些html，最好是能够显示目录。
+
+实现思路：使用ng作为文件服务器；
+
+实现过程：
+docker pull nginx
+docker run -p 80:80 --name nginx -d nginx
+docker container cp nginx:/etc/nginx /mydata/nginx/conf
+mv /mydata/nginx/conf/nginx/* /mydata/nginx/conf
+rm -rf /mydata/nginx/conf/nginx
+
+docker stop nginx
+docker rm nginx
+
+
+下面一步很重要，把/mnt/e/backup/html映射出去
+docker run -p 80:80 -p 443:443 --name nginx \
+-v /mnt:/usr/share/nginx/html \
+-v /mydata/nginx/logs:/var/log/nginx \
+-v /mydata/nginx/conf:/etc/nginx \
+-d nginx
+
+docker update nginx --restart=always
+
+
+再简单配置一下/mydata/nginx/conf/conf.d/default.conf
+
+location / {
+    root   /usr/share/nginx/html;
+    autoindex on;  # 开启目录文件列表
+}
+
+测试，done！
+
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>docker pull fraoustin/fancyindex
+
+docker run -p 80:80 --name fancyindex \
+-v /mnt:/share \
+-d fraoustin/fancyindex 
+
+docker update fancyindex --restart=always
+
+docker run -d -e &quot;CONTAINER_TIMEZONE=Europe/Paris&quot; \
+-e WEBUSER=myuser&quot; -e &quot;WEBPASSWORD=mypassword&quot; \
+-v /mnt:/share --name fancyindex -p 8080:80 fraoustin/fancyindex 
+
+-e WEBUSER=root -e WEBPASSWORD=root \
+-e COLOR=blue \
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="_5-8-elasticsearch" tabindex="-1"><a class="header-anchor" href="#_5-8-elasticsearch" aria-hidden="true">#</a> 5.8. elasticsearch</h3><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>mkdir -p /mydata/elasticsearch/config
+mkdir -p /mydata/elasticsearch/data
+echo &quot;http.host: 0.0.0.0&quot; &gt;&gt; /mydata/elasticsearch/config/elasticsearch.yml
+
+chmod -R 777 /mydata/elasticsearch/
+
+docker pull elasticsearch:7.4.2
+
+docker run --name elasticsearch -p 9200:9200 -p 9300:9300 \
+-e &quot;discovery.type=single-node&quot; \
+-e ES_JAVA_OPTS=&quot;-Xms1024m -Xmx2048m&quot; \
+-v /mydata/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml \
+-v /mydata/elasticsearch/data:/usr/share/elasticsearch/data \
+-v /mydata/elasticsearch/plugins:/usr/share/elasticsearch/plugins \
+-d elasticsearch:7.4.2
+
+docker update elasticsearch --restart=always
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="_5-9-kinaba" tabindex="-1"><a class="header-anchor" href="#_5-9-kinaba" aria-hidden="true">#</a> 5.9. kinaba</h3><div class="language-text line-numbers-mode" data-ext="text"><pre class="language-text"><code>docker pull kibana:7.4.2
+docker run --name kibana -e ELASTICSEARCH_HOSTS=http://192.168.1.150:9200 -p 5601:5601 \
+-d kibana:7.4.2
+
+docker update kibana --restart=always
+
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p><a href="https://blog.csdn.net/smily77369/article/details/114926723" target="_blank" rel="noopener noreferrer">Centos7 下安装最新 ffmpeg<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a><a href="https://blog.csdn.net/fengguang54/article/details/118725400" target="_blank" rel="noopener noreferrer">CentOS7安装ffmpeg<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a></p><hr><p><strong>上面的方式在实践过程中会发现缺少部分编解码器，是不够完全的。</strong><strong>根据 <strong><a href="https://github.com/a-schild" target="_blank" rel="noopener noreferrer"><strong>a-schild</strong><span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a></strong>/</strong><a href="https://github.com/a-schild/jave2" target="_blank" rel="noopener noreferrer"><strong>jave2</strong><span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a><strong>的思路，直接下载这个包下面的运行文件即可。</strong></p><p><strong>如，mac上直接下载</strong><strong>jave-nativebin-osxm1/src/main/resources/ws/schild/jave/nativebin/ffmpeg-aarch64-osx ，</strong><strong>下载到本地之后，然后配置一下环境变量即可。</strong></p><h2 id="_6-参考" tabindex="-1"><a class="header-anchor" href="#_6-参考" aria-hidden="true">#</a> 6. 参考</h2><ul><li><a href="https://docs.docker.com/get-started/overview/#running-more-workloads-on-the-same-hardware" target="_blank" rel="noopener noreferrer">Docker overview<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a> - 官网</li><li><a href="https://yeasy.gitbook.io/docker_practice/" target="_blank" rel="noopener noreferrer">Docker-从入门到实践<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a></li><li><a href="https://www.quanxiaoha.com/docker/docker-tutorial.html" target="_blank" rel="noopener noreferrer">Docker 教程（图文讲解）<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a></li><li><a href="https://pdai.tech/md/devops/docker/docker-00-overview.html" target="_blank" rel="noopener noreferrer">pdaiTeck-Docker<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span></a></li><li></li></ul></div><!----><footer class="page-meta"><div class="meta-item edit-link"><a href="https://github.com/vongdefu/vongdefu.github.io/edit/main/demo/theme-docs/src/03-framework/docker.md" rel="noopener noreferrer" target="_blank" aria-label="编辑此页" class="nav-link label"><!--[--><svg xmlns="http://www.w3.org/2000/svg" class="icon edit-icon" viewBox="0 0 1024 1024" fill="currentColor" aria-label="edit icon"><path d="M430.818 653.65a60.46 60.46 0 0 1-50.96-93.281l71.69-114.012 7.773-10.365L816.038 80.138A60.46 60.46 0 0 1 859.225 62a60.46 60.46 0 0 1 43.186 18.138l43.186 43.186a60.46 60.46 0 0 1 0 86.373L588.879 565.55l-8.637 8.637-117.466 68.234a60.46 60.46 0 0 1-31.958 11.229z"></path><path d="M728.802 962H252.891A190.883 190.883 0 0 1 62.008 771.98V296.934a190.883 190.883 0 0 1 190.883-192.61h267.754a60.46 60.46 0 0 1 0 120.92H252.891a69.962 69.962 0 0 0-69.098 69.099V771.98a69.962 69.962 0 0 0 69.098 69.098h475.911A69.962 69.962 0 0 0 797.9 771.98V503.363a60.46 60.46 0 1 1 120.922 0V771.98A190.883 190.883 0 0 1 728.802 962z"></path></svg><!--]-->编辑此页<span><svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path><polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg><span class="external-link-icon-sr-only">open in new window</span></span><!----></a></div><div class="meta-item git-info"><!----><!----></div></footer><nav class="page-nav"><!----><a href="/03-framework/maven.html" class="nav-link next" aria-label="maven"><div class="hint">下一页<span class="arrow end"></span></div><div class="link">maven<!----></div></a></nav><div class="giscus-wrapper input-top" id="comment" style="display:block;"><div class="loading-icon-wrapper" style="display:flex;align-items:center;justify-content:center;height:96px"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" preserveAspectRatio="xMidYMid" viewBox="25 25 50 50"><animateTransform attributeName="transform" type="rotate" dur="2s" keyTimes="0;1" repeatCount="indefinite" values="0;360"></animateTransform><circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><animate attributeName="stroke-dasharray" dur="1.5s" keyTimes="0;0.5;1" repeatCount="indefinite" values="1,200;90,200;1,200"></animate><animate attributeName="stroke-dashoffset" dur="1.5s" keyTimes="0;0.5;1" repeatCount="indefinite" values="0;-35px;-125px"></animate></circle></svg></div></div><!----><!--]--></main><!--]--><footer class="footer-wrapper"><div class="footer">浪漫骑士的二流键盘</div><div class="copyright">Copyright © 2025 vongdefu</div></footer></div><!--]--><!----><!----><!----><!--]--></div>
+    <script type="module" src="/assets/app-fb6938a2.js" defer></script>
+  </body>
+</html>
