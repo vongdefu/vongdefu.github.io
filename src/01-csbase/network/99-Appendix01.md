@@ -134,3 +134,210 @@ $ curl --trace-ascii trace1.txt www.baidu.com
 - [curl 网站开发指南](https://www.ruanyifeng.com/blog/2011/09/curl.html)
 - [curl tutorial](https://curl.se/docs/tutorial.html)
 - [everything curl](https://everything.curl.dev/)
+
+
+
+
+---
+
+
+## TODO
+
+其它协议的 curl 过程，比如 ftp、file 等
+
+```
+curl
+curl --help
+curl -v www.baidu.com
+curl -i www.sina.com
+curl -V
+curl --trace trace.txt www.baidu.com
+curl --trace-ascii trace1.txt www.baidu.com
+curl -v www.baidu.com
+curl -v https://www.cnblogs.com/Kimbing-Ng/p/12411017.html
+curl -v https://res.wx.qq.com/a/wx_fed/assets/res/NTI4MWU5.ico
+curl -v
+https://mp.weixin.qq.com/mp/appmsgreport?action=page_time_5s&__biz=MzkxNTU5MjE0MQ==&uin=&key=&pass_ticket=&wxtoken=777&devicetype=&clientversion=&__biz=MzkxNTU5MjE0MQ%3D%3D&appmsg_token=&x5=0&f=json
+curl -v https://mp.weixin.qq.com/mp/appmsgreport?action=page_time_5s&__biz=MzkxNTU5MjE0MQ==&uin=&key=&pass_ticket=&wxtoken=777&devicetype=&clientversion=&__biz=MzkxNTU5MjE0MQ%3D%3D&appmsg_token=&x5=0&f=json
+curl -X POST https://reqbin.com/echo/post/form      -d "username=exampleuser"      -d "password=examplepass"      -i
+curl -X POST https://reqbin.com/echo/post/form      -d "username=exampleuser"      -d "password=examplepass"      -v
+curl --trace-ascii trace2.txt -X POST https://reqbin.com/echo/post/form      -d "username=exampleuser"      -d "password=examplepass"
+
+```
+
+```
+zeanzai@DESKTOP-BTBMQTM MINGW64 /d/00.zeanzai/Downloads
+$ curl -X POST https://postman-echo.com/post \
+     -d "name=JohnDoe" \
+     -d "email=johndoe@example.com" \
+     -i -v
+Note: Unnecessary use of -X or --request, POST is already inferred.
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 198.18.0.177:443...
+* Connected to postman-echo.com (198.18.0.177) port 443
+* schannel: disabled automatic use of client certificate
+  0     0    0     0    0     0      0      0 --:--:--  0:00:02 --:--:--     0* using HTTP/1.x
+> POST /post HTTP/1.1
+> Host: postman-echo.com
+> User-Agent: curl/8.4.0
+> Accept: */*
+> Content-Length: 38
+> Content-Type: application/x-www-form-urlencoded
+>
+} [38 bytes data]
+< HTTP/1.1 200 OK
+< Date: Wed, 10 Jul 2024 20:29:05 GMT
+< Content-Type: application/json; charset=utf-8
+< Content-Length: 601
+< Connection: keep-alive
+< Server: nginx/1.25.3
+< ETag: W/"259-ifTTU5DnnKCfTuvZaz9HI2sLoUA"
+< set-cookie: sails.sid=s%3A6DPYcAmmqOiH_vpl2snsXOhUl5nP0vuh.kx924N3RZo4IAEF2z3LmbYuwfwVj4oDSY7HOBQKxfRI; Path=/; HttpOnly
+<
+{ [601 bytes data]
+100   639  100   601  100    38    198     12  0:00:03  0:00:03 --:--:--   210HTTP/1.1 200 OK
+Date: Wed, 10 Jul 2024 20:29:05 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 601
+Connection: keep-alive
+Server: nginx/1.25.3
+ETag: W/"259-ifTTU5DnnKCfTuvZaz9HI2sLoUA"
+set-cookie: sails.sid=s%3A6DPYcAmmqOiH_vpl2snsXOhUl5nP0vuh.kx924N3RZo4IAEF2z3LmbYuwfwVj4oDSY7HOBQKxfRI; Path=/; HttpOnly
+
+{
+  "args": {},
+  "data": "",
+  "files": {},
+  "form": {
+    "name": "JohnDoe",
+    "email": "johndoe@example.com"
+  },
+  "headers": {
+    "host": "postman-echo.com",
+    "x-request-start": "t=1720643345.306",
+    "content-length": "38",
+    "x-forwarded-proto": "https",
+    "x-forwarded-port": "443",
+    "x-amzn-trace-id": "Root=1-668eef11-1cb5d670060250137bd54f43",
+    "user-agent": "curl/8.4.0",
+    "accept": "*/*",
+    "content-type": "application/x-www-form-urlencoded"
+  },
+  "json": {
+    "name": "JohnDoe",
+    "email": "johndoe@example.com"
+  },
+  "url": "https://postman-echo.com/post"
+}
+* Connection #0 to host postman-echo.com left intact
+
+zeanzai@DESKTOP-BTBMQTM MINGW64 /d/00.zeanzai/Downloads
+$ curl --trace-ascii trace3.txt -X POST https://postman-echo.com/post -d "name=JohnDoe" -d "email=johndoe@example.com" -i -v
+Warning: -v, --verbose overrides an earlier trace/verbose option
+Note: Unnecessary use of -X or --request, POST is already inferred.
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 198.18.0.177:443...
+* Connected to postman-echo.com (198.18.0.177) port 443
+* schannel: disabled automatic use of client certificate
+* using HTTP/1.x
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0> POST /post HTTP/1.1
+> Host: postman-echo.com
+> User-Agent: curl/8.4.0
+> Accept: */*
+> Content-Length: 38
+> Content-Type: application/x-www-form-urlencoded
+>
+} [38 bytes data]
+< HTTP/1.1 200 OK
+< Date: Wed, 10 Jul 2024 20:31:12 GMT
+< Content-Type: application/json; charset=utf-8
+< Content-Length: 601
+< Connection: keep-alive
+< Server: nginx/1.25.3
+< ETag: W/"259-IayvP2xeNpPd32eWUmNCUWeyCCg"
+< set-cookie: sails.sid=s%3Am5aFmAWC0nOARrKqEO52NnDIP3kc5NlV.3pVNVXcSukjZx2VdtOm73Hyro5EHztF3vLIIj48pz3s; Path=/; HttpOnly
+<
+{ [601 bytes data]
+100   639  100   601  100    38    581     36  0:00:01  0:00:01 --:--:--   619HTTP/1.1 200 OK
+Date: Wed, 10 Jul 2024 20:31:12 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 601
+Connection: keep-alive
+Server: nginx/1.25.3
+ETag: W/"259-IayvP2xeNpPd32eWUmNCUWeyCCg"
+set-cookie: sails.sid=s%3Am5aFmAWC0nOARrKqEO52NnDIP3kc5NlV.3pVNVXcSukjZx2VdtOm73Hyro5EHztF3vLIIj48pz3s; Path=/; HttpOnly
+
+{
+  "args": {},
+  "data": "",
+  "files": {},
+  "form": {
+    "name": "JohnDoe",
+    "email": "johndoe@example.com"
+  },
+  "headers": {
+    "host": "postman-echo.com",
+    "x-request-start": "t=1720643472.834",
+    "content-length": "38",
+    "x-forwarded-proto": "https",
+    "x-forwarded-port": "443",
+    "x-amzn-trace-id": "Root=1-668eef90-7680e0742990c84040ee5e73",
+    "user-agent": "curl/8.4.0",
+    "accept": "*/*",
+    "content-type": "application/x-www-form-urlencoded"
+  },
+  "json": {
+    "name": "JohnDoe",
+    "email": "johndoe@example.com"
+  },
+  "url": "https://postman-echo.com/post"
+}
+* Connection #0 to host postman-echo.com left intact
+
+zeanzai@DESKTOP-BTBMQTM MINGW64 /d/00.zeanzai/Downloads
+$ curl --trace-ascii trace3.txt -X POST https://postman-echo.com/post -d "name=JohnDoe" -d "email=johndoe@example.com" -i
+Note: Unnecessary use of -X or --request, POST is already inferred.
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   639  100   601  100    38    499     31  0:00:01  0:00:01 --:--:--   532HTTP/1.1 200 OK
+Date: Wed, 10 Jul 2024 20:31:45 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 601
+Connection: keep-alive
+Server: nginx/1.25.3
+ETag: W/"259-EBimwo87KXSp4mfcmb/q/eoIBZ4"
+set-cookie: sails.sid=s%3ApvMx8cr7sdZd5sB7Rk3V3918Q-arRI_z.fxF9DWIG7%2FtUdwXVn9t7BI6kLH3PzfV1PgxQu41kY4Q; Path=/; HttpOnly
+
+{
+  "args": {},
+  "data": "",
+  "files": {},
+  "form": {
+    "name": "JohnDoe",
+    "email": "johndoe@example.com"
+  },
+  "headers": {
+    "host": "postman-echo.com",
+    "x-request-start": "t=1720643505.940",
+    "content-length": "38",
+    "x-forwarded-proto": "https",
+    "x-forwarded-port": "443",
+    "x-amzn-trace-id": "Root=1-668eefb1-464cd4653fece34f5034368f",
+    "user-agent": "curl/8.4.0",
+    "accept": "*/*",
+    "content-type": "application/x-www-form-urlencoded"
+  },
+  "json": {
+    "name": "JohnDoe",
+    "email": "johndoe@example.com"
+  },
+  "url": "https://postman-echo.com/post"
+}
+
+zeanzai@DESKTOP-BTBMQTM MINGW64 /d/00.zeanzai/Downloads
+$
+
+```
+

@@ -1,6 +1,5 @@
-### 5.5. rabbitmq
 
-```
+``` sh
 
 docker search rabbitmq
 

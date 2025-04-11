@@ -225,4 +225,19 @@ DirectByteBuffer(int cap) {                   // package-private
 ```
 
 
+---
 
+待整理： 基于cas扣减库存
+
+场景描述
+
+
+
+实现过程
+
+cas基本原理及问题解决
+
+cas： 保存数据时先进行对比，如果是期望的那个值，就进行保存，否则就进行修改
+
+
+[秒杀系统扣减库存方案](https://zhuanlan.zhihu.com/p/473990908)

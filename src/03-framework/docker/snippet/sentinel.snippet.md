@@ -1,6 +1,4 @@
-### 5.6. sentinel
-
-```
+```sh
 
 docker pull bladex/sentinel-dashboard:1.7.1
 

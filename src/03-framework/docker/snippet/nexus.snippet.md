@@ -1,7 +1,4 @@
-
-### 5.3. nexus
-
-```
+```sh
 docker pull sonatype/nexus3
 
 mkdir -p /mydata/nexus/data

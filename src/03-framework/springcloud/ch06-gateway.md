@@ -550,3 +550,8 @@ swagger-order模块的搭建步骤与swagger-user模块的搭建步骤一致。�
 - scg路由规则动态可配置化
 
 
+
+
+扩展阅读：
+1. [10Wqps 超高并发 API 网关 架构演进之路](https://mp.weixin.qq.com/s/hMhKFszDKFswmGEEOtzDWQ)
+2. [建设微服务API网关的一些实践](https://mp.weixin.qq.com/s/Xbi5YCEyJUjZXCV8NZg17A)

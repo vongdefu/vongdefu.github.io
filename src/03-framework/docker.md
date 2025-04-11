@@ -94,23 +94,81 @@
 ## 5. 常用软件的安装
 
 
-<!-- @include: ./docker/snippet/redis.snippet.md -->
+<details>
 
-<!-- @include: ./docker/snippet/mysql.snippet.md -->
+<summary>redis</summary>
 
-<!-- @include: ./docker/snippet/nexus.snippet.md -->
+{{#include ./docker/snippet/redis.snippet.md}}
 
-<!-- @include: ./docker/snippet/rocketmq.snippet.md -->
+</details>
 
-<!-- @include: ./docker/snippet/rabbitmq.snippet.md -->
+<details>
 
-<!-- @include: ./docker/snippet/sentinel.snippet.md -->
+<summary>mysql</summary>
 
-<!-- @include: ./docker/snippet/nginx.snippet.md -->
+{{#include ./docker/snippet/mysql.snippet.md}}
 
-<!-- @include: ./docker/snippet/elasticsearch.snippet.md -->
+</details>
 
-<!-- @include: ./docker/snippet/kinaba.snippet.md -->
+<details>
+
+<summary>nexus</summary>
+
+{{#include ./docker/snippet/nexus.snippet.md}}
+
+</details>
+
+<details>
+
+<summary>rocketmq</summary>
+
+{{#include ./docker/snippet/rocketmq.snippet.md}}
+
+</details>
+
+
+<details>
+
+<summary>rabbitmq</summary>
+
+{{#include ./docker/snippet/rabbitmq.snippet.md}}
+
+</details>
+
+
+<details>
+
+<summary>sentinel</summary>
+
+{{#include ./docker/snippet/sentinel.snippet.md}}
+
+</details>
+
+<details>
+
+<summary>nginx</summary>
+
+{{#include ./docker/snippet/nginx.snippet.md}}
+
+</details>
+
+<details>
+
+<summary>elasticsearch</summary>
+
+{{#include ./docker/snippet/elasticsearch.snippet.md}}
+
+</details>
+
+
+<details>
+
+<summary>kinaba</summary>
+
+{{#include ./docker/snippet/kinaba.snippet.md}}
+
+</details>
+
 
 
 ## 6. 参考

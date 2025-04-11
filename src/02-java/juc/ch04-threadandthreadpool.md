@@ -528,3 +528,138 @@ anyOf：只要有一个任务完成
 
 - `static CompletableFuture<Void> allOf(CompletableFuture<?>... cfs)`：返回一个新的 `CompletableFuture`，当所有传入的 `CompletableFuture` 都完成时，它也会完成。
 - `static CompletableFuture<Object> anyOf(CompletableFuture<?>... cfs)`：返回一个新的 `CompletableFuture`，当任意一个传入的 `CompletableFuture` 完成时，它也会完成，并返回完成的 `CompletableFuture` 的结果。
+
+
+
+--- 
+
+![](./ch04-threadandthreadpool/image/1680192815465.png)
+![](./ch04-threadandthreadpool/image/1681096582444.png)
+![](./ch04-threadandthreadpool/image/1681097139723.png)
+![](./ch04-threadandthreadpool/image/1681099783399.png)
+![](./ch04-threadandthreadpool/image/1681100338362.png)
+![](./ch04-threadandthreadpool/image/1681102072423.png)
+![](./ch04-threadandthreadpool/image/1681102113588.png)
+![](./ch04-threadandthreadpool/image/1681102150000.png)
+![](./ch04-threadandthreadpool/image/1681102215387.png)
+![](./ch04-threadandthreadpool/image/1681102267638.png)
+![](./ch04-threadandthreadpool/image/1681102318098.png)
+![](./ch04-threadandthreadpool/image/1714526099071.png)
+
+
+
+
+
+---
+
+待整理： 基于线程池批量抄表 
+## 场景描述
+
+抄表过程包括获取楼栋信息，之后根据楼层信息获取当前楼栋信息的设备信息，之后拿到设备的请求链路信息，最后组装命令信息到消息队列中。这个过程可能是一个请求，但是涉及到很多个设备，每一个设备信息都需要进行抄表命令的组装。如果采用循环的方式，那么这个过程的耗时就很长，因此需要优化，采用线程池的方式。
+
+实现思路： 先根据楼栋获取当前楼栋的所有设备信息，然后把设备信息放入阻塞队列中，然后使用线程池依次执行阻塞队列中的设备信息。
+
+> 可以把weibo爬虫中的任务执行，放到这个案例中。
+
+
+
+
+func getshebeiList(louceng) {
+// 查询楼层与设备信息表，获取当前楼层的所有设备信息
+}
+
+
+线程池实现原理
+批量构建消息体后放入阻塞队列中，由线程池进行处理
+
+
+
+
+
+![image.png](./ch04-threadandthreadpool/image/1680192815465.png)
+
+
+
+```
+/**
+ * 首页热门信息流 20s
+ */
+@XxlJob("hotLineTimeReplay")
+public void hotLineTimeReplay() {
+    try {
+        long start = System.currentTimeMillis();
+        List<CompletableFuture<Void>> futures = new ArrayList<>(WeiboBizSchedule.BATCH_HOT_FEED_TIMES);
+        for (int i = 0; i < WeiboBizSchedule.BATCH_HOT_FEED_TIMES; i++) {
+
+            CompletableFuture<Void> voidCompletableFuture =
+                    CompletableFuture.runAsync(weiboIosFeedService::hotTimeLine,
+                            BusinessPool.B_REPLAY_JOB_HOT_FEED);
+
+            futures.add(voidCompletableFuture);
+        }
+        HystrixFuture.completAllOf(System.currentTimeMillis(), futures, 55*1000).join();    // 15s后所有的线程都要结束
+        LOG.info("hot-line-time, spend time: {}", (System.currentTimeMillis() - start));
+    } catch (Exception e) {
+        LOG.error("error happen: ", e);
+    }
+}
+
+```
+
+
+```
+public static final ExecutorService B_REPLAY_JOB_HOT_FEED_ANDROID = new ThreadPoolExecutor(
+        BASE_THREAD_NUMS,
+        Math.max(BASE_THREAD_NUMS, 200),
+        5,
+        TimeUnit.MINUTES,
+        new LinkedBlockingQueue(1000),
+        new DefaultThreadFactory("weibo-replay-hotfeed"),
+        new ThreadPoolExecutor.CallerRunsPolicy()
+);
+
+```
+
+
+```
+public class HystrixFuture<T> {
+    private static final Logger LOG = LogbackRollingFileUtil.getLogger("hystrixFuture");
+
+    public static CompletableFuture<Void> completAllOf(
+            long sequence, List<CompletableFuture<Void>> futureList, long timeout) {
+
+               return CompletableFuture.runAsync(
+                        () -> {
+                            try {
+                                Thread.sleep(timeout);
+                            } catch (Exception e) {
+                            }
+
+                            futureList.forEach(future -> {
+                                if (future.isDone() || future.isCancelled()) {
+                                    return;
+                                }
+                                future.cancel(true);
+                                LOG.error(sequence + " kill one thread ,cause timeout");
+                            });
+
+                        });
+    }
+}
+
+```
+
+
+
+[SpringBoot与RabbitMQ详解与整合](https://ost.51cto.com/posts/15542)
+
+
+
+
+[后端思维篇：手把手教你写一个并行调用模板](https://mp.weixin.qq.com/s?__biz=Mzg3NzU5NTIwNg==&mid=2247499504&idx=1&sn=bb62226e6cffeb1859efb0100c796050&chksm=cf2221d9f855a8cf23f75cb51c1a407578fb0f279e96ddae74b5b8c84f2f5dc71762425b17cb&token=1305910004&lang=zh_CN#rd)
+[异步编程利器：CompletableFuture详解](https://mp.weixin.qq.com/s?__biz=Mzg3NzU5NTIwNg==&mid=2247490456&idx=1&sn=95836324db57673a4d7aea4fb233c0d2&chksm=cf21c4b1f8564da72dc7b39279362bcf965b1374540f3b339413d138599f7de59a5f977e3b0e&token=1260947715&lang=zh_CN&scene=21#wechat_redirect)
+
+
+
+
+

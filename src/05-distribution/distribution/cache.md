@@ -310,3 +310,167 @@ Redisson
 [Canal 解决 MySQL 和 Redis 数据同步问题](https://juejin.cn/post/6945784603508637709)
 [不知道这四种缓存模式，敢说懂缓存吗？](https://www.51cto.com/article/713035.html)
 [缓存模式（Cache Aside、Read Through、Write Through、Write Behind）](https://blog.csdn.net/z69183787/article/details/112308815)
+
+扩展： [实现多级缓存的架构设计方案](https://mp.weixin.qq.com/s/uWInyKQYkASVKPN8lblkPQ)
+
+
+---
+
+
+## 应用场景
+
+首页排名信息查询，当日信息查询，当月信息查询，
+
+## 实现过程
+
+一般情况下，本地缓存称为一级缓存，分布式缓存称为二级缓存。
+
+### ehcache一级缓存
+
+Spring Cache就是一个这个框架。它利用了AOP，实现了基于注解的缓存功能，并且进行了合理的抽象，业务代码不用关心底层是使用了什么缓存框架，只需要简单地加一个注解，就能实现缓存功能了。
+每次调用需要缓存功能的方法时，**Spring会检查检查指定参数的指定的目标方法是否已经被调用过**；**如果有就直接从缓存中获取方法调用后的结果，如果没有就调用方法并缓存结果后返回给用户**，下次调用直接从缓存中获取。
+常用的注解有@CachePut 、@CacheEvict 、@Cacheable、@CacheConfig、@EnableCaching。
+
+1. 引入相关依赖
+
+```
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-cache</artifactId>
+</dependency>
+<!--添加 ehcache依赖-->
+<dependency>
+    <groupId>net.sf.ehcache</groupId>
+    <artifactId>ehcache</artifactId>
+</dependency>
+
+```
+
+2. 新建配置文件
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache updateCheck="false">
+      <!--
+        磁盘存储:将缓存中暂时不使用的对象,转移到硬盘,类似于Windows系统的虚拟内存
+        path:指定在硬盘上存储对象的路径
+        path可以配置的目录有：
+            user.home（用户的家目录）
+            user.dir（用户当前的工作目录）
+            java.io.tmpdir（默认的临时目录）
+            ehcache.disk.store.dir（ehcache的配置目录）
+            绝对路径（如：d:\\ehcache）
+        查看路径方法：String tmpDir = System.getProperty("java.io.tmpdir");
+     -->
+    <diskStore path="java.io.tmpdir"/>
+
+      <!--
+        defaultCache:默认的缓存配置信息,如果不加特殊说明,则所有对象按照此配置项处理
+        maxElementsInMemory:设置了缓存的上限,最多存储多少个记录对象
+        eternal:代表对象是否永不过期 (指定true则下面两项配置需为0无限期)
+        timeToIdleSeconds:最大的发呆时间 /秒
+        timeToLiveSeconds:最大的存活时间 /秒
+        overflowToDisk:是否允许对象被写入到磁盘
+        说明：下列配置自缓存建立起600秒(10分钟)有效 。
+        在有效的600秒(10分钟)内，如果连续120秒(2分钟)未访问缓存，则缓存失效。
+        就算有访问，也只会存活600秒。
+     -->
+    <defaultCache maxElementsInMemory="10000" eternal="false"
+                  timeToIdleSeconds="600" timeToLiveSeconds="600" overflowToDisk="true" />
+
+
+   <!--
+      name:缓存名称。
+      maxElementsInMemory：缓存最大个数。
+      eternal:对象是否永久有效，一但设置了，timeout将不起作用。
+      timeToIdleSeconds：设置对象在失效前的允许闲置时间（单位：秒）。仅当eternal=false对象不是永久有效时使用，可选属性，默认值是0，也就是可闲置时间无穷大。
+      timeToLiveSeconds：设置对象在失效前允许存活时间（单位：秒）。最大时间介于创建时间和失效时间之间。仅当eternal=false对象不是永久有效时使用，默认是0.，也就是对象存活时间无穷大。
+      overflowToDisk：当内存中对象数量达到maxElementsInMemory时，Ehcache将会对象写到磁盘中。
+      diskSpoolBufferSizeMB：这个参数设置DiskStore（磁盘缓存）的缓存区大小。默认是30MB。每个Cache都应该有自己的一个缓冲区。
+      maxElementsOnDisk：硬盘最大缓存个数。
+      diskPersistent：是否缓存虚拟机重启期数据 Whether the disk store persists between restarts of the Virtual Machine. The default value is false.
+      diskExpiryThreadIntervalSeconds：磁盘失效线程运行时间间隔，默认是120秒。
+      memoryStoreEvictionPolicy：当达到maxElementsInMemory限制时，Ehcache将会根据指定的策略去清理内存。默认策略是LRU（最近最少使用）。你可以设置为FIFO（先进先出）或是LFU（较少使用）。
+      clearOnFlush：内存数量最大时是否清除。
+   -->
+    <cache name="orderInfo"
+           maxElementsInMemory="10000"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="3600"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
+  
+</ehcache>
+
+现在假设有如下配置：
+
+timeToIdleSeconds=600
+
+timeToLiveSeconds=1800
+
+缓存有效时间为1800秒（自缓存建立起半小时有效），在有效的半小时内，如果连续600s钟未访问缓存，则缓存失效，特别说明的是，就算缓存访问从未间断，到半小时后，缓存也会失效。当然，timeToLiveSeconds必须大于timeToIdleSeconds才有意义并且只有在eternal为false时，这2个属性才有效。
+
+```
+
+3. 添加配置
+
+```
+spring:
+  cache:
+    type: ehcache
+    ehcache:
+      config: classpath:ehcache.xml
+
+```
+
+4. 打开缓存开关
+
+![image.png](./cache/image/1681737993134.png)
+
+5. 使用
+
+![image.png](./cache/image/1681738093429.png)
+
+7. 测试效果展示
+
+![image.png](./cache/image/1681737803914.png)
+**从200ms，优化到1ms以内。**
+
+### redis二级缓存
+
+![image.png](./cache/image/1681732132729.png)
+
+### 一级缓存与二级缓存配合使用
+
+![image.png](./cache/image/1681738419471.png)
+具体实现过程，可以在redis作为二级缓存的基础上加上 @Cacheable 即可。
+
+## 一级缓存VS二级缓存
+
+访问速度：理论上，访问速度上一级缓存要比二级缓存要快一些，因为一级缓存是直接从本地内存中获取数据，而二级缓存则会产生网络IO；
+应用场景：一级缓存只适合变更频率低、实时性要求低的数据，主要是用来提升访问速度，二级缓存的适用场景更为丰富；
+数据一致性问题： 二者都会产生缓存与数据库数据不一致问题。一方面，二者都需要解决缓存与db数据不一致问题；另一方面，一级缓存在集群部署环境的数据变更时，除了要解决双写一致性问题外，还要通知剩余节点更新缓存；
+
+**缓存的过期时间、过期策略以及多线程访问的问题也都需要考虑进去。**
+
+## 参考
+
+[SpringBoot整合Ehcache缓存(二十二)](https://developer.aliyun.com/article/851866)
+[史上最全的Spring Boot Cache使用与整合](https://blog.csdn.net/qq_32448349/article/details/101696892)
+[Spring Cache，从入门到真香](https://zhuanlan.zhihu.com/p/266804094)
+
+二级缓存与纯redis操作有什么优劣？
+SpringBoot+Redis+Ehcache实现二级缓存
+dataeye/overseas-web/ProductRankingServiceImpl
+
+> 效果： 查询的结果会放到ehcache中，以后的每次查询，都会从本地缓存中查询，提高了查询效率
+> 使用查询条件作为key
+
+思考： 这种方案与【先查redis缓存，如果redis中不存在就查数据库，查完之后再放到redis中；如果有直接返回】的方案有何优劣？
+
+1. 方案一，也就是二级缓存，适合单实例部署的场景，如果部署多个后端服务实例，可能会造成多个服务实例都有同一个
+

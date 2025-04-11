@@ -1,5 +1,3 @@
-### 5.8. elasticsearch
-
 ```
 mkdir -p /mydata/elasticsearch/config
 mkdir -p /mydata/elasticsearch/data

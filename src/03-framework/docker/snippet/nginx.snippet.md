@@ -1,7 +1,4 @@
-
-### 5.7. nginx
-
-```
+```sh
 
 docker run -p 80:80 -p 443:443 --name nginx \
 -v /mnt/e/backup/html:/usr/share/nginx/html \
