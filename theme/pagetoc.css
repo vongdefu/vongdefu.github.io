@@ -68,4 +68,8 @@
     font-weight: bold;
     color: #e67e22;
   }
-  
+
+// 修改侧边栏中章节的字体大小
+.chapter li.part-title {
+  font-size: 1.2em;
+}
