@@ -13,22 +13,21 @@ WSL 是 Windows 平台上提供的一种虚拟化的 Linux 服务，但是我们
    2. WSL 的版本安装不同，其内部支持的 Linux 的版本可能就不同；
 2. 对 Linux 的可操控性：所有的操作是交给 Windows 平台的，程序员要求更高的可控性；
 
-
 - 为什么使用 VirtualBox+Vagrant 的方式
 
-  |  | WSL | VirtualBox+Vagrant |
-  | --- | --- | --- |
-  | 基本原理 | 基于 Windows，与 Windows 平台贴合很好，所有的操作都是交给 Windows 平台来管理的，不太需要自行维护。 | 独立于操作系统平台。使用 vagrant 来管理工作流。 |
-  | 项目环境的一致性保证 | 依赖于 Windows 的特定版本甚至特定的硬件支持，以及 WSL 的版本。 | 使用 vagrantfile 来保证。不同环境可以似乎用同一个 vagrantfile 来确保安装的环境的配置的一致性。 |
-  | 对 Linux 的可操控性 | 较差。 | 较强。可以使用一些 ssh 客户端或者直接使用 git 工具连接。 |
+  |                      | WSL                                                                                                | VirtualBox+Vagrant                                                                             |
+  | -------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+  | 基本原理             | 基于 Windows，与 Windows 平台贴合很好，所有的操作都是交给 Windows 平台来管理的，不太需要自行维护。 | 独立于操作系统平台。使用 vagrant 来管理工作流。                                                |
+  | 项目环境的一致性保证 | 依赖于 Windows 的特定版本甚至特定的硬件支持，以及 WSL 的版本。                                     | 使用 vagrantfile 来保证。不同环境可以似乎用同一个 vagrantfile 来确保安装的环境的配置的一致性。 |
+  | 对 Linux 的可操控性  | 较差。                                                                                             | 较强。可以使用一些 ssh 客户端或者直接使用 git 工具连接。                                       |
 
 ## 2. 是个什么玩意儿？
 
-Vagrant是一种在单个工作流程中构建和管理虚拟机环境的工具。通过易于使用的工作流程并专注于自动化，Vagrant降低了开发环境的设置时间，提高了生产一致性，并使“在我的机器上工作”成为过去的遗留物。
+Vagrant 是一种在单个工作流程中构建和管理虚拟机环境的工具。通过易于使用的工作流程并专注于自动化，Vagrant 降低了开发环境的设置时间，提高了生产一致性，并使“在我的机器上工作”成为过去的遗留物。
 
-Vagrant通过虚拟机相关平台更加高级的一种管理形式，直接通过平台api进行管理，而你只需要准备好你的文件就可以了。
+Vagrant 通过虚拟机相关平台更加高级的一种管理形式，直接通过平台 api 进行管理，而你只需要准备好你的文件就可以了。
 
-Vagrant将在一个一致的环境中隔离依赖关系及其配置，而不会牺牲您习惯使用的任何工具（编辑器，浏览器，调试器等）。一旦您或其他人创建了单个 Vagrant文件，您只需要vagrant up安装并配置所有内容即可使用。团队的其他成员使用相同的配置创建他们的开发环境，因此无论您是在Linux，Mac OS X还是Windows上工作，您的所有团队成员都在同一环境中运行代码，针对相同的依赖项，所有组件都配置相同办法。告别“在我的机器上工作”的错误。
+Vagrant 将在一个一致的环境中隔离依赖关系及其配置，而不会牺牲您习惯使用的任何工具（编辑器，浏览器，调试器等）。一旦您或其他人创建了单个 Vagrant 文件，您只需要 vagrant up 安装并配置所有内容即可使用。团队的其他成员使用相同的配置创建他们的开发环境，因此无论您是在 Linux，Mac OS X 还是 Windows 上工作，您的所有团队成员都在同一环境中运行代码，针对相同的依赖项，所有组件都配置相同办法。告别“在我的机器上工作”的错误。
 
 几个重要概念：
 
@@ -39,11 +38,11 @@ Vagrant将在一个一致的环境中隔离依赖关系及其配置，而不会�
 
 1. 安装 VirtualBox，并完成 VirtualBox 的设置，例如：虚拟机保存目录；
 2. 安装 Vagrant；命令行输入“vagrant version”可以查看是否安装成功；
-3. 之后完成配置：新建系统环境变量，环境变量名为 VAGRANT_HOME，变量值为 d:\05.VM\.vagrant.d 。这个文件中保存后续添加的 box；【不需要添加到PATH】
+3. 之后完成配置：新建系统环境变量，环境变量名为 VAGRANT_HOME，变量值为 d:\05.VM\.vagrant.d 。这个文件中保存后续添加的 box；【不需要添加到 PATH】
 
-  ![1722997403039](./vagrant/image/1722997403039.png)
+![1722997403039](./vagrant/image/1722997403039.png)
 
-## 4. 其他操作 
+## 4. 其他操作
 
 - 查找 box
 
@@ -69,10 +68,10 @@ Vagrant将在一个一致的环境中隔离依赖关系及其配置，而不会�
   # ENV["LC_ALL"] = "en_US.UTF-8"
   Vagrant.configure("2") do |config|
     config.vm.box = "centos/7"
-    
+
     # config.vm.network "private_network", ip: "192.168.56.12"
     config.vm.network "public_network", bridge: "Realtek PCIe GbE Family Controller", ip: "192.168.1.105"
-    
+
     # 设置内存和核心数
     config.vm.provider "virtualbox" do |vb|
       vb.memory = "12288"
@@ -96,8 +95,8 @@ Vagrant将在一个一致的环境中隔离依赖关系及其配置，而不会�
     - PubkeyAuthentication yes
     - PasswordAuthentication yes
   - 重启 ssh 服务： systemctl restart sshd
-  - 生成 sshkey ：  ssh-keygen -t ed25519 -C "zeanzai.me@gmail.com" 。 目的是生成 .ssh 文件夹，因为 windows 分发的 key 是放到这个目录下的。
-  - 把 Windows 的 key 分发到 centos 上：   ssh-copy-id -i /c/Users/zeanzai/.ssh/id_ed25519.pub root@192.168.56.12
+  - 生成 sshkey ： ssh-keygen -t ed25519 -C "zeanzai.me@gmail.com" 。 目的是生成 .ssh 文件夹，因为 windows 分发的 key 是放到这个目录下的。
+  - 把 Windows 的 key 分发到 centos 上： ssh-copy-id -i /c/Users/zeanzai/.ssh/id_ed25519.pub root@192.168.56.12
 - 其他操作
   - 关机： vagrant halt
   - 修改了 vagrantfile 后重启： vagrant reload
@@ -109,4 +108,4 @@ Vagrant将在一个一致的环境中隔离依赖关系及其配置，而不会�
 ## 5. 参考
 
 - [超详细的 Vagrant 上手指南](https://zhuanlan.zhihu.com/p/259833884)
-- [开发环境管理利器Vagrant](https://www.cnblogs.com/evan-blog/p/10552997.html)
+- [开发环境管理利器 Vagrant](https://www.cnblogs.com/evan-blog/p/10552997.html)
