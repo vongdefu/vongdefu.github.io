@@ -1,109 +1,9 @@
-# Git及Github
+# CVS 之 Git 与 Github
+
+## 常用命令
 
 ```bash
-
-# 生成key，在命令行里面填写文件名，多个key使用用户名进行区分， 如： id_rsa_vongdefu
-ssh-keygen -t ed25519 -C "your.email@example.com"
-
-
-# 为每一个仓库设置用户名和邮箱
-#   只需要在仓库目录下执行即可
-git config user.name "Your Name"
-git config user.email "your.email@example.com"
-#   之后在 .git/config 可以看到设置后的用户名和邮箱
-
-# 全局配置，最好不要进行这个操作
-git config --global user.name zeanzai
-git config --global user.email "zeanzai.me@gmail.com"
-git config --global http.proxy 127.0.0.1:7890
-
-# 注意：如果是需要身份验证的，就用这种格式：
-git config --global http.proxy 用户名:密码@IP:端口
-# 如果需要设置https，那么就需要把 http.proxy 改成 https.proxy
-git config --global https.proxy 127.0.0.1:7890
-
-# 查看一下配置
-git config --global --list
-
-
-# 测试
-ssh -T git@github.com
-ssh -T git@gitee.com
-
-# 使用git克隆私有仓库
-git clone --branch master https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/vongdefu/vongdefu-dochub.git vongdefu-dochub
-
-# ssh
-ssh-copy-id -i ./id_ed25519.pub root@192.168.1.150
-
-# 空仓库
-mkdir test
-cd test
-git init 
-touch README.md
-git add README.md
-git commit -m "first commit"
-git remote add origin https://gitee.com/zeanzai/test.git
-git push -u origin "master"
-
-# 已有仓库
-cd existing_git_repo
-git remote add origin https://gitee.com/zeanzai/test.git
-git push -u origin "master"
-
-# 分支管理
-## 创建并切换到新分支
-git checkout -b ${{branch_name}} 
-
-## 删除分支
-
-```
-
-## 克隆GitHub私有仓库
-
-1. 需要在**用户的配置页面**中配置一个PAT（personal access token）；
-2. 在 仓库的url中配置上这个PAT ： 见上面
-3. 如果私有仓库需要使用GitHubActions，则还需要
-   1. 根据 peaceiris/actions-gh-pages@v3 的[要求](https://github.com/peaceiris/actions-gh-pages)，在**仓库的setting中**设置 action 的权限，设置为可读写
-   2. 在**仓库的setting中**配置上面这个生成的 PAT ；
-
-
-## 合并提交记录
-
-```
-# 1. 拉取最新代码
-git checkout master
-git pull origin master
-
-# 2. 启动交互式 rebase（假设要合并全部提交）
-git rebase -i --root
-
-# 3. 在打开的编辑器中：
-# 将第一个提交前的 "pick" 保留
-# 其他所有提交前的 "pick" 改为 "squash" 或简写 "s"
-# 保存退出编辑器
-
-# 4. 处理合并提交信息（会打开新编辑器）
-# 删除所有旧提交信息，写入新提交信息
-# 保存退出
-
-# 5. 强制推送更新（⚠️ 重要警告：这会重写历史）
-git push origin master --force
-```
-
-
-
-
----
-
-
-1. Git 架构
-
-
-![](https://cdn.nlark.com/yuque/0/2023/jpeg/29433025/1683166686637-6846f0c7-7099-4a18-b741-25d2591de145.jpeg?x-oss-process=image%2Fformat%2Cwebp%2Fresize%2Cw_458%2Climit_0%2Finterlace%2C1#averageHue=%23e8e8e8&from=url&id=pEyZV&originHeight=234&originWidth=458&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
-
-```
-zeanzai@DESKTOP-BTBMQTM MINGW64 /d/02.sourcecode/Github/atguigu-gulimall/docs/课件/01-基础篇
+# git 的帮助文档
 $ git
 usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]
            [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
@@ -150,183 +50,315 @@ concept guides. See 'git help <command>' or 'git help <concept>'
 to read about a specific subcommand or concept.
 See 'git help git' for an overview of the system.
 
-
-```
-
-2. 全局配置
-   1. 查询全局配置项
-   2. 配置用户名和邮箱
-3. 克隆
-4. 获取远程更新
-5. 提交到远程
-   1. add
-   2. commit
-   3. push
-6. 查询远程配置信息
-7. 
-
-8. 
+# 生成key，在命令行里面填写文件名，
+# 多个key使用用户名进行区分， 如： id_rsa_vongdefu
+# 通常情况下一台主机使用一个key即可
+ssh-keygen -t ed25519 -C "your.email@example.com"
 
 
+# 为每一个仓库设置用户名和邮箱
+#   只需要在仓库目录下执行即可
+git config user.name "Your Name"
+git config user.email "your.email@example.com"
+#   之后在 .git/config 可以看到设置后的用户名和邮箱
 
----
+# 全局配置，最好不要进行这个操作
+git config --global user.name zeanzai
+git config --global user.email "zeanzai.me@gmail.com"
+git config --global http.proxy 127.0.0.1:7890
+
+# 注意：如果是需要身份验证的，就用这种格式：
+git config --global http.proxy 用户名:密码@IP:端口
+# 如果需要设置https，那么就需要把 http.proxy 改成 https.proxy
+git config --global https.proxy 127.0.0.1:7890
+
+# 查看一下配置
+git config --global --list
+
+
+# 测试
+ssh -T git@github.com
+ssh -T git@gitee.com
+
+# 使用git克隆私有仓库
+git clone --branch master https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/vongdefu/vongdefu-dochub.git vongdefu-dochub
+
+# ssh
+ssh-copy-id -i ./id_ed25519.pub root@192.168.1.150
+
+# 空仓库
+mkdir test
+cd test
+git init
+touch README.md
+git add README.md
+git commit -m "first commit"
+git remote add origin https://gitee.com/zeanzai/test.git
+git push -u origin "master"
+
+# 已有仓库
+cd existing_git_repo
+git remote add origin https://gitee.com/zeanzai/test.git
+git push -u origin "master"
+
+# 分支管理 ---------------------------------------------------------------------
+## 创建并切换到新分支
+git checkout -b ${{branch_name}}
+
+## 查看当前工作分支及本地分支
+git branch -v
+
+## 查看本地和远端分支
+git branch -av
+
+## 查看远端分支
+git branch -rv
+
+## 切换到指定分支
+git checkout 指定分支
+
+## 基于当前分支创建新分支
+git branch 新分支
+
+## 基于指定分支创建新分支
+git branch 新分支 指定分支
+
+## 基于某个 commit 创建分支
+git branch 新分支 某个 commit 的 id
+
+## 创建并切换到该分支
+git checkout -b 新分支
+
+## 安全删除本地某分支
+git branch -d 要删除的分支
+
+## 强行删除本地某分支
+git branch -D 要删除的分支
+
+## 删除已合并到 master 分支的所有本地分支
+git branch --merged master | grep -v '^\*\| master' | xargs -n 1 git branch -d
+
+## 删除远端 origin 已不存在的所有本地分支
+git remote prune orign
+
+## 将 A 分支合入到当前分支中且为 merge 创建 commit
+git merge A 分支
+
+## 将 A 分支合入到 B 分支中且为 merge 创建 commit
+git merge A 分支 B 分支
+
+## 将当前分支基于 B 分支做 rebase，以便将 B 分支合入到当前分支
+git rebase B 分支
+
+## 将 A 分支基于 B 分支做 rebase，以便将 B 分支合入到 A 分支
+git rebase B 分支 A 分支
+
+
+# 变更历史 ---------------------------------------------------------------------
+## 当前分支各个 commit 用一行显示
+git log --oneline
+
+## 显示就近的 n 个 commit
+git log -n
+
+## 用图示显示所有分支的历史
+git log --oneline --graph --all
+
+## 查看涉及到某文件变更的所有 commit
+git log 文件
+
+## 某文件各行最后修改对应的 commit 以及作者
+git blame 文件
 
 
 
-**配置操作 **
-**全局配置 **
-git config --global user.name '你的名字' 
-git config --global user.email '你的邮箱' 
+# 标签操作 ---------------------------------------------------------------------
+## 查看已有标签
+git tag
 
-**当前仓库配置 **
-git config --local user.name '你的名字' 
-git config --local user.email '你的邮箱' 
+## 新建标签
+git tag v1.0
 
-**查看 global 配置 **
-git config --global --list 
-**查看当前仓库配置 **
-git config --local --list 
-**删除 global 配置 **
-git config --unset --global 要删除的配置项 
-**删除当前仓库配置 **
-git config --unset --local 要删除的配置项**本地操作 **
-**查看变更情况 **
-git status 
-**将当前目录及其子目录下所有变更都加入到暂存区 **
-git add . 
-**将仓库内所有变更都加入到暂存区 **
-git add -A 
-**将指定文件添加到暂存区 **
-git add 文件1 文件2 文件3 
-**比较工作区和暂存区的所有差异 **
-git diff 
-**比较某文件工作区和暂存区的差异 **
-git diff 文件 
-**比较暂存区和 HEAD 的所有差异 **
-git diff --cached 
-**比较某文件暂存区和 HEAD 的差异 **
-git diff --cached 文件 
-**比较某文件工作区和 HEAD 的差异 **
-git diff HEAD 文件 
-**创建 commit **
-git commit 
-**将工作区指定文件恢复成和暂存区一致 **
-git checkout 文件1 文件2 文件3 
-**将暂存区指定文件恢复成和 HEAD 一致 **
-git reset 文件1 文件2 文件3 
-**将暂存区和工作区所有文件恢复成和 HEAD 一样 **
-git reset --hard 
-**用 difftool 比较任意两个 commit 的差异**git difftool 提交1 提交2 
-**查看哪些文件没被 Git 管控 **
-git ls-files --others 
-**将未处理完的变更先保存到 stash 中 **
-git stash 
-**临时任务处理完后继续之前的工作 **
-pop 不保留 stash 
-apply 保留 stash 
-git stash pop 
-git stash apply 
-**查看所有 stash **
-git stash list 
-**取回某次 stash 的变更 **
-git stash pop stash@{数字n} 
-**优雅修改最后一次 commit **
-git add. 
-git commit --amend 
-**分支操作 **
-**查看当前工作分支及本地分支 **
-git branch -v 
-**查看本地和远端分支 **
-git branch -av 
-**查看远端分支 **
-git branch -rv 
-**切换到指定分支 **
-git checkout 指定分支 
-**基于当前分支创建新分支 **
-git branch 新分支 
-**基于指定分支创建新分支**git branch 新分支 指定分支 
-**基于某个 commit 创建分支 **
-git branch 新分支 某个 commit 的 id 
-**创建并切换到该分支 **
-git checkout -b 新分支 
-**安全删除本地某分支 **
-git branch -d 要删除的分支 
-**强行删除本地某分支 **
-git branch -D 要删除的分支 
-**删除已合并到 master 分支的所有本地分支 **
-git branch --merged master | grep -v '^\*\| master' | xargs -n 1 git branch -d 
-**删除远端 origin 已不存在的所有本地分支 **
-git remote prune orign 
-**将 A 分支合入到当前分支中且为 merge 创建 commit **
-git merge A分支 
-**将 A 分支合入到 B 分支中且为 merge 创建 commit **
-git merge A分支 B分支 
-**将当前分支基于 B 分支做 rebase，以便将B分支合入到当前分支 **
-git rebase B分支 
-**将 A 分支基于 B 分支做 rebase，以便将 B 分支合入到 A 分支 **
-git rebase B分支 A分支 
-**变更历史 **
-**当前分支各个 commit 用一行显示 **
-git log --oneline 
-**显示就近的 n 个 commit **
-git log -n 
-**用图示显示所有分支的历史 **
-git log --oneline --graph --all**查看涉及到某文件变更的所有 commit **
-git log 文件 
-**某文件各行最后修改对应的 commit 以及作者 **
-git blame 文件 
-**标签操作 **
-**查看已有标签 **
-git tag 
-**新建标签 **
-git tag v1.0 
-**新建带备注标签 **
-git tag -a v1.0 -m '前端食堂' 
-**给指定的 commit 打标签 **
-git tag v1.0 commitid 
-**推送一个本地标签 **
-git push origin v1.0 
-**推送全部未推送过的本地标签 **
-git push origin --tags 
-**删除一个本地标签 **
-git tag -d v1.0 
-**删除一个远端标签 **
-git push origin :refs/tags/v1.0 
-**远端交互 **
-**查看所有远端仓库 **
-git remote -v 
-**添加远端仓库 **
-git remote add url 
-**删除远端仓库 **
-git remote remove remote的名称**重命名远端仓库 **
-git remote rename 旧名称 新名称 
-**将远端所有分支和标签的变更都拉到本地 **
-git fetch remote 
-**把远端分支的变更拉到本地，且 merge 到本地分支 **
-git pull origin 分支名 
-**将本地分支 push 到远端 **
-git push origin 分支名 
-**删除远端分支 **
-git push remote --delete 远端分支名 
+## 新建带备注标签
+git tag -a v1.0 -m '前端食堂'
+
+## 给指定的 commit 打标签
+git tag v1.0 commitid
+
+## 推送一个本地标签
+git push origin v1.0
+
+## 推送全部未推送过的本地标签
+git push origin --tags
+
+## 删除一个本地标签
+git tag -d v1.0
+
+## 删除一个远端标签
+git push origin :refs/tags/v1.0
+
+# 远端交互 ---------------------------------------------------------------------
+## 查看所有远端仓库
+git remote -v
+
+## 添加远端仓库
+git remote add url
+
+## 删除远端仓库
+git remote remove remote 的名称重命名远端仓库
+git remote rename 旧名称 新名称
+
+## 将远端所有分支和标签的变更都拉到本地
+git fetch remote
+
+## 把远端分支的变更拉到本地，且 merge 到本地分支
+git pull origin 分支名
+
+## 将本地分支 push 到远端
+git push origin 分支名
+
+## 删除远端分支
+git push remote --delete 远端分支名
 git push remote :远端分支名
 
 
+```
 
-[Git常用命令面试题 60道.pdf](https://www.yuque.com/attachments/yuque/0/2024/pdf/29433025/1714797565446-de96130d-879d-4ece-bc88-eaa5d5c88c91.pdf?_lake_card=%7B%22src%22%3A%22https%3A%2F%2Fwww.yuque.com%2Fattachments%2Fyuque%2F0%2F2024%2Fpdf%2F29433025%2F1714797565446-de96130d-879d-4ece-bc88-eaa5d5c88c91.pdf%22%2C%22name%22%3A%22Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%9D%A2%E8%AF%95%E9%A2%98%2060%E9%81%93.pdf%22%2C%22size%22%3A435466%2C%22ext%22%3A%22pdf%22%2C%22source%22%3A%22%22%2C%22status%22%3A%22done%22%2C%22download%22%3Atrue%2C%22taskId%22%3A%22ud27565a0-dc6c-4734-b6b2-aa7bb836d7a%22%2C%22taskType%22%3A%22upload%22%2C%22type%22%3A%22application%2Fpdf%22%2C%22__spacing%22%3A%22both%22%2C%22id%22%3A%22uf45ecd82%22%2C%22margin%22%3A%7B%22top%22%3Atrue%2C%22bottom%22%3Atrue%7D%2C%22card%22%3A%22file%22%7D)
+## 特殊场景
 
+### 克隆 GitHub 私有仓库
 
+1. 需要在**用户的配置页面**中配置一个 PAT（personal access token）；
+2. 在 仓库的 url 中配置上这个 PAT ： 见上面
+3. 如果私有仓库需要使用 GitHubActions，则还需要
+   1. 根据 peaceiris/actions-gh-pages@v3 的[要求](https://github.com/peaceiris/actions-gh-pages)，在**仓库的 setting 中**设置 action 的权限，设置为可读写
+   2. 在**仓库的 setting 中**配置上面这个生成的 PAT ；
 
+### 合并提交记录
 
+```txt
+# 1. 拉取最新代码
+git checkout master
+git pull origin master
+
+# 2. 启动交互式 rebase（假设要合并全部提交）
+git rebase -i --root
+
+# 3. 在打开的编辑器中：
+# 将第一个提交前的 "pick" 保留
+# 其他所有提交前的 "pick" 改为 "squash" 或简写 "s"
+# 保存退出编辑器
+
+# 4. 处理合并提交信息（会打开新编辑器）
+# 删除所有旧提交信息，写入新提交信息
+# 保存退出
+
+# 5. 强制推送更新（⚠️ 重要警告：这会重写历史）
+git push origin master --force
+```
+
+---
+
+1. Git 架构
+
+![1745156420826](./git/image/1745156420826.png)
+
+---
+
+**配置操作 **
+**全局配置 **
+git config --global user.name '你的名字'
+git config --global user.email '你的邮箱'
+
+**当前仓库配置 **
+git config --local user.name '你的名字'
+git config --local user.email '你的邮箱'
+
+**查看 global 配置 **
+git config --global --list
+
+**查看当前仓库配置 **
+git config --local --list
+
+**删除 global 配置 **
+git config --unset --global 要删除的配置项
+**删除当前仓库配置 **
+git config --unset --local 要删除的配置项
+
+**本地操作 **
+**查看变更情况 **
+git status
+
+**将当前目录及其子目录下所有变更都加入到暂存区 **
+git add .
+
+**将仓库内所有变更都加入到暂存区 **
+git add -A
+
+**将指定文件添加到暂存区 **
+git add 文件 1 文件 2 文件 3
+
+**比较工作区和暂存区的所有差异 **
+git diff
+
+**比较某文件工作区和暂存区的差异 **
+git diff 文件
+
+**比较暂存区和 HEAD 的所有差异 **
+git diff --cached
+
+**比较某文件暂存区和 HEAD 的差异 **
+git diff --cached 文件
+
+**比较某文件工作区和 HEAD 的差异 **
+git diff HEAD 文件
+
+**创建 commit **
+git commit
+
+**将工作区指定文件恢复成和暂存区一致 **
+git checkout 文件 1 文件 2 文件 3
+
+**将暂存区指定文件恢复成和 HEAD 一致 **
+git reset 文件 1 文件 2 文件 3
+
+**将暂存区和工作区所有文件恢复成和 HEAD 一样 **
+git reset --hard
+
+**用 difftool 比较任意两个 commit 的差异**
+git difftool 提交 1 提交 2
+
+**查看哪些文件没被 Git 管控 **
+git ls-files --others
+
+**将未处理完的变更先保存到 stash 中 **
+git stash
+
+**临时任务处理完后继续之前的工作 **
+pop 不保留 stash
+apply 保留 stash
+git stash pop
+git stash apply
+
+**查看所有 stash **
+git stash list
+
+**取回某次 stash 的变更 **
+git stash pop stash@{数字 n}
+
+**优雅修改最后一次 commit **
+git add.
+git commit --amend
+
+[Git 常用命令面试题 60 道.pdf](https://www.yuque.com/attachments/yuque/0/2024/pdf/29433025/1714797565446-de96130d-879d-4ece-bc88-eaa5d5c88c91.pdf?_lake_card=%7B%22src%22%3A%22https%3A%2F%2Fwww.yuque.com%2Fattachments%2Fyuque%2F0%2F2024%2Fpdf%2F29433025%2F1714797565446-de96130d-879d-4ece-bc88-eaa5d5c88c91.pdf%22%2C%22name%22%3A%22Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%9D%A2%E8%AF%95%E9%A2%98%2060%E9%81%93.pdf%22%2C%22size%22%3A435466%2C%22ext%22%3A%22pdf%22%2C%22source%22%3A%22%22%2C%22status%22%3A%22done%22%2C%22download%22%3Atrue%2C%22taskId%22%3A%22ud27565a0-dc6c-4734-b6b2-aa7bb836d7a%22%2C%22taskType%22%3A%22upload%22%2C%22type%22%3A%22application%2Fpdf%22%2C%22__spacing%22%3A%22both%22%2C%22id%22%3A%22uf45ecd82%22%2C%22margin%22%3A%7B%22top%22%3Atrue%2C%22bottom%22%3Atrue%7D%2C%22card%22%3A%22file%22%7D)
 
 ## 更换 main 分支为 master
 
 1. 修改默认分支为 master
 
-
 ![image.png](./git/image/1714714045740.png)
 
 2. 修改本地分支
-
 
 ![image.png](./git/image/1714714009546.png)
 
@@ -337,7 +369,6 @@ git branch -u origin/master master
 git remote set-head origin -a
 
 ```
-
 
 ## mac 上使用 idea 上传代码到远程出错
 
@@ -355,19 +386,11 @@ git remote set-head origin -a
 
 ![image.png](./git/image/1714708087975.png)
 
-
-
- Appendix： GitHub 已经认证过的 app
+Appendix： GitHub 已经认证过的 app
 
 ![image.png](./git/image/1714708755512.png)
 
-
-
-
-
-
 ---
-
 
 Git 使用
 
@@ -735,9 +758,3 @@ git remote rename
 [https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%AE%80%E4%BB%8B](https://git-scm.com/book/zh/v2/Git-%25E5%2588%2586%25E6%2594%25AF-%25E5%2588%2586%25E6%2594%25AF%25E7%25AE%2580%25E4%25BB%258B)
 
 [http://git.oschina.net/progit/1-%E8%B5%B7%E6%AD%A5.html](http://git.oschina.net/progit/1-%25E8%25B5%25B7%25E6%25AD%25A5.html)
-
-
-
-
-
-
