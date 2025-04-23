@@ -37,6 +37,8 @@
   - [Unsafe 工具类](./02-java/juc/ch05-unsafe.md)
   - [LockSupport](./02-java/juc/ch06-locksupport.md)
   - [AQS](./02-java/juc/ch07-aqs.md)
+  - [Java8 新特性.md](./02-java/juc/Java8新特性.md)
+  - [JUC2](./02-java/juc/JUC2.md)
 - [JVM](./02-java/jvm/README.md)
   - [概览](./02-java/jvm/ch01-overview.md)
   - [编译器与字节码](./02-java/jvm/ch02-compileandbytecode.md)
