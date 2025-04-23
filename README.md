@@ -1,18 +1,274 @@
-
 [访问地址： https://vongdefu.github.io](https://vongdefu.github.io)
 
-# 说明
+## 仓库内容
+
+> 网站有所更新，具体请查看网站链接。
+
+- 01-CS 基础（01-cabase）
+  - 组成原理与操作系统
+  - 数据结构与算法：智力题、加密算法
+  - 计算机网络
+  - 设计模式： [SOLID](https://pdai.tech/md/dev-spec/spec/dev-th-solid.html) 在框架中的使用，
+  - 架构设计
+- 02-Java 编程语言（02-java）
+  - OOP
+  - 关键字：
+  - 集合： Java 集合源码分析
+  - 异常
+  - 反射
+  - 注解
+  - 序列化
+  - 泛型
+  - JUC
+  - 函数式编程
+  - `JVM相关`：运行期内存结构、对象是否应该回收判断标准、垃圾回收算法、垃圾回收器、配置参数、分析工具、双亲委派模型、class 文件、调优
+  - 新特性
+- 03-框架（03-framework）
+  - 软件构建工具：
+    - 开发环境配置
+    - Ant
+    - Maven： 私服
+    - Gradle
+  - Spring 全家桶
+    - Spring： （IOC 原理、ID 原理、Bean 生命周期、组件架构图、MVC 原理、隔离级别）；
+    - SpringBoot
+    - SpringCloud： （组件及其各自作用和原理、某些组件的源码）Feign 源码剖析、Redission 源码剖析、SpringCloud-Alibaba 框架学习
+  - ORM 框架
+    - Hibernate
+    - Mybatis： （使用方式、基本原理、缓存）
+  - 常用类库
+    - Apache common
+    - hutool
+    - Spring 工具类
+    - Guava 工具包：Guava Cache、Ratelimiter
+    - Lombok
+    - MapStruct
+    - FastJson/Jackson
+    - [Disruptor](https://javaguide.cn/high-performance/message-queue/disruptor-questions.html#disruptor-%E6%98%AF%E4%BB%80%E4%B9%88)
+    - Ehcache
+- 04-中间件（04-middleware）
+  - 关系型数据库
+    - MySQL： 索引、事务及其特性、并发一致性问题、隔离级别、锁、MVCC、各种日志、SQL 优化、Explain 执行计划、分库分表
+  - NoSql
+    - Redis： 数据结构（种类、内部实现原理、应用场景、操作）、持久化机制、事务、集群、哨兵模式、cluster 模式、七大经典问题（缓存击穿、缓存穿透、缓存雪崩、数据不一致、并发竞争、热点 key、BigKey 问题）、分布式锁、分布式限流、唯一 ID、Redis 调优（使用方式优化、内存优化）
+    - MongoDB
+    - ES + Kibana
+  - MQ： 基本原理、应用场景、问题解决（消息重复、消息积压、消息丢失、顺序消费）、高可用
+    - RabbitMQ
+    - Kafka
+  - 其它
+    - Nginx
+    - Zookeeper： 数据存储、应用场景、与 kafka 的关系、相关面试题
+- 05-分布式：（05-distribution）
+  - 基本理论：
+    - 分布式系统基本问题：[分布式系统的 8 个谬误](https://pdai.tech/md/arch/arch-z-wrong.html)
+    - CAP
+      - 一致性 C，XA 方案、Paxos 算法、ZAB 算法、Raft 算法
+      - 可用性 A，评判标准、心跳检测、异地多活和同城双活、gossip、隔离、限流、负载均衡
+      - 容错性 P，日志复制、主备、互备、集群
+      - CP 与 AP 权衡问题，WARO 机制、Quorum 机制
+    - BASE、
+    - 常用算法：
+      - Raft、Paxos、ZAB、 一致性 Hash、Gossip、集群、冗余（备份）
+      - [负载均衡算法 ](https://pdai.tech/md/algorithm/alg-domain-load-balance.html#google_vignette)
+      - 限流算法
+      - [容灾备份方案](https://pdai.tech/md/arch/arch-y-backup.html)
+  - 分布式应用
+    - 分布式会话： 发展历程、各自过程中遇到的问题及解决方案、分布式会话实现方案
+    - 分布式事务： （背景、实现方式、优缺点分析、具体实现【seata 原理】）
+    - 分布式网关：
+    - 分库分表
+    - 分布式锁
+    - 分布式 ID： **（雪花算法、**[**Leaf——美团点评分布式 ID 生成系统**](https://tech.meituan.com/2017/04/21/mt-leaf.html)**）**
+    - 分布式缓存
+    - 分布式工作流调度
+    - 分布式消息：应用内部各组件通信、websocket
+    - 分布式搜索
+    - 分布式服务治理： 限流、熔断、降级、注册与发现、故障恢复
+    - 分布式链路追踪
+- 06-质量管理： 包含软件生命周期的管理的相关内容（06-devops）
+  - 需求分析阶段（需求澄清、需求反讲、设计方案评审）
+  - 设计与实现阶段：代码评审规范（单元测试、统一命名规范、代码风格、静态样式检查、SDLC 安全设计评审、SQM 扫描）
+  - 测试阶段：测试方案（单元测试、集成测试、渗透测试、基准测试、压力测试）、测试工具（ Jmeter、AB、基准测试）
+  - 发版及上线阶段：Git 与 Gitlab、Jenkins 与 工作流、GIT 提交过程规范、移交过程规范（开发分支合并到 release 分支）、灰度发布与回滚、监控告警、日志记录、docker + k8s
+  - 运维和监控： 日志平台、 Prometheus、Zabban、Grafana
+- 07-工程设计： 一些常见业务场景的设计与实现（结合业务场景+实战过程+原理+优缺点分析等）（07-systemdesign）
+  - 接口设计规范（安全（OWASPTop10）、超时与重试、数据脱敏、序列化与反序列化、接口风格、防重放（防刷、幂等）、限流、优化、接口文档）
+  - DDD 领域模型设计（展示层、应用层、领域层、基础设施层）
+  - 多级缓存的设计与实现
+  - gate 与 oauth2.0
+  - 秒杀
+  - 单点登录
+  - 认证和鉴权、 JWT、RBAC
+
+## 说明
 
 - 网站生成工具： [mdBook-v0.4.47](https://github.com/rust-lang/mdBook)；
-- 对mdbook进行了增强： 添加了显示TOC的相关内容；
-- 使用工作流自动部署；
+- mdBook 工具的优点：
+  - 静态网站性能很高，相同 markdown 文件下，比 vitepress 等静态网站，性能高出一个量级；
+  - 本地启动时只需要一个 exe 文件，如果需要自定义一些额外的功能等，可以直接添加对应的 css、js 文件，甚至如果想要改变布局只需要修改 index.hbs 文件即可；
+  - 学习曲线不算陡峭，易于上手；
+  - 对目录更加可控；
+    - markdown 文档命名更加可控，既可以是中文，也可以是带空格的中文；
+    - 统一编入 summary.md 中，排序由在此文件中的顺序决定；
+- 对 mdbook 进行了增强： 添加了显示 TOC 的相关内容；
+  - 在 theme 文件中添加 css 和 js 文件；
+  - 在 book.toml 文件中添加对 css 和 js 文件的引用；
+- 使用工作流自动部署；具体参考[这里](https://github.com/rust-lang/mdBook/wiki/Automated-Deployment:-GitHub-Actions#using-deploy-via-actions)；
 
 ## 本地运行
 
 1. 克隆本项目到本地；
-2. 在release页面下载mdbook.exe，并放到README.md同级目录下；
-3. 命令行中运行 ./mdbook.exe serve ；
+2. 在 [release 页面](https://github.com/rust-lang/mdBook/releases/tag/v0.4.47) 下载 mdbook.exe，并放到 README.md 同级目录下；
+3. 命令行中运行 ./mdbook.exe serve ； 其它命令参考[这里](https://rust-lang.github.io/mdBook/cli/index.html)；
 4. 浏览器中： localhost:3000 ；
+5. 可以配合 vscode+markdown preview enhance 插件+自定义 css 的 markdown 预览使用；
+
+<details>
+
+<summary>markdown预览css</summary>
+
+```css
+/* 整体页面布局 */
+body {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 2em;
+  max-width: 960px;
+  margin: auto;
+}
+
+/* 标题样式 */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  line-height: 1.25;
+  color: #1a1a1a;
+}
+
+h1 {
+  font-size: 2em;
+  border-bottom: 2px solid #eaeaea;
+  padding-bottom: 0.3em;
+}
+
+h2 {
+  font-size: 1.6em;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 0.3em;
+}
+
+h3 {
+  font-size: 1.4em;
+}
+
+h4 {
+  font-size: 1.2em;
+}
+
+h5 {
+  font-size: 1em;
+}
+
+h6 {
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* 段落和列表 */
+p {
+  margin: 1em 0;
+}
+
+ul,
+ol {
+  padding-left: 2em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+li {
+  margin: 0.3em 0;
+}
+
+/* 代码块 */
+pre {
+  background-color: #f8f8f8;
+  padding: 1em;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.95em;
+}
+
+code {
+  font-family: "Courier New", Courier, monospace;
+  background-color: #f4f4f4;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+}
+
+/* 高亮代码行（适配 mdbook 风格） */
+pre code {
+  display: block;
+  background-color: #f8f8f8;
+  color: #333;
+}
+
+/* 链接样式 */
+a {
+  color: #007acc;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* 引用块 */
+blockquote {
+  border-left: 4px solid #ddd;
+  padding-left: 1em;
+  color: #666;
+  margin: 1em 0;
+  background-color: #f9f9f9;
+}
+
+/* 表格样式 */
+table {
+  border-collapse: collapse;
+  margin: 1em 0;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 0.5em 1em;
+}
+
+th {
+  background-color: #f4f4f4;
+  text-align: left;
+}
+
+/* 分割线 */
+hr {
+  border: 0;
+  height: 1px;
+  background: #eaeaea;
+  margin: 2em 0;
+}
+```
+
+</details>
 
 ## :chart_with_upwards_trend: 趋势
 
