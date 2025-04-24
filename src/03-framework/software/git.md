@@ -758,3 +758,91 @@ git remote rename
 [https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%AE%80%E4%BB%8B](https://git-scm.com/book/zh/v2/Git-%25E5%2588%2586%25E6%2594%25AF-%25E5%2588%2586%25E6%2594%25AF%25E7%25AE%2580%25E4%25BB%258B)
 
 [http://git.oschina.net/progit/1-%E8%B5%B7%E6%AD%A5.html](http://git.oschina.net/progit/1-%25E8%25B5%25B7%25E6%25AD%25A5.html)
+
+## GitHub 工作流
+
+Github 为我们提供了搭建个人网站的可能性，我们可以通过 markdown+静态网站生成工具生成静态网站的源代码，然后上传到 GitHub 上，加上一些配置，就可以搭建成功。
+
+但是在这个过程中，有很多动作是每次更新时都要操作的，比如在个人网站上添加一个新的 markdown 文档，这个时候我们的动作包括：
+
+1. 本地生成静态页面；
+2. 把生成的页面和 markdown 源文件上传至远程仓库；
+
+事实上，我们可以采取一些工作流的方式，GitHub 也为我们提供了解放生产力的方式，这种方式就是工作流。
+
+下面是之前搭建网站时用到的工作流：
+
+<details>
+
+<summary>持续集成</summary>
+
+```yml
+name: 🚀 持续集成
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "defu/**"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🥝 检出 master 分支，到虚拟机的 private-repo 文件夹
+        uses: actions/checkout@v4
+        with:
+          path: private-repo
+
+      - name: 🍌 克隆公有仓库 vongdefu.github.io 到虚拟机的 public-repo 文件夹
+        run: |
+          git clone https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/vongdefu/vongdefu.github.io.git public-repo
+
+      - name: 🍒 同步 private-repo 和 public-repo ， 并推送到 vongdefu.github.io
+        run: |
+          rsync -av --delete --exclude=".*" private-repo/defu/ public-repo/
+          cd public-repo
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Trigger: ${{ github.sha }}， ${{ github.event.head_commit.message }} "
+          git push origin master
+
+      - name: 🍏 检出 hope 分支
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          ref: hope # 指定检出 hope 分支
+
+      - name: 🍓 检出 master 分支， 并放到 src 下面
+        run: |
+          git clone --branch master https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/vongdefu/vongdefu-dochub.git vongdefu-dochub
+          mv ./vongdefu-dochub/defu/* ./src/
+
+      - name: 🥭 设置 Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: 🍅 安装依赖
+        env:
+          NODE_OPTIONS: --max_old_space_size=8192
+        run: |
+          npm install 
+          npm run docs:build
+
+      - name: 🍆 部署到公共仓库
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.PAT_TOKEN }}
+          external_repository: vongdefu/vongdefu.github.io
+          publish_branch: gh-pages
+          publish_dir: src/.vuepress/dist
+          force_orphan: true
+          allow_empty_commit: true
+          full_commit_message: ${{ github.event.head_commit.message }}
+```
+
+</details>
