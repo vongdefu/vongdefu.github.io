@@ -39,6 +39,8 @@
       - [使用 Thread 配置多数据源](./02-java/juc/mutil-ds.md)
   - [锁](./02-java/juc/ch03-lock.md)
   - [线程池](./02-java/juc/ch04-threadandthreadpool.md)
+    - [线程](./02-java/juc/thread.md)
+    - [线程池](./02-java/juc/threadpool.md)
   - [Unsafe 工具类](./02-java/juc/ch05-unsafe.md)
   - [LockSupport](./02-java/juc/ch06-locksupport.md)
   - [AQS](./02-java/juc/ch07-aqs.md)
