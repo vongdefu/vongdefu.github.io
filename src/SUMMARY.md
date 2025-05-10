@@ -4,22 +4,6 @@
 
 # CS 基础
 
-- [前端](./01-csbase/frontend.md)
-- [数据结构与算法](./01-csbase/dsa.md)
-- [计算机网络](./01-csbase/network/README.md)
-  - [HTTP](./01-csbase/network/01-http.md)
-  - [TCP](./01-csbase/network/02-tcp.md)
-  - [网络层](./01-csbase/network/03-networklayer.md)
-  - [网络接口层](./01-csbase/network/04-networkinterface.md)
-  - [附录一](./01-csbase/network/99-Appendix01.md)
-  - [附录二](./01-csbase/network/99-Appendix02.md)
-- [设计模式](./01-csbase/designPattern/README.md)
-  - [单例模式](./01-csbase/designPattern/ch01-singleton.md)
-  - [建造模式](./01-csbase/designPattern/ch02-build.md)
-  - [模板方法模式](./01-csbase/designPattern/ch03-template-method.md)
-  - [策略模式](./01-csbase/designPattern/ch04-strategy.md)
-  - [责任链模式](./01-csbase/designPattern/ch05-responsibility-chain.md)
-
 # Java
 
 - [Java 基础](./02-java/javacore/README.md)
@@ -125,7 +109,8 @@
 - [API](./05-distribution/api.md)
 - [分布式](./05-distribution/distribution/README.md)
   - [基础理论](./05-distribution/distribution/theory.md)
-  - [分布式锁](./05-distribution/distribution/lock.md)
+  - [分布式锁](./05-distribution/lock/README.md)
+    - [分布式锁实践](./05-distribution/lock/practice.md)
   - [分布式事务](./05-distribution/distribution/transaction.md)
   - [分布式 ID](./05-distribution/distribution/id.md)
   - [分布式缓存](./05-distribution/distribution/cache.md)
