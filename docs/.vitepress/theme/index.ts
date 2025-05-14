@@ -4,7 +4,7 @@ import type { Theme } from "vitepress";
 import DefaultTheme from "vitepress/theme";
 import "./style.css";
 import GiscusComment from "./components/GiscusComment.vue";
-import wechat from "./components/wechat.vue";
+// import wechat from "./components/wechat.vue";
 
 export default {
   extends: DefaultTheme,
@@ -12,7 +12,7 @@ export default {
     return h(DefaultTheme.Layout, null, {
       // https://vitepress.dev/guide/extending-default-theme#layout-slots
       "doc-after": () => h(GiscusComment),
-      "aside-top": () => h(wechat),
+      // "aside-top": () => h(wechat),
     });
   },
   enhanceApp({ app, router, siteData }) {

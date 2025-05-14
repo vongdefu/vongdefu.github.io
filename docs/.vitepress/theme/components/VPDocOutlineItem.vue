@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import type { DefaultTheme } from "vitepress/theme";
 
 defineProps<{
@@ -33,13 +33,13 @@ function onClick({ target: el }: Event) {
 }
 
 .nested {
-  padding-right: 16px;
-  padding-left: 16px;
+  padding-right: 13px;
+  padding-left: 13px;
 }
 
 .outline-link {
   display: block;
-  line-height: 28px;
+  line-height: 22px;
   font-size: 14px;
   font-weight: 400;
   color: var(--vp-c-text-2);
@@ -51,11 +51,11 @@ function onClick({ target: el }: Event) {
 
 .outline-link:hover,
 .outline-link.active {
-  color: var(--vp-c-text-1);
+  color: var(--vp-c-text-3);
   transition: color 0.25s;
 }
 
 .outline-link.nested {
   padding-left: 13px;
 }
-</style>
+</style> -->
