@@ -301,7 +301,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         text: "分布式事务",
         base: "/05-分布式/分布式事务",
         items: [
-          { text: "基础理论", link: "/分布式事务/基础理论" },
+          { text: "基础理论", link: "/基础理论" },
           {
             text: "Seata实战",
             base: "/05-分布式/分布式事务/seata实战",
