@@ -297,7 +297,28 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       { text: "基础理论", link: "/distribution/theory" },
       { text: "分布式锁", link: "/lock/README" },
       { text: "分布式锁实践", link: "/lock/practice" },
-      { text: "分布式事务", link: "/distribution/transaction" },
+      {
+        text: "分布式事务",
+        base: "/05-分布式/分布式事务",
+        items: [
+          { text: "基础理论", link: "/分布式事务/基础理论" },
+          {
+            text: "Seata实战",
+            base: "/05-分布式/分布式事务/seata实战",
+            items: [
+              { text: "Seata的安装", link: "/安装" },
+              {
+                text: "Seata-AT模式",
+                link: "/Seata-AT模式",
+              },
+              {
+                text: "Seata-TCC模式",
+                link: "/Seata-TCC模式",
+              },
+            ],
+          },
+        ],
+      },
       { text: "分布式 ID", link: "/distribution/id" },
       { text: "分布式缓存", link: "/distribution/cache" },
       { text: "分布式消息", link: "/distribution/message" },
