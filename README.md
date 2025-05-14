@@ -90,6 +90,23 @@ https://www.carbonads.net/join
   :theme="isDark ? 'dark' : 'light'"
   :key="route.path"
 ></Giscus>
+
+<script
+  src="https://giscus.app/client.js"
+  data-repo="vongdefu/vongdefu.github.io"
+  data-repo-id="R_kgDON_DwvQ"
+  data-category="Announcements"
+  data-category-id="DIC_kwDON_Dwvc4CnWcs"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
 ```
 
 ### 在目录上方添加公众号头像等引流图片

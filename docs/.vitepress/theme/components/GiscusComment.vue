@@ -2,10 +2,10 @@
   <div style="margin-top: 24px">
     <Giscus
       id="comments"
-      repo="vongdefu/cs-tips"
-      repoid="R_kgDOOnFHUQ"
+      repo="vongdefu/vongdefu.github.io"
+      repoid="R_kgDON_DwvQ"
       category="Announcements"
-      categoryid="DIC_kwDOOnFHUc4Cp8qg"
+      categoryid="DIC_kwDON_Dwvc4CnWcs"
       mapping="pathname"
       term="Welcome to giscus!"
       reactionsenabled="1"
