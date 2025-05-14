@@ -1,7 +1,5 @@
 ## 分布式理论
 
-> 要结合项目来讲；
-
 ### 1. 说说 CAP 原则？
 
 CAP 原则又称 CAP 定理，指的是在一个分布式系统中，Consistency（一致性）、 Availability（可用性）、Partition tolerance（分区容错性）这 3 个基本需求，最多只能同时满足其中的 2 个。
