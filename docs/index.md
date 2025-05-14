@@ -24,6 +24,8 @@ features:
 
 ## TODO
 
+- [ ] 使用 Seata 实现 TCC 模式；以及 Seata 各个模式的基本原理；
+
 ### 2025-05-14
 
 1. 迁移到 vongdefu.github.io 上；

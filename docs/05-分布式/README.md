@@ -61,15 +61,15 @@ dir:
 1. 我们自己写的代码，应该怎么实现我们的需求：应用层面（锁、缓存、事务、 消息、 ID、Job、会话）
 2. 我们用的中间件是怎么实现我们的需求的：治理层面（负载均衡、限流与熔断、注册与发现、RPC、监控和报警、链路追踪）
 
-- [基础理论](./distribution/theory.md)
+- [基础理论]
 - 分布式锁 lock.md
-- [分布式事务](./distribution/transaction.md)
-- [分布式 ID](./distribution/id.md)
-- [分布式缓存](./distribution/cache.md)
-- [分布式消息](./distribution/message.md)
-- [分布式存储（分库分表）](./distribution/duration.md)
-- [布式会话](./distribution/session.md)
-- [分布式 Job](./distribution/job.md)
+- [分布式事务]
+- [分布式 ID]
+- [分布式缓存]
+- [分布式消息]
+- [分布式存储（分库分表）]
+- [布式会话]
+- [分布式 Job]
 
 ## 10. 参考
 
