@@ -1,56 +1,3 @@
----
-title: JVM面试题，54道Java虚拟机八股文（2.3万字113张手绘图），面渣逆袭必看👍
-shortTitle: 面渣逆袭-JVM
-author: 三分恶
-date: 2025-01-10
-category:
-  - 面渣逆袭
-tag:
-  - 面渣逆袭
-description: 下载次数超 1 万次，2.3 万字 113 张手绘图，详解 54 道 Java 虚拟机面试高频题（让天下没有难背的八股），面渣背会这些 JVM 八股文，这次吊打面试官，我觉得稳了（手动 dog）。
-head:
-  - - meta
-    - name: keywords
-      content: Java,Java虚拟机,JVM,Java面试题,JVM面试题,java虚拟机面试题,八股文,java
----
-
-![面渣逆袭JVM篇封面图](https://cdn.tobebetterjavaer.com/stutymore/jvm-mianzhanixi-jvm.jpg)
-
-## 前言
-
-2.3 万字 113 张手绘图，详解 54 道 Java 虚拟机面试高频题（让天下没有难背的八股），面渣背会这些 JVM 八股文，这次吊打面试官，我觉得稳了（手动 dog）。整理：沉默王二，戳[转载链接](https://mp.weixin.qq.com/s/bHhqhl8mH3OAPt3EkaVc8Q)，作者：三分恶，戳[原文链接](https://mp.weixin.qq.com/s/XYsEJyIo46jXhHE1sOR_0Q)。
-
-亮白版本更适合拿出来打印，这也是很多学生党喜欢的方式，打印出来背诵的效率会更高。
-
-![面渣逆袭JVM篇.pdf第二版](https://cdn.tobebetterjavaer.com/stutymore/jvm-20250121142158.png)
-
-2024 年 12 月 30 日开始着手第二版更新。
-
-- 对于高频题，会标注在《[Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)》中出现的位置，哪家公司，原题是什么；如果你想节省时间的话，可以优先背诵这些题目，尽快做到知彼知己，百战不殆。
-- 结合项目（[技术派](https://javabetter.cn/zhishixingqiu/paicoding.html)、[pmhub](https://javabetter.cn/zhishixingqiu/pmhub.html)）来组织语言，让面试官最大程度感受到你的诚意，而不是机械化的背诵。
-- 修复第一版中出现的问题，包括球友们的私信反馈，网站留言区的评论，以及 [GitHub 仓库](https://github.com/itwanger/toBeBetterJavaer/issues)中的 issue，让这份面试指南更加完善。
-- 优化排版，增加手绘图，重新组织答案，使其更加口语化，从而更贴近面试官的预期。
-
-![面渣逆袭已经提交 1438 次 GitHub 记录](https://cdn.tobebetterjavaer.com/stutymore/jvm-20250110113003.png)
-
-由于 PDF 没办法自我更新，所以需要最新版的小伙伴，可以微信搜【**沉默王二**】，或者扫描/长按识别下面的二维码，关注二哥的公众号，回复【**222**】即可拉取最新版本。
-
-当然了，请允许我的一点点私心，那就是星球的 PDF 版本会比公众号早一个月时间，毕竟星球用户都付费过了，我有必要让他们先享受到一点点福利。相信大家也都能理解，毕竟在线版是免费的，CDN、服务器、域名、OSS 等等都是需要成本的。
-
-更别说我付出的时间和精力了。
-
-<div style="text-align: center; margin: 20px 0;">
-    <img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/gongzhonghao.png" alt="微信扫码或者长按识别，或者微信搜索“沉默王二”" style="max-width: 100%; height: auto;  border-radius: 10px;" />
-</div>
-
-百度网盘、阿里云盘、夸克网盘都可以下载到最新版本，我会第一时间更新上去。
-
-![回复 222](https://cdn.tobebetterjavaer.com/stutymore/javase-20241230171125.png)
-
-展示一下暗黑版本的 PDF 吧，排版清晰，字体优雅，更加适合夜服，晚上看会更舒服一点。
-
-![面渣逆袭JVM篇.pdf暗黑版](https://cdn.tobebetterjavaer.com/stutymore/jvm-20250121142305.png)
-
 ## 一、引言
 
 ### 1.什么是 JVM?
@@ -61,40 +8,18 @@ JVM，也就是 Java 虚拟机，它是 Java 实现跨平台的基石。
 
 程序运行时，JVM 会对字节码文件进行逐行解释，翻译成机器码指令，并交给对应的操作系统去执行。
 
-![三分恶面渣逆袭：Java语言编译运行](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-1.png)
+![Java语言编译运行](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-1.png)
 
 这样就实现了 Java 一次编译，处处运行的特性。
 
 #### 说说 JVM 的其他特性？
 
-①、JVM 可以自动管理内存，通过垃圾回收器回收不再使用的对象并释放内存空间。
-
-②、JVM 包含一个即时编译器 JIT，它可以在运行时将热点代码缓存到 codeCache 中，下次执行的时候不用再一行一行的解释，而是直接执行缓存后的机器码，执行效率会大幅提高。
-
-![截图来自美团技术](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/jvm/jit-9a62fc02-1a6a-451e-bb2b-19fc086d5be0.png)
-
-③、任何可以通过 Java 编译的语言，比如说 Groovy、Kotlin、Scala 等，都可以在 JVM 上运行。
-
-![三分恶面渣逆袭：JVM跨语言](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-2.png)
-
-#### 为什么要学习 JVM？
-
-学习 JVM 可以帮助我们开发者更好地优化程序性能、避免内存问题。
-
-比如说了解 JVM 的内存模型和垃圾回收机制，可以帮助我们更合理地配置内存、减少 GC 停顿。
-
-比如说掌握 JVM 的类加载机制可以帮助我们排查类加载冲突或异常。
-
-再比如说，JVM 还提供了很多调试和监控工具，可以帮助我们分析内存和线程的使用情况，从而解决内存溢出内存泄露等问题。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东同学 10 后端实习一面的原题：有了解 JVM 吗
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动同学 20 测开一面的原题：了解过 JVM 么？讲一下 JVM 的特性
+- **自动管理内存**，通过垃圾回收器回收不再使用的对象并释放内存空间；
+- **即时编译器 JIT**，它可以在运行时将热点代码缓存到 codeCache 中，下次执行的时候不用再一行一行的解释，而是直接执行缓存后的机器码，执行效率会大幅提高；
+  - ![截图来自美团技术](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/jvm/jit-9a62fc02-1a6a-451e-bb2b-19fc086d5be0.png)
+- **任何编译后符合字节码规范的编程语言，都可以在 JVM 上运行**；比如说 Groovy、Kotlin、Scala 等；
 
 ### 2.说说 JVM 的组织架构（补充）
-
-> 增补于 2024 年 03 月 08 日。
-
-推荐阅读：[大白话带你认识 JVM](https://javabetter.cn/jvm/what-is-jvm.html)
 
 JVM 大致可以划分为三个部分：类加载器、运行时数据区和执行引擎。
 
@@ -106,20 +31,17 @@ JVM 大致可以划分为三个部分：类加载器、运行时数据区和执�
 
 ③ 执行引擎，也是 JVM 的心脏，负责执行字节码。它包括一个虚拟处理器、即时编译器 JIT 和垃圾回收器。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯 Java 后端实习一面原题：说说 JVM 的组织架构
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的得物面经同学 9 面试题目原题：JVM 的架构，具体阐述一下各个部分的功能？
-
 ## 二、内存管理
 
 ### 3.能说一下 JVM 的内存区域吗？
 
-推荐阅读：[深入理解 JVM 的运行时数据区](https://javabetter.cn/jvm/neicun-jiegou.html)
-
 按照 Java 虚拟机规范，JVM 的内存区域可以细分为`程序计数器`、`虚拟机栈`、`本地方法栈`、`堆`和`方法区`。
 
-![三分恶面渣逆袭：Java虚拟机运行时数据区](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-3.png)
+![Java虚拟机运行时数据区](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-3.png)
 
 其中`方法区`和`堆`是线程共享的，`虚拟机栈`、`本地方法栈`和`程序计数器`是线程私有的。
+
+之所以要把 jvm 的内存区域根据线程是否共享来划分，是因为程序本质上分为两个内容，一个是代码片段，一个是数据存储，而数据结构上是： 栈管运行、堆管存储。
 
 #### 介绍一下程序计数器？
 
@@ -129,9 +51,9 @@ JVM 大致可以划分为三个部分：类加载器、运行时数据区和执�
 
 Java 虚拟机栈的生命周期与线程相同。
 
-当线程执行一个方法时，会创建一个对应的[栈帧](https://javabetter.cn/jvm/stack-frame.html)，用于存储局部变量表、操作数栈、动态链接、方法出口等信息，然后栈帧会被压入虚拟机栈中。当方法执行完毕后，栈帧会从虚拟机栈中移除。
+当线程执行一个方法时，会创建一个对应的栈帧，用于存储局部变量表、操作数栈、动态链接、方法出口等信息，然后栈帧会被压入虚拟机栈中。当方法执行完毕后，栈帧会从虚拟机栈中移除。
 
-![三分恶面渣逆袭：Java虚拟机栈](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-4.png)
+![Java虚拟机栈](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-4.png)
 
 #### 一个什么都没有的空方法，空的参数都没有，那局部变量表里有没有变量？
 
@@ -205,13 +127,15 @@ Java 中“几乎”所有的对象都会在堆中分配，堆也是[垃圾收�
 
 从内存回收的角度来看，由于垃圾收集器大部分都是基于分代收集理论设计的，所以堆又被细分为`新生代`、`老年代`、`Eden空间`、`From Survivor空间`、`To Survivor空间`等。
 
-![三分恶面渣逆袭：Java 堆内存结构](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-5.png)
+![Java 堆内存结构](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-5.png)
 
 随着 [JIT 编译器](https://javabetter.cn/jvm/jit.html)的发展和逃逸技术的逐渐成熟，“所有的对象都会分配到堆上”就不再那么绝对了。
 
 从 JDK 7 开始，JVM 默认开启了逃逸分析，意味着如果某些方法中的对象引用没有被返回或者没有在方法体外使用，也就是未逃逸出去，那么对象可以直接在栈上分配内存。
 
 #### 堆和栈的区别是什么？
+
+> 堆管存储、栈管运行。
 
 堆属于线程共享的内存区域，几乎所有 new 出来的对象都会堆上分配，生命周期不由单个方法调用所决定，可以在方法调用结束后继续存在，直到不再被任何变量引用，最后被垃圾收集器回收。
 
@@ -241,36 +165,19 @@ public class StaticVarDemo {
 }
 ```
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东同学 10 后端实习一面的原题：堆和栈的区别是什么
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的比亚迪面经同学 3 Java 技术一面面试原题：介绍一下 JVM 运行时数据区
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 1 Java 后端技术一面面试原题：讲一下 JVM 内存结构？
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 1 Java 技术一面面试原题：说说 JVM 运行时数据区
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 2 Java 后端技术一面面试原题：JVM 内存结构了解吗？
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手面经同学 1 部门主站技术部面试原题：请说一下 Java 的内存区域，程序计数器等？
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 8 Java 后端实习一面面试原题：jvm 内存分布，有垃圾回收的是哪些地方
-> 8. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的得物面经同学 8 一面面试原题：说一说 jvm 内存区域
-> 9. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 3 Java 后端技术一面面试原题：jmm 内存模型 栈 方法区存放的是什么
-> 10. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的收钱吧面经同学 1 Java 后端一面面试原题：你提到了栈帧，那局部变量表除了栈帧还有什么？一个什么都没有的空方法，完全空的参数什么都没有，那局部变量表里有没有变量？
-> 11. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的招银网络科技面经同学 9 Java 后端技术一面面试原题：Java 堆内存和栈内存的区别
-> 12. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 OPPO 面经同学 1 面试原题：说一下 JVM 内存模型
-> 13. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的深信服面经同学 3 Java 后端线下一面面试原题：JVM 变量存在堆栈的位置？
-> 14. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 TP 联洲同学 5 Java 后端一面的原题：Jvm 内存区域，本地方法栈的运行场景，Native 方法解释一下
-> 15. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动同学 17 后端技术面试原题：jvm 结构 运行时数据区有什么结构 堆存什么
-> 16. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 29 Java 后端一面原题：new 一个对象存放在哪里？（运行时数据区），局部变量存在 JVM 哪里
-
 ### 4.说一下 JDK 1.6、1.7、1.8 内存区域的变化？
 
 JDK 1.6 使用永久代来实现方法区：
 
-![三分恶面渣逆袭：JDK 1.6内存区域](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-6.png)
+![JDK 1.6内存区域](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-6.png)
 
 JDK 1.7 时仍然是永久带，但发生了一些细微变化，比如将字符串常量池、静态变量存放到了堆上。
 
-![三分恶面渣逆袭：JDK 1.7内存区域](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-7.png)
+![JDK 1.7内存区域](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-7.png)
 
 在 JDK 1.8 时，直接在内存中划出了一块区域，叫**元空间**，来取代之前放在 JVM 内存中的永久代，并将运行时常量池、类常量池都移动到了元空间。
 
-![三分恶面渣逆袭：JDK 1.8内存区域](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-8.png)
+![JDK 1.8内存区域](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-8.png)
 
 ### 5.为什么使用元空间替代永久代？
 
@@ -294,19 +201,23 @@ JDK 8 就终于完成了这项移出工作，这样的好处就是，元空间�
 
 ### 6.对象创建的过程了解吗？
 
-当我们使用 new 关键字创建一个对象时，JVM 首先会检查 new 指令的参数是否能在常量池中定位到类的符号引用，然后检查这个符号引用代表的类是否已被加载、解析和初始化。如果没有，就先执行类加载。
+当我们使用 new 关键字创建一个对象时，JVM 首先会检查 new 指令的参数是否能在方法区常量池中定位到类的符号引用，然后检查这个符号引用代表的类是否已被加载、解析和初始化。如果没有，就先执行类加载。
 
 ![二哥的 Java 进阶之路：对象的创建过程](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240404091445.png)
 
-如果已经加载，JVM 会为对象分配内存完成初始化，比如数值类型的成员变量初始值是 0，布尔类型是 false，对象类型是 null。
+如果已经加载，JVM 会为对象分配内存，并完成初始化，比如数值类型的成员变量初始值是 0，布尔类型是 false，对象类型是 null。
 
 接下来会设置对象头，里面包含了对象是哪个类的实例、对象的哈希码、对象的 GC 分代年龄等信息。
 
-最后，JVM 会执行构造方法 `<init>` 完成赋值操作，将成员变量赋值为预期的值，比如 `int age = 18`，这样一个对象就创建完成了。
+最后，JVM 会执行构造方法 `<init>` 进行实例化，完成赋值操作，将成员变量赋值为预期的值，比如 `int age = 18`，这样一个对象就创建完成了。
+
+> 初始化 VS 实例化
+> 初始化： 分配完内存之后，给变量赋上初始值；
+> 实例化： 给变量赋上代码中给定的值；
 
 #### 对象的销毁过程了解吗？
 
-当对象不再被任何引用指向时，就会变成垃圾。垃圾收集器会通过可达性分析算法判断对象是否存活，如果对象不可达，就会被回收。
+当对象不再被任何引用指向时，就会变成垃圾。垃圾收集器会通过**可达性分析**算法判断对象是否存活，如果对象不可达，就会被回收。
 
 垃圾收集器通过标记清除、标记复制、标记整理等算法来回收内存，将对象占用的内存空间释放出来。
 
@@ -326,15 +237,11 @@ JDK 8 就终于完成了这项移出工作，这样的好处就是，元空间�
 | Parallel New      | CMS          | -XX:+UseParNewGC -XX:+UseConcMarkSweepGC |
 | G1                |              | -XX:+UseG1GC                             |
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的比亚迪面经同学 3 Java 技术一面面试原题：对象创建到销毁的流程
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 2 Java 后端技术一面面试原题：说说创建对象的流程？
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的携程面经同学 1 Java 后端技术一面面试原题：对象创建到销毁，内存如何分配的，（类加载和对象创建过程，CMS，G1 内存清理和分配）
-
 ### 7.堆内存是如何分配的？
 
 在堆中为对象分配内存时，主要使用两种策略：指针碰撞和空闲列表。
 
-![三分恶面渣逆袭：指针碰撞和空闲列表](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-10.png)
+![指针碰撞和空闲列表](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-10.png)
 
 指针碰撞适用于管理简单、碎片化较少的内存区域，如年轻代；而空闲列表适用于内存碎片化较严重或对象大小差异较大的场景如老年代。
 
@@ -352,10 +259,6 @@ JVM 维护一个列表，记录堆中所有未占用的内存块，每个内存�
 
 分配后，如果选中的内存块未被完全利用，剩余的部分会作为一个新的内存块加入到空闲列表中。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的携程面经同学 1 Java 后端技术一面面试原题：对象创建到销毁，内存如何分配的，（类加载和对象创建过程，CMS，G1 内存清理和分配）
-
-memo：2025 年 1 月 10 日修改到此
-
 ### 8.new 对象时，堆会发生抢占吗？
 
 会。
@@ -365,6 +268,9 @@ memo：2025 年 1 月 10 日修改到此
 new 对象时，指针会向右移动一个对象大小的距离，假如一个线程 A 正在给字符串对象 s 分配内存，另外一个线程 B 同时为 ArrayList 对象 l 分配内存，两个线程就发生了抢占。
 
 #### JVM 怎么解决堆内存分配的竞争问题？
+
+1. 利用 CAS 算法+失败重试来保证更新的原子性；
+2. 为每一个线程分配独立的 TLAB 空间；
 
 为了解决堆内存分配的竞争问题，JVM 为每个线程保留了一小块内存空间，被称为 TLAB，也就是线程本地分配缓冲区，用于存放该线程分配的对象。
 
@@ -416,15 +322,13 @@ class TLABDemo {
 
 ### 9.能说一下对象的内存布局吗？
 
-好的。
-
-对象的内存布局是由 Java 虚拟机规范定义的，但具体的实现细节各有不同，如 HotSpot 和 OpenJ9 就不一样。
+对象的内存布局是由 **Java 虚拟机规范** 定义的，但具体的实现细节各有不同，如 HotSpot 和 OpenJ9 就不一样。
 
 就拿我们常用的 HotSpot 来说吧。
 
-对象在内存中包括三部分：对象头、实例数据和对齐填充。
+对象在内存中包括三部分：**对象头**、**实例数据**和**对齐填充**。
 
-![三分恶面渣逆袭：对象的存储布局](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-12.png)
+![对象的存储布局](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-12.png)
 
 #### 说说对象头的作用？
 
@@ -507,8 +411,6 @@ class MyObject {
 
 #### 用过 JOL 查看对象的内存布局吗？
 
-用过。
-
 [JOL](https://openjdk.org/projects/code-tools/jol/) 是一款分析 JVM 对象布局的工具。
 
 第一步，在 pom.xml 中引入 JOL 依赖：
@@ -581,9 +483,6 @@ class ReferenceSizeExample {
 
 ReferenceHolder.reference 的大小为 4 字节。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的帆软同学 3 Java 后端一面的原题：Object a = new object()的大小，对象引用占多少大小？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的去哪儿面经同学 1 技术二面面试原题：Object 底层的数据结构（蒙了）
-
 memo：2025 年 1 月 11 日修改到此
 
 ### 10.JVM 怎么访问对象的？
@@ -594,13 +493,13 @@ memo：2025 年 1 月 11 日修改到此
 
 优点是，对象被移动时只需要修改句柄表中的指针，而不需要修改对象引用本身。
 
-![三分恶面渣逆袭：通过句柄访问对象](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-13.png)
+![通过句柄访问对象](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-13.png)
 
 在直接指针访问中，引用直接存储对象的内存地址；对象的实例数据和类型信息都存储在堆中固定的内存区域。
 
 优点是访问速度更快，因为少了一次句柄的寻址操作。缺点是如果对象在内存中移动，引用需要更新为新的地址。
 
-![三分恶面渣逆袭：通过直接指针访问对象](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-14.png)
+![通过直接指针访问对象](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-14.png)
 
 HotSpot 虚拟机主要使用直接指针来进行对象访问。
 
@@ -608,7 +507,7 @@ HotSpot 虚拟机主要使用直接指针来进行对象访问。
 
 四种，分别是强引用、软引用、弱引用和虚引用。
 
-![三分恶面渣逆袭：四种引用总结](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-19.png)
+![四种引用总结](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-19.png)
 
 强引用是 Java 中最常见的引用类型。使用 new 关键字赋值的引用就是强引用，只要强引用关联着对象，垃圾收集器就不会回收这部分对象，即使内存不足。
 
@@ -648,13 +547,13 @@ static class Entry extends WeakReference<ThreadLocal<?>> {
 PhantomReference<String> phantomRef = new PhantomReference<>(new String("沉默王二"), new ReferenceQueue<>());
 ```
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东同学 4 云实习面试原题：四个引用(强软弱虚)
-
 ### 12.Java 堆的内存分区了解吗？
+
+> 分代和分区。
 
 了解。Java 堆被划分为**新生代**和**老年代**两个区域。
 
-![三分恶面渣逆袭：Java堆内存划分](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-21.png)
+![Java堆内存划分](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-21.png)
 
 新生代又被划分为 Eden 空间和两个 Survivor 空间（From 和 To）。
 
@@ -662,16 +561,13 @@ PhantomReference<String> phantomRef = new PhantomReference<>(new String("沉默�
 
 对象在新生代中经历多次 GC 后，如果仍然存活，会被移动到老年代。当老年代内存不足时，会触发 Major GC，对整个堆进行垃圾回收。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的得物面经同学 8 一面面试原题：Java 中堆内存怎么组织的
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 27 云后台技术一面面试原题：怎么来区分对象是属于哪个代的？
-
 ### 13.说一下新生代的区域划分？
 
 新生代的垃圾收集主要采用标记-复制算法，因为新生代的存活对象比较少，每次复制少量的存活对象效率比较高。
 
 基于这种算法，虚拟机将内存分为一块较大的 Eden 空间和两块较小的 Survivor 空间，每次分配内存只使用 Eden 和其中一块 Survivor。发生垃圾收集时，将 Eden 和 Survivor 中仍然存活的对象一次性复制到另外一块 Survivor 空间上，然后直接清理掉 Eden 和已用过的那块 Survivor 空间。默认 Eden 和 Survivor 的大小比例是 8∶1。
 
-![三分恶面渣逆袭：新生代内存划分](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-25.png)
+![新生代内存划分](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-25.png)
 
 ### 14.对象什么时候会进入老年代？
 
@@ -723,12 +619,6 @@ Region 的大小可以通过 JVM 参数 `-XX:G1HeapRegionSize` 来设置，默�
 
 这是因为如果年龄较小的对象在 Survivor 区中占用了较大的空间，会导致 Survivor 区中的对象复制次数增多，影响垃圾回收的效率。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的阿里面经同学 5 阿里妈妈 Java 后端技术一面面试原题：哪些情况下对象会进入老年代？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 7 Java 后端技术一面面试原题：新生代对象转移到老年代的条件
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的拼多多面经同学 4 技术一面面试原题：对象什么时候进入老年代
-
-memo：2025 年 1 月 13 日修改到此
-
 ### 15.STW 了解吗？
 
 了解。
@@ -752,7 +642,7 @@ JVM 会使用一个名为安全点（Safe Point）的机制来确保线程能够
 
 用个通俗的比喻，老王去拉车，车上的东西很重，老王累的汗流浃背，但是老王不能在上坡或者下坡时休息，只能在平地上停下来擦擦汗，喝口水。
 
-![三分恶面渣逆袭：老王拉车只能在平路休息](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-33.png)
+![老王拉车只能在平路休息](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-33.png)
 
 推荐大家看看这个[HotSpot JVM Deep Dive - Safepoint](https://www.youtube.com/watch?v=JkbWPPNc4SI)，对 safe point 有一个比较深入地解释。
 
@@ -760,7 +650,7 @@ JVM 会使用一个名为安全点（Safe Point）的机制来确保线程能够
 
 ### 16.对象一定分配在堆中吗？
 
-不一定。
+不一定。有可能会分配到栈上。
 
 默认情况下，Java 对象是在堆中分配的，但 JVM 会进行逃逸分析，来判断对象的生命周期是否只在方法内部，如果是的话，这个对象可以在栈上分配。
 
@@ -801,7 +691,7 @@ public Person createPerson() {
 
 比如说 `new Person()` 创建的对象被返回，那么这个对象就逃逸出当前方法了。
 
-![三分恶面渣逆袭：方法逃逸](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-37.png)
+![方法逃逸](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-37.png)
 
 再比如说，对象被另外一个线程引用，生命周期超出了当前线程，那么对象就必须分配在堆中，并且线程之间需要同步。
 
@@ -871,7 +761,7 @@ class MemoryLeakExample {
 
 用一个比较有味道的比喻来形容就是，内存溢出是排队去蹲坑，发现没坑了；内存泄漏，就是有人占着茅坑不拉屎，导致坑位不够用。
 
-![三分恶面渣逆袭：内存泄漏、内存溢出](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-15.png)
+![内存泄漏、内存溢出](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-15.png)
 
 > 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 1 Java 技术一面面试原题：说说 OOM 的原因
 > 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手面经同学 1 部门主站技术部面试原题：了解 OOM 吗？
@@ -1040,10 +930,6 @@ threadLocal.set(new Object()); // 未清理
 
 然后在结果观察内存占用最多的对象，找到内存泄漏的源头。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东同学 10 后端实习一面的原题：什么是内存泄露
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手面经同学 1 部门主站技术部面试原题：Java 哪些内存区域会发生 OOM？为什么？
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 4 一面面试原题：内存泄漏怎么排查
-
 ### 21.有没有处理过内存溢出问题？
 
 有。
@@ -1067,9 +953,6 @@ jmap -dump:format=b,file=heap.hprof <pid>
 或者检查代码中是否存在内存泄漏，如未关闭的资源、长生命周期的对象等。
 
 之后，在本地进行压力测试，模拟高负载情况下的内存表现，确保修改有效，且没有引入新的问题。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为面经同学 9 Java 通用软件开发一面面试原题：如何排查 OOM？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的荣耀面经同学 4 面试原题：有没遇到内存泄露，溢出的情况，怎么发生和处理的？
 
 ### 22.什么情况下会发生栈溢出？（补充）
 
@@ -1113,8 +996,6 @@ public class LargeLocalVariables {
 }
 ```
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 OPPO 面经同学 1 面试原题：什么情况下会发生栈溢出？
-
 ## 三、垃圾收集
 
 ### 23.讲讲 JVM 的垃圾回收机制（补充）
@@ -1143,26 +1024,13 @@ java -XX:+UseConcMarkSweepGC \
 
 Java 的垃圾回收过程主要分为标记存活对象、清除无用对象、以及内存压缩/整理三个阶段。不同的垃圾回收器在执行这些步骤时会采用不同的策略和算法。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为 OD 技术一面遇到的一道原题。
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 2 Java 后端技术一面面试原题：了解 GC 吗？不可达判断知道吗？
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 26 暑期实习微信支付面试原题：JVM 垃圾删除
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的得物面经同学 8 一面面试原题：Java 中垃圾回收的原理
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手同学 2 一面面试原题：JVM 了解吗？内存回收机制说一下？
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 OPPO 面经同学 1 面试原题：垃圾回收的过程是什么？
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 vivo 面经同学 10 技术一面面试原题：说一下 GC，有哪些方法
-> 8. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的荣耀面经同学 4 面试原题：对垃圾回收的理解？
-> 9. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动同学 17 后端技术面试原题：垃圾回收机制 为什么要学 jvm 内存泄漏场景
-> 10. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 27 云后台技术一面面试原题：GC？怎么样去识别垃圾？
-> 11. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的理想汽车面经同学 2 一面面试原题：说说你对 GC 的了解？
-> 12. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 29 Java 后端一面原题：JVM 垃圾回收机制？
-
 ### 24.如何判断对象仍然存活？
 
 Java 通过可达性分析算法来判断一个对象是否还存活。
 
 通过一组名为 “GC Roots” 的根对象，进行递归扫描，无法从根对象到达的对象就是“垃圾”，可以被回收。
 
-![三分恶面渣逆袭：GC Root](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-18.png)
+![GC Root](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-18.png)
 
 这也是 G1、CMS 等主流垃圾收集器使用的主要算法。
 
@@ -1170,7 +1038,7 @@ Java 通过可达性分析算法来判断一个对象是否还存活。
 
 每个对象有一个引用计数器，记录引用它的次数。当计数器为零时，对象可以被回收。
 
-![三分恶面渣逆袭：引用计数法](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-17.png)
+![引用计数法](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-17.png)
 
 引用计数法无法解决循环引用的问题。例如，两个对象互相引用，但不再被其他对象引用，它们的引用计数都不为零，因此不会被回收。
 
@@ -1179,11 +1047,6 @@ Java 通过可达性分析算法来判断一个对象是否还存活。
 在进行垃圾回收之前，JVM 会暂停所有正在执行的应用线程。
 
 这是因为可达性分析过程必须确保在执行分析时，内存中的对象关系不会被应用线程修改。如果不暂停应用线程，可能会出现对象引用的改变，导致垃圾回收过程中判断对象是否可达的结果不一致，从而引发严重的内存错误或数据丢失。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 7 京东到家面试原题：如何判断一个对象是否可以回收
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手同学 2 一面面试原题：做可达性分析的时候，应该有哪些前置性的操作？
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 9 面试原题：什么样的对象算作垃圾对象
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的同学 D 小米一面原题：gc 中判断对象可回收的方式有哪些
 
 ### 25.Java 中可作为 GC Roots 的引用有哪几种？
 
@@ -1290,15 +1153,11 @@ class ConstantPoolReference {
 
 这些常量引用的对象（字符串"Hello, World"和 Object.class 类对象）在常量池中，只要包含这些常量的 ConstantPoolReference 类未被卸载，这些对象就不会被垃圾回收。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的帆软同学 3 Java 后端一面的原题：哪些对象可以作为 GC Roots
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 27 云后台技术一面面试原题：GC Root？
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的同学 D 小米一面原题：那些对象可以作为 gc root
-
 ### 26.finalize()方法了解吗？
 
 垃圾回收就是古代的秋后问斩，`finalize()` 就是刀下留人，在人犯被处决之前，还要做最后一次审计，青天大老爷会看看有没有什么冤情，需不需要刀下留人。
 
-![三分恶面渣逆袭：刀下留人](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-20.png)
+![刀下留人](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-20.png)
 
 如果对象在进行可达性分析后发现没有与 GC Roots 相连接的引用链，那它将会被第一次标记，随后进行一次筛选。
 
@@ -1319,7 +1178,7 @@ class ConstantPoolReference {
 - **标记**：标记所有需要回收的对象
 - **清除**：回收所有被标记的对象
 
-![三分恶面渣逆袭：标记-清除算法](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-22.png)
+![标记-清除算法](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-22.png)
 
 优点是实现简单，缺点是回收过程中会产生内存碎片。
 
@@ -1327,7 +1186,7 @@ class ConstantPoolReference {
 
 `标记-复制`算法可以解决标记-清除算法的内存碎片问题，因为它将内存空间划分为两块，每次只使用其中一块。当这一块的内存用完了，就将还存活着的对象复制到另外一块上面，然后清理掉这一块。
 
-![三分恶面渣逆袭：标记-复制算法](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-23.png)
+![标记-复制算法](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-23.png)
 
 缺点是浪费了一半的内存空间。
 
@@ -1360,13 +1219,6 @@ class ConstantPoolReference {
 - 标记阶段停顿是为了保证对象的引用关系不被修改。
 - 复制阶段停顿是防止对象在复制过程中被修改。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 1 Java 后端技术一面面试原题：垃圾回收算法了解多少？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小米面经同学 F 面试原题：垃圾回收的算法及详细介绍
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 27 云后台技术一面面试原题：回收的方法？分代收集算法里面具体是怎么回收的？为什么要用分代收集呢？
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的百度同学 4 面试原题：Gc 算法有哪些?
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 9 面试原题：问了垃圾回收算法，针对问了每个算法的优缺点
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的同学 D 小米一面原题：gc 垃圾回收算法有哪些
-
 ### 28.Minor GC、Major GC、Mixed GC、Full GC 都是什么意思？
 
 Minor GC 也称为 Young GC，是指发生在年轻代的垃圾收集。年轻代包含 Eden 区以及两个 Survivor 区。
@@ -1384,9 +1236,6 @@ Full GC 是最彻底的垃圾收集，涉及整个 Java 堆和方法区。它是
 Full GC 会从 GC Root 出发，标记所有可达对象。新生代使用复制算法，清空 Eden 区。老年代使用标记-整理算法，回收对象并消除碎片。
 
 停顿时间较长，会影响系统响应性能。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的阿里面经同学 5 阿里妈妈 Java 后端技术一面面试原题：full gc 和 young gc 的区别
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 27 云后台技术一面面试原题：FULL gc 怎么去清理的？
 
 ### 29.Young GC 什么时候触发？
 
@@ -1414,7 +1263,7 @@ Full GC 会从 GC Root 出发，标记所有可达对象。新生代使用复制
 
 JVM 的垃圾收集器主要分为两大类：分代收集器和分区收集器，分代收集器的代表是 CMS，分区收集器的代表是 G1 和 ZGC。
 
-![三分恶面渣逆袭：HotSpot虚拟机垃圾收集器](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-28.png)
+![HotSpot虚拟机垃圾收集器](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-28.png)
 
 CMS 是第一个关注 GC 停顿时间的垃圾收集器，JDK 1.5 时引入，JDK9 被标记弃用，JDK14 被移除。
 
@@ -1430,7 +1279,7 @@ Serial 收集器是最基础、历史最悠久的收集器。
 
 Serial/Serial Old 收集器的运行过程如图：
 
-![三分恶面渣逆袭：Serial/Serial Old收集器运行示意图](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-29.png)
+![Serial/Serial Old收集器运行示意图](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-29.png)
 
 #### 说说 ParNew 收集器？
 
@@ -1438,13 +1287,13 @@ ParNew 收集器实质上是 Serial 收集器的多线程并行版本，使用�
 
 ParNew/Serial Old 收集器运行示意图如下：
 
-![三分恶面渣逆袭：ParNew/Serial Old收集器运行示意图](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-30.png)
+![ParNew/Serial Old收集器运行示意图](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-30.png)
 
 #### 说说 Parallel Scavenge 收集器？
 
 Parallel Scavenge 收集器是一款新生代收集器，基于标记-复制算法实现，也能够并行收集。和 ParNew 有些类似，但 Parallel Scavenge 主要关注的是垃圾收集的吞吐量——所谓吞吐量，就是 CPU 用于运行用户代码的时间和总消耗时间的比值，比值越大，说明垃圾收集的占比越小。
 
-![三分恶面渣逆袭：吞吐量](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-31.png)
+![吞吐量](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-31.png)
 
 根据对象存活周期的不同会将内存划分为几块，一般是把 Java 堆分为新生代和老年代，这样就可以根据各个年代的特点采用最适当的收集算法。
 
@@ -1456,7 +1305,7 @@ Serial Old 是 Serial 收集器的老年代版本，它同样是一个单线程�
 
 Parallel Old 是 Parallel Scavenge 收集器的老年代版本，基于标记-整理算法实现，使用多条 GC 线程在 STW 期间同时进行垃圾回收。
 
-![三分恶面渣逆袭：Parallel Old收集器](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-32.png)
+![Parallel Old收集器](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-32.png)
 
 #### 说说 CMS 收集器？
 
@@ -1493,22 +1342,14 @@ ZGC 是 JDK 11 时引入的一款低延迟的垃圾收集器，最大特点是�
 
 这一过程减少了程序员手动管理内存的负担，降低了内存泄漏和溢出错误的风险。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的滴滴同学 2 技术二面的原题：了解哪些垃圾回收器，只能回收一个代（新生代、老年代）吗，使用的 jdk 版本
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东同学 10 后端实习一面的原题：垃圾回收器的作用是什么
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的携程面经同学 10 Java 暑期实习一面面试原题：有哪些垃圾回收器，选一个讲一下垃圾回收的流程
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东同学 4 云实习面试原题：常见的 7 个 GC 回收器
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 15 点评后端技术面试原题：讲一下知道的垃圾回收器，问知不知道 ZGC 回收器（不知道）
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的阿里云面经同学 22 面经：cms 和 g1 的区别
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 9 面试原题：怎么理解并发和并行，Parallel Old 和 CMS 有什么区别？
-
 ### 32.能详细说一下 CMS 的垃圾收集过程吗？
 
-![三分恶面渣逆袭：Concurrent Mark Sweep收集器运行示意图](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-34.png)
+![Concurrent Mark Sweep收集器运行示意图](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-34.png)
 
 CMS 使用**标记-清除**算法进行垃圾收集，分 4 大步：
 
-- **初始标记**：标记所有从 GC Roots 直接可达的对象，这个阶段需要 STW，但速度很快。
-- **并发标记**：从初始标记的对象出发，遍历所有对象，标记所有可达的对象。这个阶段是并发进行的。
+- **初始标记**：标记所有从 GC Roots 直接可达的对象，这个阶段需要 STW，即停止所有用户线程，但速度很快。
+- **并发标记**：从初始标记的对象出发，遍历所有对象，标记所有可达的对象。这个阶段是与用户线程并发进行的。
 - **重新标记**：完成剩余的标记工作，包括处理并发阶段遗留下来的少量变动，这个阶段通常需要短暂的 STW 停顿。
 - **并发清除**：清除未被标记的对象，回收它们占用的内存空间。
 
@@ -1546,11 +1387,6 @@ CMS 使用**标记-清除**算法进行垃圾收集，分 4 大步：
 
 推荐阅读：[小道哥的三色标记](https://blog.csdn.net/xiaodaoge_it/article/details/121890145)
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的携程面经同学 10 Java 暑期实习一面面试原题：有哪些垃圾回收器，选一个讲一下垃圾回收的流程
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的携程面经同学 1 Java 后端技术一面面试原题：对象创建到销毁，内存如何分配的，（类加载和对象创建过程，CMS，G1 内存清理和分配）
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的收钱吧面经同学 1 Java 后端一面面试原题：CMS 用了什么垃圾回收算法？你提到了 remark，那它 remark 具体是怎么执行的？三色标记法？
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 9 面试原题：问了 CMS 垃圾回收器
-
 ### 33.G1 垃圾收集器了解吗？
 
 G1 在 JDK 1.7 时引入，在 JDK 9 时取代 CMS 成为默认的垃圾收集器。
@@ -1575,12 +1411,7 @@ G1 收集器的运行过程大致可划分为这几个步骤：
 
 ③、**可预测的停顿**，G1 在垃圾回收期间仍然需要「Stop the World」。不过，G1 在停顿时间上添加了预测机制，用户可以 JVM 启动时指定期望停顿时间，G1 会尽可能地在这个时间内完成垃圾回收。
 
-![三分恶面渣逆袭：G1收集器运行示意图](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-36.png)
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 1 Java 技术一面面试原题：说说 G1 垃圾回收器的原理
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的携程面经同学 1 Java 后端技术一面面试原题：对象创建到销毁，内存如何分配的，（类加载和对象创建过程，CMS，G1 内存清理和分配）
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的百度同学 4 面试原题：G1 垃圾回收器了解吗?
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的理想汽车面经同学 2 一面面试原题：了解过 G1 垃圾回收器吗？
+![G1收集器运行示意图](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-36.png)
 
 ### 34.有了 CMS，为什么还要引入 G1？
 
@@ -1597,8 +1428,6 @@ G1 收集器的运行过程大致可划分为这几个步骤：
 CMS 适用于对延迟敏感的应用场景，主要目标是减少停顿时间，但容易产生内存碎片。
 
 G1 则提供了更好的停顿时间预测和内存压缩能力，适用于大内存和多核处理器环境。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手面经同学 5 面试原题：CMS 垃圾收集器和 G1 垃圾收集器什么区别
 
 ### 35.你们线上用的什么垃圾收集器？
 
@@ -1638,9 +1467,10 @@ java -XX:+PrintCommandLineFlags -version
 
 我们系统采用的是 Parallel 收集器，Parallel 采用的是年轻代使用复制算法，老年代使用标记-整理算法，适用于高吞吐量要求的应用。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为 OD 面经同学 3 技术二面面试原题：工作中项目使用的什么垃圾回收算法
-
 ### 36.垃圾收集器应该如何选择？
+
+1. 理论上，版本越新的 jdk 所带的垃圾回收器越值得用，因为 Java 开发团队已经测试过了，并且这些新的垃圾收集器的更新也更符合硬件系统的更新；
+2. 一般情况下就默认，以后遇到问题再重新定位。或是调优、或是变更收集器类型，无不可。
 
 如果应用程序只需要一个很小的内存空间（大约 100 MB），或者对停顿时间没有特殊的要求，可以选择 Serial 收集器。
 
@@ -1682,15 +1512,15 @@ JDK 自带的命令行工具层面，我用过 jps、jstat、jinfo、jmap、jhat
 
 ①、JConsole：JDK 自带的监控工具，可以用来监视 Java 应用程序的运行状态，包括内存使用、线程状态、类加载、GC 等。
 
-![三分恶面渣逆袭：JConsole概览](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-39.png)
+![JConsole概览](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-39.png)
 
 ②、VisualVM：一个基于 NetBeans 的可视化工具，在很长一段时间内，VisualVM 都是 Oracle 官方主推的故障处理工具。集成了多个 JDK 命令行工具的功能，非常友好。
 
-![三分恶面渣逆袭：VisualVM安装插件](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-40.png)
+![VisualVM安装插件](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-40.png)
 
 ③、Java Mission Control：JMC 最初是 JRockit VM 中的诊断工具，但在 Oracle JDK7 Update 40 以后，就绑定到了 HotSpot VM 中。不过后来又被 Oracle 开源出来作为了一个单独的产品。
 
-![三分恶面渣逆袭：JMC主要界面](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-41.png)
+![JMC主要界面](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-41.png)
 
 #### 用过哪些第三方的工具？
 
@@ -1700,11 +1530,9 @@ JDK 自带的命令行工具层面，我用过 jps、jstat、jinfo、jmap、jhat
 
 ③、**JProfiler**：一个全功能的商业化 Java 性能分析工具，提供 CPU、 内存和线程的实时分析。
 
-④、**arthas**：阿里巴巴开源的 Java 诊断工具，主要用于线上的应用诊断；支持在不停机的情况下进行诊断；可以提供包括 JVM 信息查看、监控、Trace 命令、反编译等功能。
+④、【重点】**arthas**：阿里巴巴开源的 Java 诊断工具，主要用于线上的应用诊断；支持在不停机的情况下进行诊断；可以提供包括 JVM 信息查看、监控、Trace 命令、反编译等功能。
 
 ⑤、**async-profiler**：一个低开销的性能分析工具，支持生成火焰图，适用于复杂性能问题的分析。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为面经同学 9 Java 通用软件开发一面面试原题：如何查看当前 Java 程序里哪些对象正在使用，哪些对象已经被释放
 
 ### 39.JVM 的常见参数配置知道哪些？
 
@@ -1753,11 +1581,9 @@ JVM 调优是一个复杂的过程，调优的对象包括堆内存、垃圾收�
 
 之后进行代码优化，比如说减少大对象的创建、优化数据结构的使用方式、减少不必要的对象持有等。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为面经同学 6 Java 通用软件开发一面面试原题：说说你对 JVM 调优的了解
-
 ### 41.CPU 占用过高怎么排查？
 
-![三分恶面渣逆袭：CPU飙高](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-43.png)
+![CPU飙高](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-43.png)
 
 首先，使用 top 命令查看 CPU 占用情况，找到占用 CPU 较高的进程 ID。
 
@@ -1800,9 +1626,6 @@ printf "%x\n" PID
 
 最后，根据堆栈信息定位到具体的业务方法，查看是否有死循环、频繁的垃圾回收、资源竞争导致的上下文频繁切换等问题。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的阿里面经同学 1 闲鱼后端一面的原题：上线的业务出了问题怎么调试，比如某个线程 cpu 占用率高，怎么看堆栈信息
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手同学 4 一面原题：服务器的 CPU 占用持续升高，有哪些排查问题的手段？排查后发现是项目产生了内存泄露，如何确定问题出在哪里？
-
 ### 42.内存飙高问题怎么排查？
 
 内存飚高一般是因为创建了大量的 Java 对象导致的，如果持续飙高则说明垃圾回收跟不上对象创建的速度，或者内存泄漏导致对象无法回收。
@@ -1820,8 +1643,6 @@ printf "%x\n" PID
 第三步，使用可视化工具分析 dump 文件，比如说 VisualVM，找到占用内存高的对象，再找到创建该对象的业务代码位置，从代码和业务场景中定位具体问题。
 
 ![二哥的 Java 进阶之路：分析](https://cdn.tobebetterjavaer.com/stutymore/view-tools-20240107134238.png)
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的联想面经同学 7 面试原题：怎么定位线上的内存问题。
 
 ### 43.频繁 minor gc 怎么办？
 
@@ -1848,8 +1669,6 @@ java -Xmn256m your-app.jar
 ```
 
 调整为 6 的话，会减少 Eden 区的大小，增加 Survivor 区的大小，以确保对象在 Survivor 区中存活的时间足够长，避免过早晋升到老年代。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 8 面试原题：young GC 频繁如何排查？修改哪些参数？
 
 ### 44.频繁 Full GC 怎么办？
 
@@ -1884,15 +1703,9 @@ jmap -dump:format=b,file=heap pid
 
 假如是因为 GC 参数配置不合理导致的频繁 Full GC，可以通过调整 GC 参数来优化 GC 行为。或者直接更换更适合的 GC 收集器，如 G1、ZGC 等。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的得物面经同学 8 一面面试原题：Java 中 full gc 频繁，有哪些原因
-
 ## 五、类加载机制
 
 ### 45.了解类的加载机制吗？（补充）
-
-> 2024 年 03 月 29 日增补
-
-了解。
 
 JVM 的操作对象是 Class 文件，JVM 把 Class 文件中描述类的数据结构加载到内存中，并对数据进行校验、解析和初始化，最终转化成可以被 JVM 直接使用的类型，这个过程被称为类加载机制。
 
@@ -1901,9 +1714,6 @@ JVM 的操作对象是 Class 文件，JVM 把 Class 文件中描述类的数据�
 - **类加载器**：负责加载类文件，将类文件加载到内存中，生成 Class 对象。
 - **类加载过程**：包括加载、验证、准备、解析和初始化等步骤。
 - **双亲委派模型**：当一个类加载器接收到类加载请求时，它会把请求委派给父——类加载器去完成，依次递归，直到最顶层的类加载器，如果父——类加载器无法完成加载请求，子类加载器才会尝试自己去加载。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小米暑期实习同学 E 一面面试原题：你了解类的加载机制吗？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 3 Java 后端技术一面面试原题：java 的类加载机制 双亲委派机制 这样设计的原因是什么
 
 ### 46.类加载器有哪些？
 
@@ -1925,11 +1735,9 @@ JVM 的操作对象是 Class 文件，JVM 把 Class 文件中描述类的数据�
 
 一个类从被加载到虚拟机内存中开始，到从内存中卸载，整个生命周期需要经过七个阶段：加载 、验证、准备、解析、初始化、使用和卸载。
 
-![三分恶面渣逆袭：类的生命周期](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-44.png)
+![类的生命周期](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-44.png)
 
 ### 48.类装载的过程知道吗？
-
-> 推荐阅读：[一文彻底搞懂 Java 类加载机制](https://javabetter.cn/jvm/class-load.html)
 
 知道。
 
@@ -1951,24 +1759,17 @@ JVM 的操作对象是 Class 文件，JVM 把 Class 文件中描述类的数据�
 
 #### 载入过程 JVM 会做什么？
 
-![三分恶面渣逆袭：载入](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-45.png)
+![载入](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-45.png)
 
 - 1）通过一个类的全限定名来获取定义此类的二进制字节流。
 - 2）将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。
 - 3）在内存中生成一个代表这个类的 `java.lang.Class` 对象，作为这个类的访问入口。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小米暑期实习同学 E 一面面试原题：你了解类的加载机制吗？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 16 暑期实习一面面试原题：讲一下类加载过程，双亲委派模型，双亲委派的好处
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 18 成都到家面试原题：类加载过程
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手同学 4 一面原题：类装载的执行过程？双亲委派模式是什么？为什么使用这种模式？
-
-memo：2025 年 1 月 17 日修改至此。
-
 ### 49.什么是双亲委派模型？
 
 双亲委派模型要求类加载器在加载类时，先委托父加载器尝试加载，只有父加载器无法加载时，子加载器才会加载。
 
-![三分恶面渣逆袭：双亲委派模型](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-46.png)
+![双亲委派模型](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-46.png)
 
 这个过程会一直向上递归，也就是说，从子加载器到父加载器，再到更上层的加载器，一直到最顶层的启动类加载器。
 
@@ -1978,16 +1779,11 @@ memo：2025 年 1 月 17 日修改至此。
 
 直到某个加载器能够加载这个类，或者所有加载器都无法加载这个类，最终抛出 ClassNotFoundException。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小米暑期实习同学 E 一面面试原题：你了解类的加载机制吗？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的阿里云面经同学 22 面经：双亲委派机制
-
 ### 49.为什么要用双亲委派模型？
 
 **①、避免类的重复加载**：父加载器加载的类，子加载器无需重复加载。
 
 **②、保证核心类库的安全性**：如 `java.lang.*` 只能由 Bootstrap ClassLoader 加载，防止被篡改。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 16 暑期实习一面面试原题：讲一下类加载过程，双亲委派模型，双亲委派的好处
 
 ### 50.如何破坏双亲委派机制？
 
@@ -2004,7 +1800,7 @@ memo：2025 年 1 月 18 日修改至此。
 - 第一种：SPI 机制加载 JDBC 驱动。
 - 第二种：热部署框架。
 
-![三分恶面渣逆袭：双亲委派模型的三次破坏](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-47.png)
+![双亲委派模型的三次破坏](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-47.png)
 
 #### 说说 SPI 机制？
 
@@ -2028,8 +1824,6 @@ DriverManager 使用了线程上下文类加载器来加载 SPI 的实现类，�
 热部署是指在不重启服务器的情况下更新应用程序代码，需要替换旧版本的类，但旧版本的类可能由父加载器加载。
 
 如 Spring Boot 的 DevTools 通常会自定义类加载器，优先加载新的类版本。
-
-memo：2025 年 1 月 19 日修改至此。
 
 ### 52.Tomcat 的类加载机制了解吗？
 
@@ -2154,8 +1948,6 @@ class HotSwapClassLoader extends ClassLoader {
 
 友情提示：Intellij IDEA 提供了热部署功能，当我们修改了代码后，IDEA 会自动保存并编译，如果是 Web 项目，还可以在 Chrome 浏览器中装一个 LiveReload 插件，一旦编译完成，页面就会自动刷新看到最新的效果。对于测试或者调试来说，非常方便。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小米暑期实习同学 E 一面面试原题：那你知道类的热更新的？
-
 ### 54.说说解释执行和编译执行的区别（补充）
 
 > 2024 年 03 月 08 日增补
@@ -2179,61 +1971,3 @@ Java 一般被称为“解释型语言”，因为 Java 代码在执行前，需
 因此，Java 的执行效率得到了大幅提升。
 
 ![图片来源于美团技术博客](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/jvm/jit-9a62fc02-1a6a-451e-bb2b-19fc086d5be0.png)
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯 Java 后端实习一面原题：说说 Java 解释执行的流程。
-
-memo：2025 年 1 月 21 日修改至此。
-
----
-
-面渣逆袭 JVM 篇第二版终于整理完了，说一点心里话。
-
-![Java 基础篇、集合框架篇、JVM 篇](https://cdn.tobebetterjavaer.com/stutymore/jvm-20250121141939.png)
-
-网上的八股其实不少，这样可以给大家提供更多的选择，但面渣逆袭的含金量懂的都懂。
-
-![球友开始面试后的感慨](https://cdn.tobebetterjavaer.com/stutymore/jvm-20250118111727.png)
-
-面渣逆袭第二版是在星球嘉宾三分恶的初版基础上，加入了二哥自己的思考，加入了 1000 多份真实面经之后的结果，并且从从 24 届到 25 届，帮助了很多小伙伴。未来的 26、27 届，也将因此受益，从而拿到心仪的 offer。
-
-能帮助到大家，我很欣慰，并且在重制面渣逆袭的过程中，我也成长了很多，很多薄弱的基础环节都得到了加强。
-
-![这是我在牛客上看到的](https://cdn.tobebetterjavaer.com/stutymore/javase-20241230165717.png)
-
-![我觉得都是蛮中肯的评价](https://cdn.tobebetterjavaer.com/stutymore/javase-20241230165749.png)
-
-![双非硕测开对二哥八股的认可](https://cdn.tobebetterjavaer.com/stutymore/collection-20250108181632.png)
-
-很多时候，我觉得自己是一个佛系的人，不愿意和别人争个高低，也不愿意去刻意宣传自己的作品。
-
-我喜欢静待花开。
-
-如果你觉得面渣逆袭还不错，可以告诉学弟学妹们有这样一份免费的学习资料，帮我做个口碑。
-
-我还会继续优化，也不确定第三版什么时候会来，但我会尽力。
-
-愿大家都有一个光明的未来。
-
-由于 PDF 没办法自我更新，所以需要最新版的小伙伴，可以微信搜【**沉默王二**】，或者扫描/长按识别下面的二维码，关注二哥的公众号，回复【**222**】即可拉取最新版本。
-
-<div style="text-align: center; margin: 20px 0;">
-    <img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/gongzhonghao.png" alt="微信扫码或者长按识别，或者微信搜索“沉默王二”" style="max-width: 100%; height: auto;  border-radius: 10px;" />
-</div>
-
-百度网盘、阿里云盘、夸克网盘都可以下载到最新版本，我会第一时间更新上去。
-
-![回复 222](https://cdn.tobebetterjavaer.com/stutymore/javase-20241230171125.png)
-
-当然了，请允许我的一点点私心，那就是星球的 PDF 版本会比公众号早一个月时间，毕竟星球用户都付费过了，我有必要让他们先享受到一点点福利。相信大家也都能理解，毕竟在线版是免费的，CDN、服务器、域名、OSS 等等都是需要成本的。
-
-这次仍然是三个版本，亮白、暗黑和 epub 版本。给大家展示其中一个 epub 版本吧，有些小伙伴很急需这个版本，所以也满足大家了。
-
-![面渣逆袭JVM篇：epub 版本](https://cdn.tobebetterjavaer.com/stutymore/jvm-20250121142044.png)
-
-更别说我付出的时间和精力了。
-
----
-
-图文详解 54 道 Java 虚拟机高频面试题，这次面试，一定吊打面试官，整理：沉默王二，戳[转载链接](https://mp.weixin.qq.com/s/bHhqhl8mH3OAPt3EkaVc8Q)，作者：三分恶，戳[原文链接](https://mp.weixin.qq.com/s/XYsEJyIo46jXhHE1sOR_0Q)。
-
-_没有什么使我停留——除了目的，纵然岸旁有玫瑰、有绿荫、有宁静的港湾，我是不系之舟_。
