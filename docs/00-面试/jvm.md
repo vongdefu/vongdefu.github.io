@@ -57,7 +57,7 @@ Java 虚拟机栈的生命周期与线程相同。
 
 #### 一个什么都没有的空方法，空的参数都没有，那局部变量表里有没有变量？
 
-对于[静态方法](https://javabetter.cn/oo/static.html)，由于不需要访问实例对象 this，因此在局部变量表中不会有任何变量。
+对于静态方法，由于不需要访问实例对象 this，因此在局部变量表中不会有任何变量。
 
 对于非静态方法，即使是一个完全空的方法，局部变量表中也会有一个用于存储 this 引用的变量。this 引用指向当前实例对象，在方法调用时被隐式传入。
 
@@ -77,21 +77,39 @@ public class VarDemo1 {
 }
 ```
 
-用 `javap -v VarDemo1` 命令查看编译后的字节码，就可以在 emptyMethod 中看到这样的内容：
+用 `javap -v VarDemo1` 命令查看编译后的字节码，
 
-![二哥的 Java 进阶之路：javap emptyMethod](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240816130451.png)
+```java
+  public void emptyMethod();
+    descriptor: ()V
+    flags: ACC_PUBLIC
+    Code:
+      stack=0, locals=1, args_size=1
+         0: return
+      LineNumberTable:
+        line 6: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       1     0  this   Lme/zeanzai/mianzha/VarDemo1;
 
-这里的 `locals=1` 表示局部变量表有一个变量，即 this，Slot 0 位置存储了 this 引用。
+  public static void staticEmptyMethod();
+    descriptor: ()V
+    flags: ACC_PUBLIC, ACC_STATIC
+    Code:
+      stack=0, locals=0, args_size=0
+         0: return
+      LineNumberTable:
+        line 10: 0
+```
 
-而在静态方法 staticEmptyMethod 中，你会看到这样的内容：
+可以看到：
 
-![二哥的 Java 进阶之路：javap staticEmptyMethod](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240816130536.png)
-
-这里的 locals=0 表示局部变量表为空，因为静态方法属于类级别方法，不需要 this 引用，也就没有局部变量。
+1. emptyMethod() 中，`locals=1`，表示局部变量表有一个变量，即 this，Slot 0 位置存储了 this 引用。
+2. 在静态方法 staticEmptyMethod() 中， `locals=0`， 表示局部变量表为空，因为静态方法属于类级别方法，不需要 this 引用，也就没有局部变量。
 
 #### 介绍一下本地方法栈？
 
-本地方法栈与虚拟机栈相似，区别在于虚拟机栈是为 JVM 执行 Java 编写的方法服务的，而本地方法栈是为 Java 调用[本地 native 方法](https://javabetter.cn/oo/native-method.html)服务的，通常由 C/C++ 编写。
+本地方法栈与虚拟机栈相似，区别在于虚拟机栈是为 JVM 执行 Java 编写的方法服务的，而本地方法栈是为 Java 调用`本地 native 方法`服务的，通常由 C/C++ 编写。
 
 在本地方法栈中，主要存放了 native 方法的局部变量、动态链接和方法出口等信息。当一个 Java 程序调用一个 native 方法时，JVM 会切换到本地方法栈来执行这个方法。
 
@@ -101,35 +119,27 @@ public class VarDemo1 {
 
 比如调用操作系统的特定功能，如内存管理、文件操作、系统时间、系统调用等。
 
-详细说明一下：
-
-比如说获取系统时间的 `System.currentTimeMillis()` 方法就是调用本地方法，来获取操作系统当前时间的。
-
-![二哥的Java 进阶之路：currentTimeMillis方法源码](https://cdn.tobebetterjavaer.com/stutymore/jvm-20241020075744.png)
-
-再比如 JVM 自身的一些底层功能也需要通过本地方法来实现。像 Object 类中的 `hashCode()` 方法、`clone()` 方法等。
-
-![二哥的Java 进阶之路：hashCode方法源码](https://cdn.tobebetterjavaer.com/stutymore/jvm-20241020080126.png)
+- sun.misc.Unsafe 中大部分方法；
+- 获取系统时间的 `System.currentTimeMillis()` 方法就是调用本地方法，来获取操作系统当前时间的；
+- Object 类中的 `hashCode()` 方法、`clone()` 方法；
 
 #### native 方法解释一下？
 
-推荐阅读：[手把手教你用 C 语言实现 Java native 本地方法](https://javabetter.cn/oo/native-method.html)
-
-native 方法是在 Java 中通过 [native 关键字](https://javabetter.cn/basic-extra-meal/48-keywords.html)声明的，用于调用非 Java 语言，如 C/C++ 编写的代码。Java 可以通过 JNI，也就是 Java Native Interface 与底层系统、硬件设备、或者本地库进行交互。
+native 方法是在 Java 中通过 native 关键字声明的，用于调用非 Java 语言，如 C/C++ 编写的代码。Java 可以通过 JNI，也就是 `Java Native Interface` 与底层系统、硬件设备、或者本地库进行交互。
 
 #### 介绍一下 Java 堆？
 
-堆是 JVM 中最大的一块内存区域，被所有线程共享，在 JVM 启动时创建，主要用来存储 new 出来的对象。
+堆是 JVM 中最大的一块内存区域，被所有线程共享，在 JVM 启动时创建，主要用来存储 new 出来的对象，包括数组对象。
 
-![二哥的 Java 进阶之路：堆](https://cdn.tobebetterjavaer.com/stutymore/neicun-jiegou-20231225154450.png)
+![堆](https://cdn.tobebetterjavaer.com/stutymore/neicun-jiegou-20231225154450.png)
 
-Java 中“几乎”所有的对象都会在堆中分配，堆也是[垃圾收集器](https://javabetter.cn/jvm/gc-collector.html)管理的目标区域。
+Java 中“几乎”所有的对象都会在堆中分配，堆也是垃圾收集器管理的目标区域。
 
-从内存回收的角度来看，由于垃圾收集器大部分都是基于分代收集理论设计的，所以堆又被细分为`新生代`、`老年代`、`Eden空间`、`From Survivor空间`、`To Survivor空间`等。
+从内存回收的角度来看，由于垃圾收集器大部分都是基于`分代收集理论`设计的，所以堆又被细分为`新生代`、`老年代`、`Eden空间`、`From Survivor空间（S0区域）`、`To Survivor空间（S1区域）`等。
 
 ![Java 堆内存结构](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-5.png)
 
-随着 [JIT 编译器](https://javabetter.cn/jvm/jit.html)的发展和逃逸技术的逐渐成熟，“所有的对象都会分配到堆上”就不再那么绝对了。
+随着 JIT 编译器的发展和逃逸技术的逐渐成熟，“所有的对象都会分配到堆上”就不再那么绝对了。
 
 从 JDK 7 开始，JVM 默认开启了逃逸分析，意味着如果某些方法中的对象引用没有被返回或者没有在方法体外使用，也就是未逃逸出去，那么对象可以直接在栈上分配内存。
 
@@ -157,7 +167,7 @@ public void method() {
 }
 ```
 
-对于静态变量来说，它存储在 Java 虚拟机规范中的方法区中，在 Java 7 中是永久带，在 Java8 及以后 是元空间。
+对于静态变量来说，它存储在 Java 虚拟机规范中的方法区中，在 Java 7 中是永久代，在 Java8 及以后 是元空间 Metaspace 。
 
 ```java
 public class StaticVarDemo {
@@ -175,7 +185,7 @@ JDK 1.7 时仍然是永久带，但发生了一些细微变化，比如将字符
 
 ![JDK 1.7内存区域](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-7.png)
 
-在 JDK 1.8 时，直接在内存中划出了一块区域，叫**元空间**，来取代之前放在 JVM 内存中的永久代，并将运行时常量池、类常量池都移动到了元空间。
+在 JDK 1.8 时，直接在内存中划出了一块区域，叫**元空间 Metaspace**，来取代之前放在 JVM 内存中的永久代，并将运行时常量池、类常量池都移动到了元空间。
 
 ![JDK 1.8内存区域](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-8.png)
 
@@ -187,9 +197,7 @@ HotSpot 虚拟机的永久代大小可以通过 `-XX：MaxPermSize` 参数来设
 
 而 J9 和 JRockit 虚拟机就不存在这种限制，只要没有触碰到进程可用的内存上限，例如 32 位系统中的 4GB 限制，就不会出问题。
 
-主观上，当 Oracle 收购 BEA 获得了 JRockit 的所有权后，就准备把 JRockit 中的优秀功能移植到 HotSpot 中。
-
-如 Java Mission Control 管理工具。
+主观上，当 Oracle 收购 BEA 获得了 JRockit 的所有权后，就准备把 JRockit 中的优秀功能移植到 HotSpot 中。如 Java Mission Control 管理工具。
 
 但因为两个虚拟机对方法区实现有差异，导致这项工作遇到了很多阻力。
 
@@ -203,7 +211,7 @@ JDK 8 就终于完成了这项移出工作，这样的好处就是，元空间�
 
 当我们使用 new 关键字创建一个对象时，JVM 首先会检查 new 指令的参数是否能在方法区常量池中定位到类的符号引用，然后检查这个符号引用代表的类是否已被加载、解析和初始化。如果没有，就先执行类加载。
 
-![二哥的 Java 进阶之路：对象的创建过程](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240404091445.png)
+![对象的创建过程](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240404091445.png)
 
 如果已经加载，JVM 会为对象分配内存，并完成初始化，比如数值类型的成员变量初始值是 0，布尔类型是 false，对象类型是 null。
 
@@ -223,7 +231,35 @@ JDK 8 就终于完成了这项移出工作，这样的好处就是，元空间�
 
 可以通过 `java -XX:+PrintCommandLineFlags -version` 和 `java -XX:+PrintGCDetails -version` 命令查看 JVM 的 GC 收集器。
 
-![二哥的 Java 进阶之路：JVM 使用的垃圾收集器](https://cdn.tobebetterjavaer.com/stutymore/jvm-20250110111618.png)
+::: details 查看 JVM 的 GC 收集器
+
+```java
+zeanzai@DESKTOP-OJNPMED MINGW64 /d/03-code/Github/spring-cloud-study-notes (master)
+$ java -XX:+PrintCommandLineFlags -version
+-XX:InitialHeapSize=400526784 -XX:MaxHeapSize=6408428544 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:-UseLargePagesIndividualAllocation -XX:+UseParallelGC
+java version "1.8.0_421"
+Java(TM) SE Runtime Environment (build 1.8.0_421-b09)
+Java HotSpot(TM) 64-Bit Server VM (build 25.421-b09, mixed mode)
+
+zeanzai@DESKTOP-OJNPMED MINGW64 /d/03-code/Github/spring-cloud-study-notes (master)
+$ java -XX:+PrintGCDetails -version
+java version "1.8.0_421"
+Java(TM) SE Runtime Environment (build 1.8.0_421-b09)
+Java HotSpot(TM) 64-Bit Server VM (build 25.421-b09, mixed mode)
+Heap
+ PSYoungGen      total 114176K, used 5898K [0x0000000740b00000, 0x0000000748a00000, 0x00000007c0000000)
+  eden space 98304K, 6% used [0x0000000740b00000,0x00000007410c2a90,0x0000000746b00000)
+  from space 15872K, 0% used [0x0000000747a80000,0x0000000747a80000,0x0000000748a00000)
+  to   space 15872K, 0% used [0x0000000746b00000,0x0000000746b00000,0x0000000747a80000)
+ ParOldGen       total 261120K, used 0K [0x0000000642000000, 0x0000000651f00000, 0x0000000740b00000)
+  object space 261120K, 0% used [0x0000000642000000,0x0000000642000000,0x0000000651f00000)
+ Metaspace       used 2444K, capacity 4480K, committed 4480K, reserved 1056768K
+  class space    used 267K, capacity 384K, committed 384K, reserved 1048576K
+
+
+```
+
+:::
 
 可以看到，我本机安装的 JDK 8 默认使用的是 `Parallel Scavenge + Parallel Old`。
 
@@ -282,7 +318,30 @@ new 对象时，指针会向右移动一个对象大小的距离，假如一个�
 
 可以通过 `java -XX:+PrintFlagsFinal -version | grep TLAB` 命令查看当前 JVM 是否开启了 TLAB。
 
-![二哥的 Java 进阶之路：查看 TLAB](https://cdn.tobebetterjavaer.com/stutymore/jvm-20250111111537.png)
+::: details 查看当前 JVM 是否开启了 TLAB
+
+```java
+zeanzai@DESKTOP-OJNPMED MINGW64 /d/03-code/Github/spring-cloud-study-notes (master)
+$ java -XX:+PrintFlagsFinal -version | grep TLAB
+     bool EnableResourceManagementTLABCache         = true                                {product}
+     bool FastTLABRefill                            = true                                {product}
+    uintx MinTLABSize                               = 2048                                {product}
+     bool PrintTLAB                                 = false                               {product}
+     bool ResizeTLAB                                = true                                {pd product}
+    uintx TLABAllocationWeight                      = 35                                  {product}
+    uintx TLABRefillWasteFraction                   = 64                                  {product}
+    uintx TLABSize                                  = 0                                   {product}
+     bool TLABStats                                 = true                                {product}
+    uintx TLABWasteIncrement                        = 4                                   {product}
+    uintx TLABWasteTargetPercent                    = 1                                   {product}
+     bool UseTLAB                                   = true                                {pd product}
+     bool ZeroTLAB                                  = false                               {product}
+java version "1.8.0_421"
+Java(TM) SE Runtime Environment (build 1.8.0_421-b09)
+Java HotSpot(TM) 64-Bit Server VM (build 25.421-b09, mixed mode)
+```
+
+:::
 
 如果开启了 TLAB，会看到类似以下的输出，其中 bool UseTLAB 的值为 true。
 
@@ -306,17 +365,57 @@ class TLABDemo {
 
 在 VM 参数中添加 `-XX:+UseTLAB -XX:+PrintTLAB -XX:+PrintGCDetails -XX:+PrintGCDateStamps`，运行后可以看到这样的内容：
 
-![二哥的 Java 进阶之路：测试 TLAB](https://cdn.tobebetterjavaer.com/stutymore/jvm-20250111111823.png)
+::: details 结果
 
-- waste：未使用的 TLAB 空间。
-- alloc：分配到 TLAB 的空间。
-- refills：TLAB 被重新填充的次数。
+```java
+C:\Softwares\Java\jdk-1.8\bin\java.exe -XX:+UseTLAB -XX:+PrintTLAB -XX:+PrintGCDetails -XX:+PrintGCDateStamps "-javaagent:C:\Softwares\JetBrains\IntelliJ IDEA 2023.2.2\lib\idea_rt.jar=2848:C:\Softwares\JetBrains\IntelliJ IDEA 2023.2.2\bin" -Dfile.encoding=UTF-8 -classpath C:\Softwares\Java\jdk-1.8\jre\lib\charsets.jar;C:\Softwares\Java\jdk-1.8\jre\lib\deploy.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\access-bridge-64.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\cldrdata.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\dnsns.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\jaccess.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\jfxrt.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\localedata.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\nashorn.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunec.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunjce_provider.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunmscapi.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunpkcs11.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\zipfs.jar;C:\Softwares\Java\jdk-1.8\jre\lib\javaws.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jce.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jfr.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jfxswt.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jsse.jar;C:\Softwares\Java\jdk-1.8\jre\lib\management-agent.jar;C:\Softwares\Java\jdk-1.8\jre\lib\plugin.jar;C:\Softwares\Java\jdk-1.8\jre\lib\resources.jar;C:\Softwares\Java\jdk-1.8\jre\lib\rt.jar;D:\03-code\Github\spring-cloud-study-notes\jvm-test\target\classes;D:\00-home\repository\org\springframework\boot\spring-boot-starter\2.7.10\spring-boot-starter-2.7.10.jar;D:\00-home\repository\org\springframework\boot\spring-boot\2.7.10\spring-boot-2.7.10.jar;D:\00-home\repository\org\springframework\spring-context\5.3.26\spring-context-5.3.26.jar;D:\00-home\repository\org\springframework\boot\spring-boot-autoconfigure\2.7.10\spring-boot-autoconfigure-2.7.10.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-logging\2.7.10\spring-boot-starter-logging-2.7.10.jar;D:\00-home\repository\ch\qos\logback\logback-classic\1.2.11\logback-classic-1.2.11.jar;D:\00-home\repository\ch\qos\logback\logback-core\1.2.11\logback-core-1.2.11.jar;D:\00-home\repository\org\apache\logging\log4j\log4j-to-slf4j\2.17.2\log4j-to-slf4j-2.17.2.jar;D:\00-home\repository\org\apache\logging\log4j\log4j-api\2.17.2\log4j-api-2.17.2.jar;D:\00-home\repository\org\slf4j\jul-to-slf4j\1.7.36\jul-to-slf4j-1.7.36.jar;D:\00-home\repository\jakarta\annotation\jakarta.annotation-api\1.3.5\jakarta.annotation-api-1.3.5.jar;D:\00-home\repository\org\springframework\spring-core\5.3.26\spring-core-5.3.26.jar;D:\00-home\repository\org\springframework\spring-jcl\5.3.26\spring-jcl-5.3.26.jar;D:\00-home\repository\org\yaml\snakeyaml\1.30\snakeyaml-1.30.jar;D:\00-home\repository\org\slf4j\slf4j-api\1.7.36\slf4j-api-1.7.36.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-web\2.7.10\spring-boot-starter-web-2.7.10.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-json\2.7.10\spring-boot-starter-json-2.7.10.jar;D:\00-home\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.13.5\jackson-datatype-jdk8-2.13.5.jar;D:\00-home\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.13.5\jackson-datatype-jsr310-2.13.5.jar;D:\00-home\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.13.5\jackson-module-parameter-names-2.13.5.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-tomcat\2.7.10\spring-boot-starter-tomcat-2.7.10.jar;D:\00-home\repository\org\apache\tomcat\embed\tomcat-embed-core\9.0.73\tomcat-embed-core-9.0.73.jar;D:\00-home\repository\org\apache\tomcat\embed\tomcat-embed-el\9.0.73\tomcat-embed-el-9.0.73.jar;D:\00-home\repository\org\apache\tomcat\embed\tomcat-embed-websocket\9.0.73\tomcat-embed-websocket-9.0.73.jar;D:\00-home\repository\org\springframework\spring-web\5.3.26\spring-web-5.3.26.jar;D:\00-home\repository\org\springframework\spring-beans\5.3.26\spring-beans-5.3.26.jar;D:\00-home\repository\org\springframework\spring-webmvc\5.3.26\spring-webmvc-5.3.26.jar;D:\00-home\repository\org\springframework\spring-aop\5.3.26\spring-aop-5.3.26.jar;D:\00-home\repository\org\springframework\spring-expression\5.3.26\spring-expression-5.3.26.jar;D:\00-home\repository\org\jsoup\jsoup\1.15.3\jsoup-1.15.3.jar;D:\00-home\repository\io\github\furstenheim\copy_down\1.0\copy_down-1.0.jar;D:\00-home\repository\org\json\json\20210307\json-20210307.jar;D:\00-home\repository\com\fasterxml\jackson\core\jackson-databind\2.13.0\jackson-databind-2.13.0.jar;D:\00-home\repository\com\fasterxml\jackson\core\jackson-annotations\2.13.5\jackson-annotations-2.13.5.jar;D:\00-home\repository\com\fasterxml\jackson\core\jackson-core\2.13.5\jackson-core-2.13.5.jar;D:\00-home\repository\org\apache\httpcomponents\httpclient\4.5.13\httpclient-4.5.13.jar;D:\00-home\repository\org\apache\httpcomponents\httpcore\4.4.16\httpcore-4.4.16.jar;D:\00-home\repository\commons-codec\commons-codec\1.15\commons-codec-1.15.jar me.zeanzai.mianzha.TLABDemo
+TLAB: gc thread: 0x0000011f599c5800 [id: 3980] desired_size: 1966KB slow allocs: 0  refill waste: 31456B alloc: 1.00000    15729KB refills: 1 waste 83.1% gc: 1674000B slow: 0B fast: 0B
+TLAB: gc thread: 0x0000011f383f4800 [id: 5212] desired_size: 1966KB slow allocs: 0  refill waste: 31456B alloc: 1.00000    15729KB refills: 7 waste 11.8% gc: 1668624B slow: 16B fast: 224B
+TLAB totals: thrds: 2  refills: 8 max: 7 slow allocs: 0 max 0 waste: 20.8% gc: 3342624B max: 1674000B slow: 16B max: 16B fast: 224B max: 224B
+2025-05-15T22:43:01.722+0800: [GC (System.gc()) [PSYoungGen: 15728K->1005K(114176K)] 15728K->1013K(375296K), 0.0008065 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+2025-05-15T22:43:01.723+0800: [Full GC (System.gc()) [PSYoungGen: 1005K->0K(114176K)] [ParOldGen: 8K->880K(261120K)] 1013K->880K(375296K), [Metaspace: 3462K->3462K(1056768K)], 0.0039229 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+Heap
+ PSYoungGen      total 114176K, used 2949K [0x0000000740b00000, 0x0000000748a00000, 0x00000007c0000000)
+  eden space 98304K, 3% used [0x0000000740b00000,0x0000000740de1608,0x0000000746b00000)
+  from space 15872K, 0% used [0x0000000746b00000,0x0000000746b00000,0x0000000747a80000)
+  to   space 15872K, 0% used [0x0000000747a80000,0x0000000747a80000,0x0000000748a00000)
+ ParOldGen       total 261120K, used 880K [0x0000000642000000, 0x0000000651f00000, 0x0000000740b00000)
+  object space 261120K, 0% used [0x0000000642000000,0x00000006420dc088,0x0000000651f00000)
+ Metaspace       used 3471K, capacity 4496K, committed 4864K, reserved 1056768K
+  class space    used 380K, capacity 388K, committed 512K, reserved 1048576K
 
-可以看到，当前线程的 TLAB 目标大小为 10,496 KB（`desired_size: 10496KB`）；未发生慢分配（`slow allocs: 0`）；分配效率直接拉满（`alloc: 1.00000 52494KB`）。
+```
+
+:::
+
+- waste ：未使用的 TLAB 空间。
+- alloc ：分配到 TLAB 的空间。
+- refills ：TLAB 被重新填充的次数。
+
+可以看到，当前线程的 TLAB 目标大小为 10,496 KB（`desired_size: 1966KB`）；未发生慢分配（`slow allocs: 0`）；分配效率直接拉满（`alloc: 1.00000 15729KB`）。
 
 当使用 `-XX:-UseTLAB -XX:+PrintGCDetails` 关闭 TLAB 时，会看到类似以下的输出：
 
-![二哥的 Java 进阶之路：关闭 TLAB](https://cdn.tobebetterjavaer.com/stutymore/jvm-20250111112843.png)
+::: details 结果
+
+```java
+[GC (System.gc()) [PSYoungGen: 11800K->1053K(114176K)] 11800K->1061K(375296K), 0.0008633 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+[Full GC (System.gc()) [PSYoungGen: 1053K->0K(114176K)] [ParOldGen: 8K->880K(261120K)] 1061K->880K(375296K), [Metaspace: 3456K->3456K(1056768K)], 0.0040098 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+Heap
+ PSYoungGen      total 114176K, used 4K [0x0000000740b00000, 0x0000000748a00000, 0x00000007c0000000)
+  eden space 98304K, 0% used [0x0000000740b00000,0x0000000740b013c8,0x0000000746b00000)
+  from space 15872K, 0% used [0x0000000746b00000,0x0000000746b00000,0x0000000747a80000)
+  to   space 15872K, 0% used [0x0000000747a80000,0x0000000747a80000,0x0000000748a00000)
+ ParOldGen       total 261120K, used 880K [0x0000000642000000, 0x0000000651f00000, 0x0000000740b00000)
+  object space 261120K, 0% used [0x0000000642000000,0x00000006420dc088,0x0000000651f00000)
+ Metaspace       used 3465K, capacity 4496K, committed 4864K, reserved 1056768K
+  class space    used 380K, capacity 388K, committed 512K, reserved 1048576K
+
+Process finished with exit code 0
+
+```
+
+:::
 
 直接出现了两次 GC，因为没有 TLAB，Eden 区更快被填满，导致年轻代 GC。年轻代 GC 频繁触发，一部分长生命周期对象被晋升到老年代，间接导致老年代 GC 触发。
 
@@ -346,7 +445,7 @@ Mark Word 存储了对象的运行时状态信息，包括锁、哈希值、GC �
 
 可以通过 `java -XX:+PrintFlagsFinal -version | grep UseCompressedOops` 命令来查看 JVM 是否开启了压缩指针。
 
-![二哥的 Java 进阶之路：查看 JVM 是否开启压缩指针](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240320220408.png)
+![查看 JVM 是否开启压缩指针](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240320220408.png)
 
 如果压缩指针开启，输出结果中的 bool UseCompressedOops 值为 true。
 
@@ -387,8 +486,6 @@ JVM 会对这些数据进行对齐/重排，以提高内存访问速度。
 
 #### new Object() 对象的内存大小是多少？
 
-推荐阅读：[高端面试必备：一个 Java 对象占用多大内存 ](https://www.cnblogs.com/rickiyang/p/14206724.html)
-
 一般来说，目前的操作系统都是 64 位的，并且 JDK 8 中的压缩指针是默认开启的，因此在 64 位的 JVM 上，`new Object()`的大小是 16 字节（12 字节的对象头 + 4 字节的对齐填充）。
 
 ![rickiyang：Java 对象模型](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240320221330.png)
@@ -410,6 +507,8 @@ class MyObject {
 考虑到对齐填充，MyObject 对象的总大小为 12（对象头） + 4（a） + 8（b） + 1（c） + 7（填充） = 32 字节。
 
 #### 用过 JOL 查看对象的内存布局吗？
+
+::: details 用 JOL 查看对象的内存布局
 
 [JOL](https://openjdk.org/projects/code-tools/jol/) 是一款分析 JVM 对象布局的工具。
 
@@ -443,7 +542,25 @@ public class JOLSample {
 
 第三步，运行代码，查看输出结果：
 
-![二哥的 Java 进阶之路：JOL 运行结果](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240320223653.png)
+```java
+C:\Softwares\Java\jdk-1.8\bin\java.exe "-javaagent:C:\Softwares\JetBrains\IntelliJ IDEA 2023.2.2\lib\idea_rt.jar=3201:C:\Softwares\JetBrains\IntelliJ IDEA 2023.2.2\bin" -Dfile.encoding=UTF-8 -classpath C:\Softwares\Java\jdk-1.8\jre\lib\charsets.jar;C:\Softwares\Java\jdk-1.8\jre\lib\deploy.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\access-bridge-64.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\cldrdata.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\dnsns.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\jaccess.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\jfxrt.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\localedata.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\nashorn.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunec.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunjce_provider.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunmscapi.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunpkcs11.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\zipfs.jar;C:\Softwares\Java\jdk-1.8\jre\lib\javaws.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jce.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jfr.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jfxswt.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jsse.jar;C:\Softwares\Java\jdk-1.8\jre\lib\management-agent.jar;C:\Softwares\Java\jdk-1.8\jre\lib\plugin.jar;C:\Softwares\Java\jdk-1.8\jre\lib\resources.jar;C:\Softwares\Java\jdk-1.8\jre\lib\rt.jar;D:\03-code\Github\spring-cloud-study-notes\jvm-test\target\classes;D:\00-home\repository\org\springframework\boot\spring-boot-starter\2.7.10\spring-boot-starter-2.7.10.jar;D:\00-home\repository\org\springframework\boot\spring-boot\2.7.10\spring-boot-2.7.10.jar;D:\00-home\repository\org\springframework\spring-context\5.3.26\spring-context-5.3.26.jar;D:\00-home\repository\org\springframework\boot\spring-boot-autoconfigure\2.7.10\spring-boot-autoconfigure-2.7.10.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-logging\2.7.10\spring-boot-starter-logging-2.7.10.jar;D:\00-home\repository\ch\qos\logback\logback-classic\1.2.11\logback-classic-1.2.11.jar;D:\00-home\repository\ch\qos\logback\logback-core\1.2.11\logback-core-1.2.11.jar;D:\00-home\repository\org\apache\logging\log4j\log4j-to-slf4j\2.17.2\log4j-to-slf4j-2.17.2.jar;D:\00-home\repository\org\apache\logging\log4j\log4j-api\2.17.2\log4j-api-2.17.2.jar;D:\00-home\repository\org\slf4j\jul-to-slf4j\1.7.36\jul-to-slf4j-1.7.36.jar;D:\00-home\repository\jakarta\annotation\jakarta.annotation-api\1.3.5\jakarta.annotation-api-1.3.5.jar;D:\00-home\repository\org\springframework\spring-core\5.3.26\spring-core-5.3.26.jar;D:\00-home\repository\org\springframework\spring-jcl\5.3.26\spring-jcl-5.3.26.jar;D:\00-home\repository\org\yaml\snakeyaml\1.30\snakeyaml-1.30.jar;D:\00-home\repository\org\slf4j\slf4j-api\1.7.36\slf4j-api-1.7.36.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-web\2.7.10\spring-boot-starter-web-2.7.10.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-json\2.7.10\spring-boot-starter-json-2.7.10.jar;D:\00-home\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.13.5\jackson-datatype-jdk8-2.13.5.jar;D:\00-home\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.13.5\jackson-datatype-jsr310-2.13.5.jar;D:\00-home\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.13.5\jackson-module-parameter-names-2.13.5.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-tomcat\2.7.10\spring-boot-starter-tomcat-2.7.10.jar;D:\00-home\repository\org\apache\tomcat\embed\tomcat-embed-core\9.0.73\tomcat-embed-core-9.0.73.jar;D:\00-home\repository\org\apache\tomcat\embed\tomcat-embed-el\9.0.73\tomcat-embed-el-9.0.73.jar;D:\00-home\repository\org\apache\tomcat\embed\tomcat-embed-websocket\9.0.73\tomcat-embed-websocket-9.0.73.jar;D:\00-home\repository\org\springframework\spring-web\5.3.26\spring-web-5.3.26.jar;D:\00-home\repository\org\springframework\spring-beans\5.3.26\spring-beans-5.3.26.jar;D:\00-home\repository\org\springframework\spring-webmvc\5.3.26\spring-webmvc-5.3.26.jar;D:\00-home\repository\org\springframework\spring-aop\5.3.26\spring-aop-5.3.26.jar;D:\00-home\repository\org\springframework\spring-expression\5.3.26\spring-expression-5.3.26.jar;D:\00-home\repository\org\jsoup\jsoup\1.15.3\jsoup-1.15.3.jar;D:\00-home\repository\io\github\furstenheim\copy_down\1.0\copy_down-1.0.jar;D:\00-home\repository\org\json\json\20210307\json-20210307.jar;D:\00-home\repository\com\fasterxml\jackson\core\jackson-databind\2.13.0\jackson-databind-2.13.0.jar;D:\00-home\repository\com\fasterxml\jackson\core\jackson-annotations\2.13.5\jackson-annotations-2.13.5.jar;D:\00-home\repository\com\fasterxml\jackson\core\jackson-core\2.13.5\jackson-core-2.13.5.jar;D:\00-home\repository\org\apache\httpcomponents\httpclient\4.5.13\httpclient-4.5.13.jar;D:\00-home\repository\org\apache\httpcomponents\httpcore\4.4.16\httpcore-4.4.16.jar;D:\00-home\repository\commons-codec\commons-codec\1.15\commons-codec-1.15.jar;D:\00-home\repository\org\openjdk\jol\jol-core\0.9\jol-core-0.9.jar me.zeanzai.mianzha.JOLSample
+# Running 64-bit HotSpot VM.
+# Using compressed oop with 3-bit shift.
+# Using compressed klass with 3-bit shift.
+# Objects are 8 bytes aligned.
+# Field sizes by type: 4, 1, 1, 2, 2, 4, 4, 8, 8 [bytes]
+# Array element sizes: 4, 1, 1, 2, 2, 4, 4, 8, 8 [bytes]
+
+java.lang.Object object internals:
+ OFFSET  SIZE   TYPE DESCRIPTION                               VALUE
+      0     4        (object header)                           01 00 00 00 (00000001 00000000 00000000 00000000) (1)
+      4     4        (object header)                           00 00 00 00 (00000000 00000000 00000000 00000000) (0)
+      8     4        (object header)                           e5 01 00 f8 (11100101 00000001 00000000 11111000) (-134217243)
+     12     4        (loss due to the next object alignment)
+Instance size: 16 bytes
+Space losses: 0 bytes internal + 4 bytes external = 4 bytes total
+
+```
 
 可以看到有 OFFSET、SIZE、TYPE DESCRIPTION、VALUE 这几个信息。
 
@@ -454,9 +571,9 @@ public class JOLSample {
 
 从上面的结果能看到，对象头是 12 个字节，还有 4 个字节的 padding，`new Object()` 一共 16 个字节。
 
-#### 对象的引用大小了解吗？
+:::
 
-推荐阅读：[Object o = new Object()占多少个字节？](https://www.cnblogs.com/dijia478/p/14677243.html)
+#### 对象的引用大小了解吗？
 
 在 64 位 JVM 上，未开启压缩指针时，对象引用占用 8 字节；开启压缩指针时，对象引用会被压缩到 4 字节。HotSpot 虚拟机默认是开启压缩指针的。
 
@@ -479,11 +596,25 @@ class ReferenceSizeExample {
 
 运行代码，查看输出结果：
 
-![二哥的 Java 进阶之路：对象的引用有多大？](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240320231059.png)
+```java
+C:\Softwares\Java\jdk-1.8\bin\java.exe "-javaagent:C:\Softwares\JetBrains\IntelliJ IDEA 2023.2.2\lib\idea_rt.jar=3360:C:\Softwares\JetBrains\IntelliJ IDEA 2023.2.2\bin" -Dfile.encoding=UTF-8 -classpath C:\Softwares\Java\jdk-1.8\jre\lib\charsets.jar;C:\Softwares\Java\jdk-1.8\jre\lib\deploy.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\access-bridge-64.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\cldrdata.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\dnsns.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\jaccess.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\jfxrt.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\localedata.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\nashorn.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunec.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunjce_provider.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunmscapi.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunpkcs11.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\zipfs.jar;C:\Softwares\Java\jdk-1.8\jre\lib\javaws.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jce.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jfr.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jfxswt.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jsse.jar;C:\Softwares\Java\jdk-1.8\jre\lib\management-agent.jar;C:\Softwares\Java\jdk-1.8\jre\lib\plugin.jar;C:\Softwares\Java\jdk-1.8\jre\lib\resources.jar;C:\Softwares\Java\jdk-1.8\jre\lib\rt.jar;D:\03-code\Github\spring-cloud-study-notes\jvm-test\target\classes;D:\00-home\repository\org\springframework\boot\spring-boot-starter\2.7.10\spring-boot-starter-2.7.10.jar;D:\00-home\repository\org\springframework\boot\spring-boot\2.7.10\spring-boot-2.7.10.jar;D:\00-home\repository\org\springframework\spring-context\5.3.26\spring-context-5.3.26.jar;D:\00-home\repository\org\springframework\boot\spring-boot-autoconfigure\2.7.10\spring-boot-autoconfigure-2.7.10.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-logging\2.7.10\spring-boot-starter-logging-2.7.10.jar;D:\00-home\repository\ch\qos\logback\logback-classic\1.2.11\logback-classic-1.2.11.jar;D:\00-home\repository\ch\qos\logback\logback-core\1.2.11\logback-core-1.2.11.jar;D:\00-home\repository\org\apache\logging\log4j\log4j-to-slf4j\2.17.2\log4j-to-slf4j-2.17.2.jar;D:\00-home\repository\org\apache\logging\log4j\log4j-api\2.17.2\log4j-api-2.17.2.jar;D:\00-home\repository\org\slf4j\jul-to-slf4j\1.7.36\jul-to-slf4j-1.7.36.jar;D:\00-home\repository\jakarta\annotation\jakarta.annotation-api\1.3.5\jakarta.annotation-api-1.3.5.jar;D:\00-home\repository\org\springframework\spring-core\5.3.26\spring-core-5.3.26.jar;D:\00-home\repository\org\springframework\spring-jcl\5.3.26\spring-jcl-5.3.26.jar;D:\00-home\repository\org\yaml\snakeyaml\1.30\snakeyaml-1.30.jar;D:\00-home\repository\org\slf4j\slf4j-api\1.7.36\slf4j-api-1.7.36.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-web\2.7.10\spring-boot-starter-web-2.7.10.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-json\2.7.10\spring-boot-starter-json-2.7.10.jar;D:\00-home\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.13.5\jackson-datatype-jdk8-2.13.5.jar;D:\00-home\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.13.5\jackson-datatype-jsr310-2.13.5.jar;D:\00-home\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.13.5\jackson-module-parameter-names-2.13.5.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-tomcat\2.7.10\spring-boot-starter-tomcat-2.7.10.jar;D:\00-home\repository\org\apache\tomcat\embed\tomcat-embed-core\9.0.73\tomcat-embed-core-9.0.73.jar;D:\00-home\repository\org\apache\tomcat\embed\tomcat-embed-el\9.0.73\tomcat-embed-el-9.0.73.jar;D:\00-home\repository\org\apache\tomcat\embed\tomcat-embed-websocket\9.0.73\tomcat-embed-websocket-9.0.73.jar;D:\00-home\repository\org\springframework\spring-web\5.3.26\spring-web-5.3.26.jar;D:\00-home\repository\org\springframework\spring-beans\5.3.26\spring-beans-5.3.26.jar;D:\00-home\repository\org\springframework\spring-webmvc\5.3.26\spring-webmvc-5.3.26.jar;D:\00-home\repository\org\springframework\spring-aop\5.3.26\spring-aop-5.3.26.jar;D:\00-home\repository\org\springframework\spring-expression\5.3.26\spring-expression-5.3.26.jar;D:\00-home\repository\org\jsoup\jsoup\1.15.3\jsoup-1.15.3.jar;D:\00-home\repository\io\github\furstenheim\copy_down\1.0\copy_down-1.0.jar;D:\00-home\repository\org\json\json\20210307\json-20210307.jar;D:\00-home\repository\com\fasterxml\jackson\core\jackson-databind\2.13.0\jackson-databind-2.13.0.jar;D:\00-home\repository\com\fasterxml\jackson\core\jackson-annotations\2.13.5\jackson-annotations-2.13.5.jar;D:\00-home\repository\com\fasterxml\jackson\core\jackson-core\2.13.5\jackson-core-2.13.5.jar;D:\00-home\repository\org\apache\httpcomponents\httpclient\4.5.13\httpclient-4.5.13.jar;D:\00-home\repository\org\apache\httpcomponents\httpcore\4.4.16\httpcore-4.4.16.jar;D:\00-home\repository\commons-codec\commons-codec\1.15\commons-codec-1.15.jar;D:\00-home\repository\org\openjdk\jol\jol-core\0.9\jol-core-0.9.jar me.zeanzai.mianzha.ReferenceSizeExample
+# Running 64-bit HotSpot VM.
+# Using compressed oop with 3-bit shift.
+# Using compressed klass with 3-bit shift.
+# Objects are 8 bytes aligned.
+# Field sizes by type: 4, 1, 1, 2, 2, 4, 4, 8, 8 [bytes]
+# Array element sizes: 4, 1, 1, 2, 2, 4, 4, 8, 8 [bytes]
+
+me.zeanzai.mianzha.ReferenceSizeExample$ReferenceHolder object internals:
+ OFFSET  SIZE               TYPE DESCRIPTION                               VALUE
+      0    12                    (object header)                           N/A
+     12     4   java.lang.Object ReferenceHolder.reference                 N/A
+Instance size: 16 bytes
+Space losses: 0 bytes internal + 0 bytes external = 0 bytes total
+
+```
 
 ReferenceHolder.reference 的大小为 4 字节。
-
-memo：2025 年 1 月 11 日修改到此
 
 ### 10.JVM 怎么访问对象的？
 
@@ -509,21 +640,21 @@ HotSpot 虚拟机主要使用直接指针来进行对象访问。
 
 ![四种引用总结](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-19.png)
 
-强引用是 Java 中最常见的引用类型。使用 new 关键字赋值的引用就是强引用，只要强引用关联着对象，垃圾收集器就不会回收这部分对象，即使内存不足。
+强引用是 Java 中最常见的引用类型。使用 new 关键字赋值的引用就是强引用，**只要强引用关联着对象，垃圾收集器就不会回收这部分对象，即使内存不足**。
 
 ```java
-// str 就是一个强引用
-String str = new String("沉默王二");
+// 强引用
+String str = new String("王德福");
 ```
 
-软引用于描述一些非必须对象，通过 SoftReference 类实现。软引用的对象在内存不足时会被回收。
+软引用于描述一些非必须对象，通过 SoftReference 类实现。**软引用的对象在内存不足时会被回收**。
 
 ```java
-// softRef 就是一个软引用
-SoftReference<String> softRef = new SoftReference<>(new String("沉默王二"));
+// 软引用
+SoftReference<String> softRef = new SoftReference<>(new String("王德福"));
 ```
 
-弱引用用于描述一些短生命周期的非必须对象，如 ThreadLocal 中的 Entry，就是通过 WeakReference 类实现的。弱引用的对象会在下一次垃圾回收时会被回收，不论内存是否充足。
+弱引用用于描述一些短生命周期的非必须对象，如 ThreadLocal 中的 Entry，就是通过 WeakReference 类实现的。**弱引用的对象会在下一次垃圾回收时会被回收，不论内存是否充足**。
 
 ```java
 static class Entry extends WeakReference<ThreadLocal<?>> {
@@ -544,7 +675,7 @@ static class Entry extends WeakReference<ThreadLocal<?>> {
 
 ```java
 // phantomRef 就是一个虚引用
-PhantomReference<String> phantomRef = new PhantomReference<>(new String("沉默王二"), new ReferenceQueue<>());
+PhantomReference<String> phantomRef = new PhantomReference<>(new String("王德福"), new ReferenceQueue<>());
 ```
 
 ### 12.Java 堆的内存分区了解吗？
@@ -573,7 +704,7 @@ PhantomReference<String> phantomRef = new PhantomReference<>(new String("沉默�
 
 对象通常会在年轻代中分配，随着时间的推移和垃圾收集的进程，某些满足条件的对象会进入到老年代中，如长期存活的对象。
 
-![二哥的 Java 进阶之路：对象进入老年代](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240501093929.png)
+![对象进入老年代](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240501093929.png)
 
 #### 长期存活的对象如何判断？
 
@@ -583,7 +714,7 @@ JVM 会为对象维护一个“年龄”计数器，记录对象在新生代中�
 
 可以通过 `jinfo -flag MaxTenuringThreshold $(jps | grep -i nacos | awk '{print $1}')` 来查看当前 JVM 的年龄阈值。
 
-![二哥的 Java 进阶之路：年龄阈值](https://cdn.tobebetterjavaer.com/stutymore/jvm-20250113095435.png)
+![年龄阈值](https://cdn.tobebetterjavaer.com/stutymore/jvm-20250113095435.png)
 
 1. 如果应用中的对象存活时间较短，可以适当调大这个值，让对象在新生代多待一会儿
 2. 如果对象存活时间较长，可以适当调小这个值，让对象更快进入老年代，减少在新生代的复制次数
@@ -599,7 +730,15 @@ String str = new String(new char[1000000]);
 
 其大小由 JVM 参数 `-XX:PretenureSizeThreshold` 控制，但在 JDK 8 中，默认值为 0，也就是说默认情况下，对象仅根据 GC 存活的次数来判断是否进入老年代。
 
-![二哥的 Java 进阶之路：PretenureSizeThreshold](https://cdn.tobebetterjavaer.com/stutymore/jvm-20250113102243.png)
+```java
+zeanzai@DESKTOP-OJNPMED MINGW64 /d/03-code/Github/spring-cloud-study-notes (master)
+$ java -XX:+PrintFlagsFinal -version | grep PretenureSizeThreshold
+    uintx PretenureSizeThreshold                    = 0                                   {product}
+java version "1.8.0_421"
+Java(TM) SE Runtime Environment (build 1.8.0_421-b09)
+Java HotSpot(TM) 64-Bit Server VM (build 25.421-b09, mixed mode)
+
+```
 
 G1 垃圾收集器中，大对象会直接分配到 HUMONGOUS 区域。当对象大小超过一个 Region 容量的 50% 时，会被认为是大对象。
 
@@ -609,9 +748,20 @@ Region 的大小可以通过 JVM 参数 `-XX:G1HeapRegionSize` 来设置，默�
 
 可以通过 `java -XX:+UseG1GC -XX:+PrintGCDetails -version` 查看 G1 垃圾收集器的相关信息。
 
-![二哥的 Java 进阶之路：UseG1GC](https://cdn.tobebetterjavaer.com/stutymore/jvm-20250113103255.png)
+```java
+zeanzai@DESKTOP-OJNPMED MINGW64 /d/03-code/Github/spring-cloud-study-notes (master)
+$ java -XX:+UseG1GC -XX:+PrintGCDetails -version
+java version "1.8.0_421"
+Java(TM) SE Runtime Environment (build 1.8.0_421-b09)
+Java HotSpot(TM) 64-Bit Server VM (build 25.421-b09, mixed mode)
+Heap
+ garbage-first heap   total 391168K, used 1024K [0x0000000642000000, 0x0000000642100bf0, 0x00000007c0000000)
+  region size 1024K, 2 young (2048K), 0 survivors (0K)
+ Metaspace       used 2444K, capacity 4480K, committed 4480K, reserved 1056768K
+  class space    used 267K, capacity 384K, committed 384K, reserved 1048576K
+```
 
-从结果上来看，我本机上 G1 的堆大小为 2GB，Region 的大小为 4MB。
+从结果上来看，我本机上 G1 的堆大小为 391168K ，Region 的大小为 1024K 。
 
 #### 动态年龄判定了解吗？
 
@@ -620,8 +770,6 @@ Region 的大小可以通过 JVM 参数 `-XX:G1HeapRegionSize` 来设置，默�
 这是因为如果年龄较小的对象在 Survivor 区中占用了较大的空间，会导致 Survivor 区中的对象复制次数增多，影响垃圾回收的效率。
 
 ### 15.STW 了解吗？
-
-了解。
 
 JVM 进行垃圾回收的过程中，会涉及到对象的移动，为了保证对象引用在移动过程中不被修改，必须暂停所有的用户线程，像这样的停顿，我们称之为`Stop The World`。简称 STW。
 
@@ -634,6 +782,8 @@ JVM 会使用一个名为安全点（Safe Point）的机制来确保线程能够
 - 垃圾回收器完成 GC 操作；
 - 线程恢复执行。
 
+> 安全区
+
 #### 什么是安全点？
 
 安全点是 JVM 的一种机制，常用于垃圾回收的 STW 操作，用于让线程在执行到某些特定位置时，可以被安全地暂停。
@@ -641,8 +791,6 @@ JVM 会使用一个名为安全点（Safe Point）的机制来确保线程能够
 通常位于方法调用、循环跳转、异常处理等位置，以保证线程暂停时数据的一致性。
 
 用个通俗的比喻，老王去拉车，车上的东西很重，老王累的汗流浃背，但是老王不能在上坡或者下坡时休息，只能在平地上停下来擦擦汗，喝口水。
-
-![老王拉车只能在平路休息](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-33.png)
 
 推荐大家看看这个[HotSpot JVM Deep Dive - Safepoint](https://www.youtube.com/watch?v=JkbWPPNc4SI)，对 safe point 有一个比较深入地解释。
 
@@ -659,7 +807,7 @@ JVM 会使用一个名为安全点（Safe Point）的机制来确保线程能够
 ```java
 public void testStackAllocation() {
     Person p = new Person();  // 对象可能分配在栈上
-    p.name = "沉默王二是只狗";
+    p.name = "王德福是只狗";
     p.age = 18;
     System.out.println(p.name);
 }
@@ -675,11 +823,18 @@ public void testStackAllocation() {
 
 可以通过 `java -XX:+PrintFlagsFinal -version | grep DoEscapeAnalysis` 来确认 JVM 是否开启了逃逸分析。
 
-![二哥的 Java 进阶之路：JVM 开启了逃逸分析](https://cdn.tobebetterjavaer.com/stutymore/jvm-20250115162625.png)
+```java
+zeanzai@DESKTOP-OJNPMED MINGW64 /d/03-code/Github/vongdefu/vongdefu-dochub (master)
+$ java -XX:+PrintFlagsFinal -version | grep DoEscapeAnalysis
+     bool DoEscapeAnalysis                          = true                                {C2 product}
+java version "1.8.0_421"
+Java(TM) SE Runtime Environment (build 1.8.0_421-b09)
+Java HotSpot(TM) 64-Bit Server VM (build 25.421-b09, mixed mode)
+```
 
 #### 逃逸具体是指什么？
 
-根据对象逃逸的范围，可以分为方法逃逸和线程逃逸。
+根据对象逃逸的范围，可以分为**方法逃逸**和**线程逃逸**。
 
 当对象被方法外部的代码引用，生命周期超出了方法的范围，那么对象就必须分配在堆中，由垃圾收集器管理。
 
@@ -708,7 +863,7 @@ public void threadEscapeExample() {
 
 #### 逃逸分析会带来什么好处？
 
-主要有三个。
+主要有三个。栈上分配、同步消除、标量替换。
 
 第一，如果确定一个对象不会逃逸，那么就可以考虑栈上分配，对象占用的内存随着栈帧出栈后销毁，这样一来，垃圾收集的压力就降低很多。
 
@@ -730,8 +885,6 @@ int x = 1;
 int y = 2;
 System.out.println(x + y);
 ```
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的收钱吧面经同学 1 Java 后端一面面试原题：所有对象都在堆上对不对？
 
 ### 17.内存溢出和内存泄漏了解吗？
 
@@ -760,11 +913,6 @@ class MemoryLeakExample {
 ```
 
 用一个比较有味道的比喻来形容就是，内存溢出是排队去蹲坑，发现没坑了；内存泄漏，就是有人占着茅坑不拉屎，导致坑位不够用。
-
-![内存泄漏、内存溢出](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-15.png)
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 1 Java 技术一面面试原题：说说 OOM 的原因
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手面经同学 1 部门主站技术部面试原题：了解 OOM 吗？
 
 ### 18.能手写内存溢出的例子吗？
 
@@ -799,16 +947,17 @@ class HeapSpaceErrorGenerator {
 
 也可以通过 VM 参数设置堆内存大小为 `-Xmx128M`，然后运行程序，出现的内存溢出的时间会更快。
 
-![二哥的 Java 进阶之路：添加 -Xmx128M VM 参数](https://cdn.tobebetterjavaer.com/stutymore/neicun-jiegou-20231225160028.png)
-
 可以看到，堆内存溢出发生在 11 个对象后。
 
-![二哥的 Java 进阶之路：堆内存溢出](https://cdn.tobebetterjavaer.com/stutymore/neicun-jiegou-20231225160115.png)
+```java
+C:\Softwares\Java\jdk-1.8\bin\java.exe -Xmx128M "-javaagent:C:\Softwares\JetBrains\IntelliJ IDEA 2023.2.2\lib\idea_rt.jar=3790:C:\Softwares\JetBrains\IntelliJ IDEA 2023.2.2\bin" -Dfile.encoding=UTF-8 -classpath C:\Softwares\Java\jdk-1.8\jre\lib\charsets.jar;C:\Softwares\Java\jdk-1.8\jre\lib\deploy.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\access-bridge-64.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\cldrdata.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\dnsns.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\jaccess.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\jfxrt.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\localedata.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\nashorn.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunec.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunjce_provider.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunmscapi.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunpkcs11.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\zipfs.jar;C:\Softwares\Java\jdk-1.8\jre\lib\javaws.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jce.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jfr.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jfxswt.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jsse.jar;C:\Softwares\Java\jdk-1.8\jre\lib\management-agent.jar;C:\Softwares\Java\jdk-1.8\jre\lib\plugin.jar;C:\Softwares\Java\jdk-1.8\jre\lib\resources.jar;C:\Softwares\Java\jdk-1.8\jre\lib\rt.jar;D:\03-code\Github\spring-cloud-study-notes\jvm-test\target\classes;D:\00-home\repository\org\springframework\boot\spring-boot-starter\2.7.10\spring-boot-starter-2.7.10.jar;D:\00-home\repository\org\springframework\boot\spring-boot\2.7.10\spring-boot-2.7.10.jar;D:\00-home\repository\org\springframework\spring-context\5.3.26\spring-context-5.3.26.jar;D:\00-home\repository\org\springframework\boot\spring-boot-autoconfigure\2.7.10\spring-boot-autoconfigure-2.7.10.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-logging\2.7.10\spring-boot-starter-logging-2.7.10.jar;D:\00-home\repository\ch\qos\logback\logback-classic\1.2.11\logback-classic-1.2.11.jar;D:\00-home\repository\ch\qos\logback\logback-core\1.2.11\logback-core-1.2.11.jar;D:\00-home\repository\org\apache\logging\log4j\log4j-to-slf4j\2.17.2\log4j-to-slf4j-2.17.2.jar;D:\00-home\repository\org\apache\logging\log4j\log4j-api\2.17.2\log4j-api-2.17.2.jar;D:\00-home\repository\org\slf4j\jul-to-slf4j\1.7.36\jul-to-slf4j-1.7.36.jar;D:\00-home\repository\jakarta\annotation\jakarta.annotation-api\1.3.5\jakarta.annotation-api-1.3.5.jar;D:\00-home\repository\org\springframework\spring-core\5.3.26\spring-core-5.3.26.jar;D:\00-home\repository\org\springframework\spring-jcl\5.3.26\spring-jcl-5.3.26.jar;D:\00-home\repository\org\yaml\snakeyaml\1.30\snakeyaml-1.30.jar;D:\00-home\repository\org\slf4j\slf4j-api\1.7.36\slf4j-api-1.7.36.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-web\2.7.10\spring-boot-starter-web-2.7.10.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-json\2.7.10\spring-boot-starter-json-2.7.10.jar;D:\00-home\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.13.5\jackson-datatype-jdk8-2.13.5.jar;D:\00-home\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.13.5\jackson-datatype-jsr310-2.13.5.jar;D:\00-home\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.13.5\jackson-module-parameter-names-2.13.5.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-tomcat\2.7.10\spring-boot-starter-tomcat-2.7.10.jar;D:\00-home\repository\org\apache\tomcat\embed\tomcat-embed-core\9.0.73\tomcat-embed-core-9.0.73.jar;D:\00-home\repository\org\apache\tomcat\embed\tomcat-embed-el\9.0.73\tomcat-embed-el-9.0.73.jar;D:\00-home\repository\org\apache\tomcat\embed\tomcat-embed-websocket\9.0.73\tomcat-embed-websocket-9.0.73.jar;D:\00-home\repository\org\springframework\spring-web\5.3.26\spring-web-5.3.26.jar;D:\00-home\repository\org\springframework\spring-beans\5.3.26\spring-beans-5.3.26.jar;D:\00-home\repository\org\springframework\spring-webmvc\5.3.26\spring-webmvc-5.3.26.jar;D:\00-home\repository\org\springframework\spring-aop\5.3.26\spring-aop-5.3.26.jar;D:\00-home\repository\org\springframework\spring-expression\5.3.26\spring-expression-5.3.26.jar;D:\00-home\repository\org\jsoup\jsoup\1.15.3\jsoup-1.15.3.jar;D:\00-home\repository\io\github\furstenheim\copy_down\1.0\copy_down-1.0.jar;D:\00-home\repository\org\json\json\20210307\json-20210307.jar;D:\00-home\repository\com\fasterxml\jackson\core\jackson-databind\2.13.0\jackson-databind-2.13.0.jar;D:\00-home\repository\com\fasterxml\jackson\core\jackson-annotations\2.13.5\jackson-annotations-2.13.5.jar;D:\00-home\repository\com\fasterxml\jackson\core\jackson-core\2.13.5\jackson-core-2.13.5.jar;D:\00-home\repository\org\apache\httpcomponents\httpclient\4.5.13\httpclient-4.5.13.jar;D:\00-home\repository\org\apache\httpcomponents\httpcore\4.4.16\httpcore-4.4.16.jar;D:\00-home\repository\commons-codec\commons-codec\1.15\commons-codec-1.15.jar;D:\00-home\repository\org\openjdk\jol\jol-core\0.9\jol-core-0.9.jar me.zeanzai.mianzha.HeapSpaceErrorGenerator
+OutOfMemoryError 发生在 11 对象后
+Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+	at me.zeanzai.mianzha.HeapSpaceErrorGenerator.main(HeapSpaceErrorGenerator.java:14)
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 1 Java 技术一面面试原题：说说 OOM 的原因
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手面经同学 1 部门主站技术部面试原题：Java 哪些内存区域会发生 OOM？为什么？
+Process finished with exit code 1
 
-memo：2025 年 1 月 14 日修改到此
+```
 
 ### 19.内存泄漏可能由哪些原因导致呢？
 
@@ -882,39 +1031,39 @@ threadLocal.set(new Object()); // 未清理
 
 第一步，使用 `jps -l` 查看运行的 Java 进程 ID。
 
-![二哥的 Java 进阶之路：jps 查看技术派的进程 ID](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806085955.png)
+![jps 查看技术派的进程 ID](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806085955.png)
 
 第二步，使用`top -p [pid]` 查看进程使用 CPU 和内存占用情况。
 
-![二哥的 Java 进阶之路：top -p](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806090059.png)
+![top -p](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806090059.png)
 
 第三步，使用 `top -Hp [pid]` 查看进程下的所有线程占用 CPU 和内存情况。
 
-![二哥的 Java 进阶之路：top -Hp](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806090208.png)
+![top -Hp](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806090208.png)
 
 第四步，抓取线程栈：`jstack -F 29452 > 29452.txt`，可以多抓几次做个对比。
 
 > 29452 为 pid，顺带作为文件名。
 
-![二哥的 Java 进阶之路：jstack](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806091529.png)
+![jstack](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806091529.png)
 
 看看有没有线程死锁、死循环或长时间等待这些问题。
 
-![二哥的 Java 进阶之路：另外一组线程 id 的堆栈](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806092007.png)
+![另外一组线程 id 的堆栈](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806092007.png)
 
 第五步，可以使用`jstat -gcutil [pid] 5000 10` 每隔 5 秒输出 GC 信息，输出 10 次，查看 **YGC** 和 **Full GC** 次数。
 
-![二哥的 Java 进阶之路：jstat](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806093011.png)
+![jstat](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806093011.png)
 
 通常会出现 YGC 不增加或增加缓慢，而 Full GC 增加很快。
 
 或使用 `jstat -gccause [pid] 5000` 输出 GC 摘要信息。
 
-![二哥的 Java 进阶之路：jstat](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806093107.png)
+![jstat](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806093107.png)
 
 或使用 `jmap -heap [pid]` 查看堆的摘要信息，关注老年代内存使用是否达到阀值，若达到阀值就会执行 Full GC。
 
-![二哥的 Java 进阶之路：jmap](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806093153.png)
+![jmap](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806093153.png)
 
 如果发现 `Full GC` 次数太多，就很大概率存在内存泄漏了。
 
@@ -922,7 +1071,7 @@ threadLocal.set(new Object()); // 未清理
 
 执行命令 `jmap -dump:format=b,file=heap.hprof 10025` 会输出进程 10025 的堆快照信息，保存到文件 heap.hprof 中。
 
-![二哥的 Java 进阶之路：jmap](https://cdn.tobebetterjavaer.com/stutymore/console-tools-20240106184317.png)
+![jmap](https://cdn.tobebetterjavaer.com/stutymore/console-tools-20240106184317.png)
 
 第七步，使用图形化工具分析，如 JDK 自带的 **VisualVM**，从菜单 > 文件 > 装入 dump 文件。
 
@@ -931,8 +1080,6 @@ threadLocal.set(new Object()); // 未清理
 然后在结果观察内存占用最多的对象，找到内存泄漏的源头。
 
 ### 21.有没有处理过内存溢出问题？
-
-有。
 
 当时在做[技术派](https://javabetter.cn/zhishixingqiu/paicoding.html)的时候，由于上传的文件过大，没有正确处理，导致一下子撑爆了内存，程序直接崩溃了。
 
@@ -955,8 +1102,6 @@ jmap -dump:format=b,file=heap.hprof <pid>
 之后，在本地进行压力测试，模拟高负载情况下的内存表现，确保修改有效，且没有引入新的问题。
 
 ### 22.什么情况下会发生栈溢出？（补充）
-
-> 2024 年 10 月 16 日增补
 
 栈溢出发生在程序调用栈的深度超过 JVM 允许的最大深度时。
 
@@ -1000,19 +1145,17 @@ public class LargeLocalVariables {
 
 ### 23.讲讲 JVM 的垃圾回收机制（补充）
 
-> 本题是增补的内容，by 2024 年 03 月 09 日；参照：[深入理解 JVM 的垃圾回收机制](https://javabetter.cn/jvm/gc.html)
-
 垃圾回收就是对内存堆中已经死亡的或者长时间没有使用的对象进行清除或回收。
 
 JVM 在做 GC 之前，会先搞清楚什么是垃圾，什么不是垃圾，通常会通过可达性分析算法来判断对象是否存活。
 
-![二哥的 Java 进阶之路：可达性分析](https://cdn.tobebetterjavaer.com/stutymore/gc-20231227104036.png)
+![可达性分析](https://cdn.tobebetterjavaer.com/stutymore/gc-20231227104036.png)
 
 在确定了哪些垃圾可以被回收后，垃圾收集器（如 CMS、G1、ZGC）要做的事情就是进行垃圾回收，可以采用标记清除算法、复制算法、标记整理算法、分代收集算法等。
 
 [技术派](https://javabetter.cn/zhishixingqiu/paicoding.html)项目使用的 JDK 8，采用的是 CMS 垃圾收集器。
 
-```
+```java
 java -XX:+UseConcMarkSweepGC \
      -XX:+UseParNewGC \
      -XX:CMSInitiatingOccupancyFraction=75 \
@@ -1050,9 +1193,6 @@ Java 通过可达性分析算法来判断一个对象是否还存活。
 
 ### 25.Java 中可作为 GC Roots 的引用有哪几种？
 
-1. 推荐阅读：[深入理解垃圾回收机制](https://javabetter.cn/jvm/gc.html)
-2. 推荐阅读：[R 大的所谓“GC roots”](https://www.zhihu.com/question/53613423/answer/135743258)
-
 所谓的 GC Roots，就是一组必须活跃的引用，它们是程序运行时的起点，是一切引用链的源头。在 Java 中，GC Roots 包括以下几种：
 
 - 虚拟机栈中的引用（方法的参数、局部变量等）
@@ -1060,7 +1200,7 @@ Java 通过可达性分析算法来判断一个对象是否还存活。
 - 类静态变量
 - 运行时常量池中的常量（String 或 Class 类型）
 
-![二哥的 java 进阶之路：GC Roots](https://cdn.tobebetterjavaer.com/stutymore/neicun-jiegou-20231227111238.png)
+![GC Roots](https://cdn.tobebetterjavaer.com/stutymore/neicun-jiegou-20231227111238.png)
 
 #### 说说虚拟机栈中的引用？
 
@@ -1078,6 +1218,10 @@ public class StackReference {
     }
 }
 ```
+
+可以使用 idea 开发工具中的 debug 运行模式来查看虚拟机栈中的方法：
+
+![1747322335546](./jvm/image/1747322335546.png)
 
 在 greet 方法中，localVar 是一个局部变量，存在于虚拟机栈中，可以被认为是 GC Roots。
 
@@ -1202,7 +1346,7 @@ class ConstantPoolReference {
 
 `分代收集`算法是目前主流的垃圾收集算法，它根据对象存活周期的不同将内存划分为几块，一般分为新生代和老年代。
 
-![二哥的 Java 进阶之路：Java 堆划分](https://cdn.tobebetterjavaer.com/stutymore/gc-20231227131241.png)
+![Java 堆划分](https://cdn.tobebetterjavaer.com/stutymore/gc-20231227131241.png)
 
 新生代用复制算法，因为大部分对象生命周期短。老年代用标记-整理算法，因为对象存活率较高。
 
@@ -1223,7 +1367,7 @@ class ConstantPoolReference {
 
 Minor GC 也称为 Young GC，是指发生在年轻代的垃圾收集。年轻代包含 Eden 区以及两个 Survivor 区。
 
-![二哥的 Java 进阶之路：Java 堆划分](https://cdn.tobebetterjavaer.com/stutymore/gc-20231227131241.png)
+![Java 堆划分](https://cdn.tobebetterjavaer.com/stutymore/gc-20231227131241.png)
 
 Major GC 也称为 Old GC，主要指的是发生在老年代的垃圾收集。是 CMS 的特有行为。
 
@@ -1241,8 +1385,6 @@ Full GC 会从 GC Root 出发，标记所有可达对象。新生代使用复制
 
 如果 Eden 区没有足够的空间时，就会触发 Young GC 来清理新生代。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的百度同学 4 面试原题：什么时候会触发 GC?
-
 ### 30.什么时候会触发 Full GC？
 
 在进行 Young GC 的时候，如果发现`老年代可用的连续内存空间` < `新生代历次 Young GC 后升入老年代的对象总和的平均大小`，说明本次 Young GC 后升入老年代的对象大小，可能超过了老年代当前可用的内存空间，就会触发 Full GC。
@@ -1255,11 +1397,7 @@ Full GC 会从 GC Root 出发，标记所有可达对象。新生代使用复制
 
 空间分配担保是指在进行 Minor GC 前，JVM 会确保老年代有足够的空间存放从新生代晋升的对象。如果老年代空间不足，可能会触发 Full GC。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手同学 4 一面原题：如何判断死亡对象？GC Roots 有哪些？空间分配担保是什么？
-
 ### 31.知道哪些垃圾收集器？
-
-推荐阅读：[深入理解 JVM 的垃圾收集器：CMS、G1、ZGC](https://javabetter.cn/jvm/gc-collector.html)
 
 JVM 的垃圾收集器主要分为两大类：分代收集器和分区收集器，分代收集器的代表是 CMS，分区收集器的代表是 G1 和 ZGC。
 
@@ -1439,13 +1577,20 @@ G1 非常适合大内存、多核处理器的环境。
 
 可以通过以下命令查看当前 JVM 的垃圾收集器：
 
+::: details 查看当前 JVM 的垃圾收集器
+
 ```java
-java -XX:+PrintCommandLineFlags -version
+zeanzai@DESKTOP-OJNPMED MINGW64 /d/03-code/Github/spring-cloud-study-notes (master)
+$ java -XX:+PrintCommandLineFlags -version
+-XX:InitialHeapSize=400526784 -XX:MaxHeapSize=6408428544 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:-UseLargePagesIndividualAllocation -XX:+UseParallelGC
+java version "1.8.0_421"
+Java(TM) SE Runtime Environment (build 1.8.0_421-b09)
+Java HotSpot(TM) 64-Bit Server VM (build 25.421-b09, mixed mode)
 ```
 
-![二哥的 Java 进阶之路：JDK 默认垃圾收集器](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240613111454.png)
-
 `UseParallelGC` = `Parallel Scavenge + Parallel Old`，表示新生代用`Parallel Scavenge`收集器，老年代使用`Parallel Old` 收集器。
+
+:::
 
 因此你也可以这样回答：
 
@@ -1469,8 +1614,8 @@ java -XX:+PrintCommandLineFlags -version
 
 ### 36.垃圾收集器应该如何选择？
 
-1. 理论上，版本越新的 jdk 所带的垃圾回收器越值得用，因为 Java 开发团队已经测试过了，并且这些新的垃圾收集器的更新也更符合硬件系统的更新；
-2. 一般情况下就默认，以后遇到问题再重新定位。或是调优、或是变更收集器类型，无不可。
+> 1. 理论上，版本越新的 jdk 所带的垃圾回收器越值得用，因为 Java 开发团队已经测试过了，并且这些新的垃圾收集器的更新也更符合硬件系统的更新；
+> 2. 一般情况下就默认，以后遇到问题再重新定位。或是调优、或是变更收集器类型，无不可。
 
 如果应用程序只需要一个很小的内存空间（大约 100 MB），或者对停顿时间没有特殊的要求，可以选择 Serial 收集器。
 
@@ -1479,8 +1624,6 @@ java -XX:+PrintCommandLineFlags -version
 如果响应时间比吞吐量优先级高，或者垃圾收集暂停必须保持在大约 1 秒以内，可以选择 CMS/ G1 收集器。
 
 如果响应时间是高优先级的，或者堆空间比较大，可以选择 ZGC 收集器。
-
-memo：2025 年 1 月 16 日修改至此。
 
 ## 四、JVM 调优
 
@@ -1571,7 +1714,7 @@ JDK 自带的命令行工具层面，我用过 jps、jstat、jinfo、jmap、jhat
 
 JVM 调优是一个复杂的过程，调优的对象包括堆内存、垃圾收集器和 JVM 运行时参数等。
 
-![二哥的 Java 进阶之路：JVM 调优](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240417094311.png)
+![JVM 调优](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240417094311.png)
 
 如果堆内存设置过小，可能会导致频繁的垃圾回收。所以在[技术派实战项目](https://javabetter.cn/zhishixingqiu/paicoding.html)中，启动 JVM 的时候配置了 `-Xms` 和 `-Xmx` 参数，让堆内存最大可用内存为 2G（我用的丐版服务器）。
 
@@ -1591,7 +1734,7 @@ JVM 调优是一个复杂的过程，调优的对象包括堆内存、垃圾收�
 top
 ```
 
-![haikuotiankongdong：top 命令结果](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240527111502.png)
+![top 命令结果](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240527111502.png)
 
 接着，使用 jstack 命令查看对应进程的线程堆栈信息。
 
@@ -1607,7 +1750,7 @@ jstack -l <pid> > thread-dump.txt
 top -H -p <pid>
 ```
 
-![haikuotiankongdong：Java 进程中的线程情况](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240527111356.png)
+![Java 进程中的线程情况](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240527111356.png)
 
 > 注意，top 命令显示的线程 ID 是十进制的，而 jstack 输出的是十六进制的，所以需要将线程 ID 转换为十六进制。
 
@@ -1638,11 +1781,11 @@ printf "%x\n" PID
 
 第二步，通过 jmap 命令 dump 出堆内存信息。
 
-![二哥的 Java 进阶之路：dump](https://cdn.tobebetterjavaer.com/stutymore/console-tools-20240106184317.png)
+![dump](https://cdn.tobebetterjavaer.com/stutymore/console-tools-20240106184317.png)
 
 第三步，使用可视化工具分析 dump 文件，比如说 VisualVM，找到占用内存高的对象，再找到创建该对象的业务代码位置，从代码和业务场景中定位具体问题。
 
-![二哥的 Java 进阶之路：分析](https://cdn.tobebetterjavaer.com/stutymore/view-tools-20240107134238.png)
+![分析](https://cdn.tobebetterjavaer.com/stutymore/view-tools-20240107134238.png)
 
 ### 43.频繁 minor gc 怎么办？
 
@@ -1739,8 +1882,6 @@ JVM 的操作对象是 Class 文件，JVM 把 Class 文件中描述类的数据�
 
 ### 48.类装载的过程知道吗？
 
-知道。
-
 类装载过程包括三个阶段：载入、链接和初始化。
 
 ①、载入：将类的二进制字节码加载到内存中。
@@ -1790,8 +1931,6 @@ JVM 的操作对象是 Class 文件，JVM 把 Class 文件中描述类的数据�
 重写 ClassLoader 的 `loadClass()` 方法。
 
 如果不想打破双亲委派模型，就重写 ClassLoader 类中的 `findClass()` 方法，那些无法被父类加载器加载的类最终会通过这个方法被加载。
-
-memo：2025 年 1 月 18 日修改至此。
 
 ### 51.有哪些破坏双亲委派模型的典型例子？
 
