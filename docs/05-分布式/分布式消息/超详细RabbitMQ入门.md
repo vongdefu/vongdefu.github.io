@@ -92,7 +92,7 @@ RabbitMQ 是一款使用 Erlang 语言开发的，实现 AMQP(高级消息队列
 
 ![图片](%E8%B6%85%E8%AF%A6%E7%BB%86RabbitMQ%E5%85%A5%E9%97%A8/image/640%5B14%5D.webp)
 
-这时，打开浏览器输入 http://localhost:15672，账号密码默认是：guest/guest
+这时，打开浏览器输入 `http://localhost:15672`，账号密码默认是：guest/guest
 
 ![图片](%E8%B6%85%E8%AF%A6%E7%BB%86RabbitMQ%E5%85%A5%E9%97%A8/image/640%5B15%5D.webp)
 
