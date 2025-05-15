@@ -321,7 +321,16 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       },
       { text: "分布式 ID", link: "/distribution/id" },
       { text: "分布式缓存", link: "/distribution/cache" },
-      { text: "分布式消息", link: "/distribution/message" },
+      {
+        text: "分布式消息",
+        base: "/05-分布式/分布式消息",
+        items: [
+          { text: "基础理论", link: "/基础理论" },
+          { text: "超详细RabbitMQ入门", link: "/超详细RabbitMQ入门" },
+          { text: "RabbitMQ防止数据丢失", link: "/RabbitMQ防止数据丢失" },
+          { text: "一文搞懂Kafka", link: "/一文搞懂Kafka" },
+        ],
+      },
       { text: "分布式存储（分库分表）", link: "/distribution/duration" },
       { text: "布式会话", link: "/distribution/session" },
       { text: "分布式 Job", link: "/distribution/job" },

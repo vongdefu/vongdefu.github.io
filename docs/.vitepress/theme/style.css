@@ -9,6 +9,7 @@ body {
 
 .vp-doc [class*='language-'] code {
   padding: 0 10px;
+  line-height: normal;
 }
 
 .vp-doc p {
@@ -23,4 +24,8 @@ body {
 
 .DocSearch-Button {
   height: 35px;
+}
+
+.vp-doc .line-numbers-wrapper {
+  line-height: normal;
 }
