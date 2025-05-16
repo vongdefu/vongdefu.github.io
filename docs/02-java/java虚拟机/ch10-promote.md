@@ -41,7 +41,7 @@
           - 物理内存耗尽
           - 应用程序的本地内存泄露（native leak），例如不断申请内存空间，却不释放
         - 优化手段
-          - 执行 jmap -histo:live <pid> 命令，强制执行 FullGC，如果几次执行后内存明显下降，则基本可以确认为 Direct buffer 问题
+          - 执行 `jmap -histo:live <pid>` 命令，强制执行 FullGC，如果几次执行后内存明显下降，则基本可以确认为 Direct buffer 问题
           - 升级地址空间为 64bit
           - 升级服务器配置规格或进行资源隔离
       - 线程资源
@@ -116,7 +116,7 @@
           - 程序启动时，调整 -XX:MaxPermSize 或 -XX:MaxMetaspaceSize 启动参数，调大方法区的大小
           - 应用重新部署时，应用没有重新启动，导致加载了多份 class 信息，再次重启即可
           - 运行时报错，可能是应用程序动态创建了大量的 class，而这些 class 生命周期却很短暂，但是 jvm 并没有卸载 class，可以配置 -XX:+CMSClassUnloadingEnabled 和 -XX:+UseConcMarkSweepGC 两个参数，允许 JVM 卸载 class
-          - 如果上面还不能解决，就是用 jmap -dump:format=b,file=dump.hprof <process-id> 命令 dump 内存对象，然后通过 MAT 工具分析开销最大的 classloader 及重复的 class
+          - 如果上面还不能解决，就是用 jmap -dump:format=b,file=dump.hprof `<process-id>` 命令 dump 内存对象，然后通过 MAT 工具分析开销最大的 classloader 及重复的 class
     - 直接内存
       - JVM 允许应用程序通过 Direct byte buffer 直接访问堆外内存，一些应用程序通过 Direct byte buffer 结合内存映射文件（memory mapped file）实现高速 IO。Direct byte buffer 默认的大小是 64MB，一旦超出这个限制，就会抛出异常。通常情况下，涉及到 Nio 操作时才会抛错。
       - 异常类型
