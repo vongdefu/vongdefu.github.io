@@ -1,12 +1,13 @@
 # CentOS
+
 ### 1. 常用命令
 
 ```bash
 //---------- 服务管理
 // 服务状态|关闭服务｜启动服务｜重启服务
-systemctl status|stop|start|restart xxx 
+systemctl status|stop|start|restart xxx
 // 重新加载服务
-systemctl daemon-reload 
+systemctl daemon-reload
 // 是否已经加入自启动
 systemctl is-enabled xxx
 // 开启自启动服务
@@ -26,8 +27,8 @@ netstat -nultp |grep 8080
 
 // --------- 磁盘管理
 fdisk -l
-lsblk 
-// 查看系统磁盘空间 
+lsblk
+// 查看系统磁盘空间
 df -h
 
 // 查看某一个文件夹下面所有文件的大小
@@ -35,7 +36,7 @@ du --max-depth=1 -h /mydata/nexus/data/log/
 
 
 // --------- 复制到远程服务器
-scp -r jdk-8u144-linux-x64.tar.gz root@192.168.1.150:/mnt/doc/package 
+scp -r jdk-8u144-linux-x64.tar.gz root@192.168.1.150:/mnt/doc/package
 // 下载
 scp -r username@ip:remote_folder local_folder    //-r表示递归
 // 复制文件夹到服务器上
@@ -80,10 +81,10 @@ $ cat adx-feed.log | grep kafka | wc -l
 grep "关键词" adx-log.log | wc -l
 
 // 统计每个小时的kafka消息
-$ cat adx-baiduUtils.log | grep kafka | awk -F " " '{print $2}' | awk -F ":" '{print $1}' | sort | uniq -c 
+$ cat adx-baiduUtils.log | grep kafka | awk -F " " '{print $2}' | awk -F ":" '{print $1}' | sort | uniq -c
 
 // 统计15点的视频素材数
-$ cat adx-baiduUtils.log | grep "2022-07-27 15:" | grep kafka | awk -F "videoList" '{print $2}' | awk -F "," '{print $1}' | sort | uniq -c | wc -l 
+$ cat adx-baiduUtils.log | grep "2022-07-27 15:" | grep kafka | awk -F "videoList" '{print $2}' | awk -F "," '{print $1}' | sort | uniq -c | wc -l
 
 // 统计某一整点的每分钟的请求异常个数
 $  cat adx-feedJob.log | grep "2022-07-28 15:" | grep "errorMsg" | awk -F "2022-07-28 15:" '{print $2}' | awk -F ":" '{print $1}' | uniq -c
@@ -105,7 +106,7 @@ uniq -c
 // 排序，按照大小，从大到小输出
 sort -rn
 
-// 
+//
 grep kafka adx-dYFeedsJobByUseIDFAZHJob.log-2022-08-10 \
 adx-dYFeedsJobByUseIDFAGoodJob.log-2022-08-10 \
 adx-dYFeedsJobByUseIDFAQueueJob.log-2022-08-10 \
@@ -127,10 +128,10 @@ Linux home.centos 3.10.0-1160.76.1.el7.x86_64 #1 SMP Wed Aug 10 16:21:17 UTC 202
 
 ::: tip 查询日志的做法
 
-1. 在业务系统中复现问题，浏览器f12打开控制台，然后找到对应的接口
-2. 拿着接口url去找对应的日志文件，然后vi打开日志文件
-3. shift+g 直接到文档最后，在vi的命令模式下输入“/{要查找的url}”进行查询
-4. 找到对应的线程名称，再次在vi的“命令模式”下输入“/{线程名称}”，然后使用shift+n向下查找，即可找到堆栈信息
+1. 在业务系统中复现问题，浏览器 f12 打开控制台，然后找到对应的接口
+2. 拿着接口 url 去找对应的日志文件，然后 vi 打开日志文件
+3. shift+g 直接到文档最后，在 vi 的命令模式下输入“/{要查找的 url}”进行查询
+4. 找到对应的线程名称，再次在 vi 的“命令模式”下输入“/{线程名称}”，然后使用 shift+n 向下查找，即可找到堆栈信息
 
 :::
 
@@ -141,8 +142,8 @@ Linux home.centos 3.10.0-1160.76.1.el7.x86_64 #1 SMP Wed Aug 10 16:21:17 UTC 202
 @tab JDK
 
 ```bash
-// 把下载好的jdk安装包上传至 centos 
-➜  Downloads scp -r jdk-8u144-linux-x64.tar.gz root@192.168.1.150:/mnt/doc/package 
+// 把下载好的jdk安装包上传至 centos
+➜  Downloads scp -r jdk-8u144-linux-x64.tar.gz root@192.168.1.150:/mnt/doc/package
 
 // 解压到安装路径下
 [root@home jdk1.8.0_144]# tar zxvf /mnt/doc/package/jdk-8u144-linux-x64.tar.gz -C /usr/setup/
@@ -166,14 +167,14 @@ export PATH=$PATH:$JAVA_HOME/bin
 ```bash
 // nacos运行环境依赖于jdk环境，因此需要先安装jdk。
 // 在mac上把从GitHub上下载下来的安装包上传至centos
-➜  Downloads scp -r nacos-server-2.2.3.tar.gz root@192.168.1.150:/mnt/doc/package 
-nacos-server-2.2.3.tar.gz          
+➜  Downloads scp -r nacos-server-2.2.3.tar.gz root@192.168.1.150:/mnt/doc/package
+nacos-server-2.2.3.tar.gz
 
 // 解压到安装目录下
 [root@home package]# tar zxvf nacos-server-2.2.3.tar.gz -C /usr/setup/
 
 // 修改start.sh启动脚本，添加jdk的环境变量
-[root@home bin]# vi /usr/setup/nacos/bin/startup.sh 
+[root@home bin]# vi /usr/setup/nacos/bin/startup.sh
 ...
 # limitations under the License.
 
@@ -275,7 +276,7 @@ WantedBy=multi-user.target
 // 配置开机自启动 end ---->
 
 // 修改启动文件中jdk的目录
-vi /usr/setup/nacos/bin/startup.sh 
+vi /usr/setup/nacos/bin/startup.sh
 
 # limitations under the License.
 
@@ -301,9 +302,12 @@ error_exit ()
 
 ```
 
-@tab Docker 
+@tab Docker
 
 ```bash
+// 扩展阅读： yum出问题后： https://www.cnblogs.com/lxzcloud/p/18349036
+
+
 // 安装yum源的工具包
 yum install -y yum-utils
 
@@ -460,13 +464,13 @@ vi /etc/profile
 export PATH=$PATH:/usr/local/ffmpeg/bin
 
 
-source /etc/profile 
+source /etc/profile
 
 
 ffmpeg -version
 ```
 
-@tab redis5 
+@tab redis5
 
 ```bash
 [root@localhost redis5.0.7]# cd /home/redis-5.0.7/utils/
@@ -517,4 +521,3 @@ Installation successful!
 ```
 
 :::
-

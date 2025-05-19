@@ -449,16 +449,18 @@ List 的数据结构，适合保存 `可以重复的、有序的数据集合`。
 
 ::: tip 思考题
 
-    1. redis中存储对象有几种方式？
-      - 第一种：
-        - set user:1:name zhangsan
-        - set user:1:age 12
-      - 第二种： value为序列化后的对象信息
-        - set user:1 serialize(userInfo)
-      - 第三种： 使用字典
-        - hset user:1 name zhangsan age 12
-    2. 假如hashtable数组上的链表元素有很多，那么rehash过程中，这些链表元素是怎么rehash到ht[1]上的？
-    3. hashtable扩容时，为什么 BGSAVE 或 BGREWRITEAOF 命令执行时的负载因子要比没有执行这两个命令时的负载因子大？
+1. redis 中存储对象有几种方式？
+
+- 第一种：
+  - set user:1:name zhangsan
+  - set user:1:age 12
+- 第二种： value 为序列化后的对象信息
+  - set user:1 serialize(userInfo)
+- 第三种： 使用字典
+  - hset user:1 name zhangsan age 12
+
+2. 假如 hashtable 数组上的链表元素有很多，那么 rehash 过程中，这些链表元素是怎么 rehash 到 ht[1]上的？
+3. hashtable 扩容时，为什么 BGSAVE 或 BGREWRITEAOF 命令执行时的负载因子要比没有执行这两个命令时的负载因子大？
 
 :::
 
@@ -469,11 +471,11 @@ Redis5.0 中还增加了一个数据结构 Stream，从字面上看是流类型�
 
 ::: tip 消息中间件的准备知识
 
-1. 为什么会有消息中间件？`
-`解耦、削峰、异步、高性能；
-2. 有哪些概念？`
-`消息、生产者、消费者、主题、channel 等；`
-`:::
+1. 为什么会有消息中间件？
+   `解耦、削峰、异步、高性能；
+2. 有哪些概念？`消息、生产者、消费者、主题、channel 等；`
+
+:::
 
 3. **应用场景**
 
@@ -496,7 +498,7 @@ Redis5.0 中还增加了一个数据结构 Stream，从字面上看是流类型�
      - xinfo groups
      - xinfo consumers
 
-   ```
+   ```sh
    // 往消息队列中插入消息
    > XADD mymsgqueue * name zeanzai
    "1654254953808-0"
@@ -508,7 +510,7 @@ Redis5.0 中还增加了一个数据结构 Stream，从字面上看是流类型�
 
    ```
 
-   ```
+   ```sh
    // 单个消费者消费
    // 消费消息队列中的消息， 消费 1654254953807-0 后续的所有消息
    > XREAD STREAMS mymsgqueue 1654254953807-0
@@ -550,7 +552,7 @@ Redis5.0 中还增加了一个数据结构 Stream，从字面上看是流类型�
 
    ```
 
-   ```
+   ```sh
    > XACK mymsgqueue group2 1654254953808-0
    (integer) 1
 
@@ -642,7 +644,7 @@ Redis5.0 中还增加了一个数据结构 Stream，从字面上看是流类型�
 
 5. **存储结构**
 
-   ```
+   ```sh
    127.0.0.1:6379> XADD mymsgqueue * name zeanzai
    "1716282237930-0"
    127.0.0.1:6379> type mymsgqueue
@@ -924,35 +926,35 @@ Bitmap 即位图，是一串连续的二进制数组（只有 0 和 1），可�
 
    如，id=13 的用户在 202206 月份的 25 日出勤了，那么就可以：
 
-   ```
+   ```sh
    SETBIT uuid:sign:13:202206 24 1
 
    ```
 
    同样地，id=26 的用户在 202207 月份的 18 日缺勤，则可以记录为：
 
-   ```
+   ```sh
    SETBIT uuid:sign:26:202207 17 0
 
    ```
 
    那么获取 id=20 的用户在 202209 月份 8 日的出勤情况，则可以使用命令：
 
-   ```
+   ```sh
    GETBIT uuid:sign:20:202209 7
 
    ```
 
    也可以统计 id=20 的用户在 202209 月份的出勤天数：
 
-   ```
+   ```sh
    BITCOUNT uuid:sign:20:202209
 
    ```
 
    甚至可以统计 id=100 的用户在 202206 月份的首次打卡情况【1 表示弹出第一个元素】：
 
-   ```
+   ```sh
    BITPOS uuid:sign:100:202206 1
 
    ```
@@ -967,7 +969,7 @@ Bitmap 即位图，是一串连续的二进制数组（只有 0 和 1），可�
 
    例如，userid=4 的用户在 20220521 这一天登陆了，就使用下面的命令在 Redis 中记录一下：
 
-   ```
+   ```sh
    SETBIT 20220521 3 1
 
    ```
@@ -980,7 +982,7 @@ Bitmap 即位图，是一串连续的二进制数组（只有 0 和 1），可�
 
    同样的，可以使用下面命令获取 userid=6 的用户在 20220522 这一天的登陆情况：
 
-   ```
+   ```sh
    GETBIT 20220522 5
 
    ```
