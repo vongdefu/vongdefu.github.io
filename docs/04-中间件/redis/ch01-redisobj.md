@@ -20,7 +20,7 @@ Redis 使用对象来表示每一个键值对，在 Redis 中创建的每一个�
 1. 有些命令要求只能用于某种特定类型的键，而有些命令则可以作用到所有类型的键，这就需要构建一种可以识别键的类型的机制，让命令执行时通过判断键的类型来选择合适的处理方式；
 2. Redis 是内存数据库，为了节省内存资源，Redis 设计了多种数据类型，而某些命令作用于其中某种类型的数据时，并不需要关注其底层到底使用的是那种数据结构，因此，还需要建立一种能够识别值的数据类型的机制，让命令执行时能够自行判断到底应该用到哪种数据结构上；
 
-因此，redis 设计了自己的类型系统——redisObject 对象。
+因此，redis 设计了自己的类型系统—— redisObject 对象。
 
 主要有两点原因：
 
@@ -32,6 +32,7 @@ Redis 使用对象来表示每一个键值对，在 Redis 中创建的每一个�
 ![image.png](./image/1718577572091.png)
 
 ```c
+// server.h
 typedef struct redisObject {
 
     // 类型，标识该对象是什么类型的对象（String 对象、 List 对象、Hash 对象、Set 对象和 Zset 对象）；
@@ -67,6 +68,7 @@ typedef struct redisObject {
 其枚举值如下：
 
 ```c
+// server.h
 /* A redis object, that is a type able to hold a string / list / set */
 
 /* The actual Redis Object */
@@ -101,72 +103,45 @@ typedef struct redisObject {
 其枚举值如下：
 
 ```c
+// server.h
 /* Objects encoding. Some kind of objects like Strings and Hashes can be
  * internally represented in multiple ways. The 'encoding' field of the object
  * is set to one of this fields for this object. */
 #define OBJ_ENCODING_RAW 0     /* Raw representation */
 #define OBJ_ENCODING_INT 1     /* Encoded as integer */
 #define OBJ_ENCODING_HT 2      /* Encoded as hash table */
-#define OBJ_ENCODING_ZIPMAP 3  /* Encoded as zipmap */
+#define OBJ_ENCODING_ZIPMAP 3  /* No longer used: old hash encoding. */
 #define OBJ_ENCODING_LINKEDLIST 4 /* No longer used: old list encoding. */
-#define OBJ_ENCODING_ZIPLIST 5 /* Encoded as ziplist */
+#define OBJ_ENCODING_ZIPLIST 5 /* No longer used: old list/hash/zset encoding. */
 #define OBJ_ENCODING_INTSET 6  /* Encoded as intset */
 #define OBJ_ENCODING_SKIPLIST 7  /* Encoded as skiplist */
 #define OBJ_ENCODING_EMBSTR 8  /* Embedded sds string encoding */
-#define OBJ_ENCODING_QUICKLIST 9 /* Encoded as linked list of ziplists */
+#define OBJ_ENCODING_QUICKLIST 9 /* Encoded as linked list of listpacks */
 #define OBJ_ENCODING_STREAM 10 /* Encoded as a radix tree of listpacks */
+#define OBJ_ENCODING_LISTPACK 11 /* Encoded as a listpack */
 
 ```
 
 使用 object encoding 命令输出的结果有： raw、int、embstr、hashtable、quicklist、ziplist、intset、skiplist 等， OBJ_ENCODING_XXX 为代码中使用，它与输出结果的转化代码如下：
 
 ```c
+// object.c
 char *strEncoding(int encoding) {
     switch(encoding) {
-        case OBJ_ENCODING_RAW: return "raw";
-        case OBJ_ENCODING_INT: return "int";
-        case OBJ_ENCODING_HT: return "hashtable";
-        case OBJ_ENCODING_QUICKLIST: return "quicklist";
-        case OBJ_ENCODING_ZIPLIST: return "ziplist";
-        case OBJ_ENCODING_INTSET: return "intset";
-        case OBJ_ENCODING_SKIPLIST: return "skiplist";
-        case OBJ_ENCODING_EMBSTR: return "embstr";
-        default: return "unknown";
+    case OBJ_ENCODING_RAW: return "raw";
+    case OBJ_ENCODING_INT: return "int";
+    case OBJ_ENCODING_HT: return "hashtable";
+    case OBJ_ENCODING_QUICKLIST: return "quicklist";
+    case OBJ_ENCODING_LISTPACK: return "listpack";
+    case OBJ_ENCODING_INTSET: return "intset";
+    case OBJ_ENCODING_SKIPLIST: return "skiplist";
+    case OBJ_ENCODING_EMBSTR: return "embstr";
+    case OBJ_ENCODING_STREAM: return "stream";
+    default: return "unknown";
     }
 }
 
 ```
-
-Redis objects can be encoded in different ways:
-
-- Strings can be encoded as:
-  - **raw**, normal string encoding.
-  - **int**, strings representing integers in a 64-bit signed interval, encoded in this way to save space.
-  - **embstr**, an embedded string, which is an object where the internal simple dynamic string, **sds**, is an unmodifiable string allocated in the same chuck as the object itself. **embstr** can be strings with lengths up to the hardcoded limit of **OBJ_ENCODING_EMBSTR_SIZE_LIMIT** or 44 bytes.
-- Lists can be encoded as:
-  - **linkedlist**, simple list encoding. No longer used, an old list encoding.
-  - **ziplist**, Redis <= 6.2, a space-efficient encoding used for small lists.
-  - **listpack**, Redis >= 7.0, a space-efficient encoding used for small lists.
-  - **quicklist**, encoded as linkedlist of ziplists or listpacks.
-- Sets can be encoded as:
-  - **hashtable**, normal set encoding.
-  - **intset**, a special encoding used for small sets composed solely of integers.
-  - **listpack**, Redis >= 7.2, a space-efficient encoding used for small sets.
-- Hashes can be encoded as:
-  - **zipmap**, no longer used, an old hash encoding.
-  - **hashtable**, normal hash encoding.
-  - **ziplist**, Redis <= 6.2, a space-efficient encoding used for small hashes.
-  - **listpack**, Redis >= 7.0, a space-efficient encoding used for small hashes.
-- Sorted Sets can be encoded as:
-  - **skiplist**, normal sorted set encoding.
-  - **ziplist**, Redis <= 6.2, a space-efficient encoding used for small sorted sets.
-  - **listpack**, Redis >= 7.0, a space-efficient encoding used for small sorted sets.
-- Streams can be encoded as:
-  - **stream**, encoded as a radix tree of listpacks.
-
-All the specially encoded types are automatically converted to the general type once you perform an operation that makes it impossible for Redis to retain the space saving encoding.
-
-Returns the string representation of the type of the value stored at **key**. The different types that can be returned are: **string**, **list**, **set**, **zset**, **hash** and **stream**.
 
 ### lru 属性
 
