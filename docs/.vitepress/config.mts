@@ -12,6 +12,7 @@ export default defineConfig({
   markdown: {
     lineNumbers: true,
     codeCopyButtonTitle: "复制",
+    math: true,
   },
   // 重写内部组件： https://vitepress.dev/zh/guide/extending-default-theme#overriding-internal-components
   // vite: {

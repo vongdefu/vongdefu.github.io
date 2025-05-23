@@ -266,6 +266,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         base: "/04-中间件/redis",
         link: "/README",
         items: [
+          { text: "Redis总结", link: "/redis.md" },
           { text: "Redis 对象系统", link: "/ch01-redisobj" },
           { text: "数据类型", link: "/ch02-datatype" },
           { text: "高级特性", link: "/ch03-greatfeature" },
