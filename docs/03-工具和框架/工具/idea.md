@@ -35,3 +35,11 @@
    ![blog20230319142409](./idea/image/blog20230319142409.png)
 
    ![blog20230319142530](./idea/image/blog20230319142530.png)
+
+-Dhttp.proxyHost=127.0.0.1
+-Dhttp.proxyPort=7890
+-Dhttps.proxyHost=127.0.0.1
+-Dhttps.proxyPort=7890
+-DsocksProxyHost=127.0.0.1
+-DsocksProxyPort=7890
+set http_proxy=http://127.0.0.1:7890 & set https_proxy=http://127.0.0.1:7890
