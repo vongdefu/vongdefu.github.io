@@ -306,7 +306,7 @@ error_exit ()
 
 ```bash
 // 扩展阅读： yum出问题后： https://www.cnblogs.com/lxzcloud/p/18349036
-
+// docker-registry :  https://cloud.tencent.com/developer/article/2516747
 
 // 安装yum源的工具包
 yum install -y yum-utils
