@@ -1,3 +1,7 @@
+<details class="details custom-block">
+
+<summary>nexus</summary>
+
 ```sh
 docker pull sonatype/nexus3
 
@@ -15,7 +19,9 @@ docker logs -f nexus
 cat /mydata/nexus/data/admin.password
 
 # 浏览器访问，然后登陆，用户名admin
-修改密码： root1003 
+修改密码： root1003
 设置为可以匿名访问
 
 ```
+
+</details>

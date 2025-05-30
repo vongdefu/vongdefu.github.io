@@ -7,9 +7,9 @@
 
 ## 2. 架构
 
-![dockeronlinux](./docker/image/docker-on-linux.png)
+![dockeronlinux](./image/docker-on-linux.png)
 
-![1725685088427](./docker/image/1725685088427.png)
+![1725685088427](./image/1725685088427.png)
 
 **Docker** 使用 Google 公司推出的 [Go 语言](https://golang.google.cn/) 进行开发实现，基于 Linux 内核的 [cgroup](https://zh.wikipedia.org/wiki/Cgroups)，[namespace](https://en.wikipedia.org/wiki/Linux_namespaces)，以及 [OverlayFS](https://docs.docker.com/storage/storagedriver/overlayfs-driver/) 类的 [Union FS](https://en.wikipedia.org/wiki/Union_mount) 等技术，对进程进行封装隔离，属于 [操作系统层面的虚拟化技术](https://en.wikipedia.org/wiki/Operating-system-level_virtualization)。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。最初实现是基于 [LXC](https://linuxcontainers.org/lxc/introduction/)，从 0.7 版本以后开始去除 LXC，转而使用自行开发的 [libcontainer](https://github.com/docker/libcontainer)，从 1.11 版本开始，则进一步演进为使用 [runC](https://github.com/opencontainers/runc) 和 [containerd](https://github.com/containerd/containerd)。
 
@@ -18,7 +18,7 @@
 
 **Docker** 在容器的基础上，进行了进一步的封装，从文件系统、网络互联到进程隔离等等，极大的简化了容器的创建和维护。使得 Docker 技术比虚拟机技术更为轻便、快捷。
 
-![1725685135928](./docker/image/1725685135928.png)
+![1725685135928](./image/1725685135928.png)
 
 ### 2.1. Docker Daemon
 
@@ -41,7 +41,7 @@
 > **Docker 镜像本质上是一组文件系统**，除了包含容器运行时所需要的程序、库、资源、配置等文件，还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。
 > 为了更好的复用、定制和扩展，镜像技术使用了分层存储技术，它的主要原理是：每一层构建完成后就不会发生改变，新的一层的构建内容只发生在当前层，后一层的构建可以依赖前一层，也就是说可以在前一层的基础上进行再构建。因此，构建镜像的最佳实践就是尽可能保证不添加任何不需要的内容。由此，也产生了 compose 技术。
 
-![1725685186337](./docker/image/1725685186337.png)
+![1725685186337](./image/1725685186337.png)
 
 ### 3.2. 容器
 
@@ -89,80 +89,6 @@
 
 - centos 平台上的安装过程
 
-## 5. 常用软件的安装
-
-<details>
-
-<summary>redis</summary>
-
-<<< ./docker/snippet/redis.snippet.md
-
-</details>
-
-<details>
-
-<summary>mysql</summary>
-
-<<< ./docker/snippet/mysql.snippet.md
-
-</details>
-
-<details>
-
-<summary>nexus</summary>
-
-<<< ./docker/snippet/nexus.snippet.md
-
-</details>
-
-<details>
-
-<summary>rocketmq</summary>
-
-<<< ./docker/snippet/rocketmq.snippet.md
-
-</details>
-
-<details>
-
-<summary>rabbitmq</summary>
-
-<<< ./docker/snippet/rabbitmq.snippet.md
-
-</details>
-
-<details>
-
-<summary>sentinel</summary>
-
-<<< ./docker/snippet/sentinel.snippet.md
-
-</details>
-
-<details>
-
-<summary>nginx</summary>
-
-<<< ./docker/snippet/nginx.snippet.md
-
-</details>
-
-<details>
-
-<summary>elasticsearch</summary>
-
-<<< ./docker/snippet/elasticsearch.snippet.md
-
-</details>
-
-<details>
-
-<summary>kinaba</summary>
-
-<<< ./docker/snippet/kinaba.snippet.md
-
-</details>
-
 ## 常用命令
 
 ```sh
@@ -205,3 +131,37 @@ docker cp host_path containerID:container_path # 从主机复制到容器
 - [Docker 教程（图文讲解）](https://www.quanxiaoha.com/docker/docker-tutorial.html)
 - [pdaiTeck-Docker](https://pdai.tech/md/devops/docker/docker-00-overview.html)
 -
+
+## 5. 常用软件的安装
+
+### 安装 redis
+
+<!--@include: ./docker/snippet/redis.snippet.md-->
+
+### 安装 MySQL
+
+<!--@include: ./docker/snippet/mysql.snippet.md-->
+
+### 安装 nexus
+
+<!--@include: ./docker/snippet/nexus.snippet.md-->
+
+### 安装 rocketmq
+
+<!--@include: ./docker/snippet/rocketmq.snippet.md-->
+
+### 安装 Rabbitmq
+
+<!--@include: ./docker/snippet/rabbitmq.snippet.md-->
+
+### 安装 sentinel
+
+<!--@include: ./docker/snippet/sentinel.snippet.md-->
+
+### 安装 ng
+
+<!--@include: ./docker/snippet/nginx.snippet.md-->
+
+### 安装 elasticsearch + kinaba
+
+<!--@include: ./docker/snippet/elasticsearch+kinaba.snippet.md-->

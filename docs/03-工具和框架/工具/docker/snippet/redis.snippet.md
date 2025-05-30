@@ -1,3 +1,7 @@
+<details class="details custom-block">
+
+<summary></summary>
+
 ```sh
 
 docker pull redis
@@ -10,3 +14,5 @@ docker run -p 6379:6379 --name redis \
 docker update redis --restart=always
 
 ```
+
+</details>
