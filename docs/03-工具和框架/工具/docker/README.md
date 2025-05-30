@@ -7,9 +7,9 @@
 
 ## 2. 架构
 
-![dockeronlinux](./image/docker-on-linux.png)
+![dockeronlinux](./README/image/docker-on-linux.png)
 
-![1725685088427](./image/1725685088427.png)
+![1725685088427](./README/image/1725685088427.png)
 
 **Docker** 使用 Google 公司推出的 [Go 语言](https://golang.google.cn/) 进行开发实现，基于 Linux 内核的 [cgroup](https://zh.wikipedia.org/wiki/Cgroups)，[namespace](https://en.wikipedia.org/wiki/Linux_namespaces)，以及 [OverlayFS](https://docs.docker.com/storage/storagedriver/overlayfs-driver/) 类的 [Union FS](https://en.wikipedia.org/wiki/Union_mount) 等技术，对进程进行封装隔离，属于 [操作系统层面的虚拟化技术](https://en.wikipedia.org/wiki/Operating-system-level_virtualization)。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。最初实现是基于 [LXC](https://linuxcontainers.org/lxc/introduction/)，从 0.7 版本以后开始去除 LXC，转而使用自行开发的 [libcontainer](https://github.com/docker/libcontainer)，从 1.11 版本开始，则进一步演进为使用 [runC](https://github.com/opencontainers/runc) 和 [containerd](https://github.com/containerd/containerd)。
 
@@ -18,7 +18,7 @@
 
 **Docker** 在容器的基础上，进行了进一步的封装，从文件系统、网络互联到进程隔离等等，极大的简化了容器的创建和维护。使得 Docker 技术比虚拟机技术更为轻便、快捷。
 
-![1725685135928](./image/1725685135928.png)
+![1725685135928](./README/image/1725685135928.png)
 
 ### 2.1. Docker Daemon
 
@@ -41,7 +41,7 @@
 > **Docker 镜像本质上是一组文件系统**，除了包含容器运行时所需要的程序、库、资源、配置等文件，还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。
 > 为了更好的复用、定制和扩展，镜像技术使用了分层存储技术，它的主要原理是：每一层构建完成后就不会发生改变，新的一层的构建内容只发生在当前层，后一层的构建可以依赖前一层，也就是说可以在前一层的基础上进行再构建。因此，构建镜像的最佳实践就是尽可能保证不添加任何不需要的内容。由此，也产生了 compose 技术。
 
-![1725685186337](./image/1725685186337.png)
+![1725685186337](./README/image/1725685186337.png)
 
 ### 3.2. 容器
 
@@ -87,7 +87,146 @@
 
 ## 4. 实践
 
-- centos 平台上的安装过程
+<details class="details custom-block">
+
+<summary> centos 平台上安装 Docker 和 Docker-compose </summary>
+
+```bash
+// 扩展阅读： yum出问题后： https://www.cnblogs.com/lxzcloud/p/18349036
+// docker-registry :  https://cloud.tencent.com/developer/article/2516747
+
+// 安装yum源的工具包
+yum install -y yum-utils
+
+// 配置docker的安装源
+yum-config-manager \
+--add-repo \
+https://download.docker.com/linux/centos/docker-ce.repo
+
+// 安装docker
+yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
+
+// 设置开机自启
+systemctl enable docker
+
+
+// 配置阿里云的镜像源，帮助文档： https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
+mkdir -p /etc/docker
+tee /etc/docker/daemon.json <<-'EOF'
+{
+"registry-mirrors": ["https://hpifphoh.mirror.aliyuncs.com"]
+}
+EOF
+systemctl daemon-reload
+systemctl restart docker
+
+// 查看安装之后的docker信息，最后可以看到配置的阿里云的镜像源
+[root@home ～]# docker info
+Client: Docker Engine - Community
+ Version:    24.0.6
+ Context:    default
+ Debug Mode: false
+ Plugins:
+  buildx: Docker Buildx (Docker Inc.)
+    Version:  v0.11.2
+    Path:     /usr/libexec/docker/cli-plugins/docker-buildx
+  compose: Docker Compose (Docker Inc.)
+    Version:  v2.21.0
+    Path:     /usr/libexec/docker/cli-plugins/docker-compose
+
+Server:
+ Containers: 0
+  Running: 0
+  Paused: 0
+  Stopped: 0
+ Images: 0
+ Server Version: 24.0.6
+ Storage Driver: overlay2
+  Backing Filesystem: xfs
+  Supports d_type: true
+  Using metacopy: false
+  Native Overlay Diff: true
+  userxattr: false
+ Logging Driver: json-file
+ Cgroup Driver: cgroupfs
+ Cgroup Version: 1
+ Plugins:
+  Volume: local
+  Network: bridge host ipvlan macvlan null overlay
+  Log: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog
+ Swarm: inactive
+ Runtimes: io.containerd.runc.v2 runc
+ Default Runtime: runc
+ Init Binary: docker-init
+ containerd version: 61f9fd88f79f081d64d6fa3bb1a0dc71ec870523
+ runc version: v1.1.9-0-gccaecfc
+ init version: de40ad0
+ Security Options:
+  seccomp
+   Profile: builtin
+ Kernel Version: 3.10.0-1160.71.1.el7.x86_64
+ Operating System: CentOS Linux 7 (Core)
+ OSType: linux
+ Architecture: x86_64
+ CPUs: 8
+ Total Memory: 23.26GiB
+ Name: home.centos
+ ID: bf0036ec-e56a-4c78-ae07-d8e224f11480
+ Docker Root Dir: /var/lib/docker
+ Debug Mode: false
+ Experimental: false
+ Insecure Registries:
+  127.0.0.0/8
+ Registry Mirrors:
+  https://hpifphoh.mirror.aliyuncs.com/
+ Live Restore Enabled: false
+
+// 查看docker的版本信息
+[root@home ~]# docker version
+Client: Docker Engine - Community
+ Version:           24.0.6
+ API version:       1.43
+ Go version:        go1.20.7
+ Git commit:        ed223bc
+ Built:             Mon Sep  4 12:35:25 2023
+ OS/Arch:           linux/amd64
+ Context:           default
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          24.0.6
+  API version:      1.43 (minimum version 1.12)
+  Go version:       go1.20.7
+  Git commit:       1a79695
+  Built:            Mon Sep  4 12:34:28 2023
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          1.6.24
+  GitCommit:        61f9fd88f79f081d64d6fa3bb1a0dc71ec870523
+ runc:
+  Version:          1.1.9
+  GitCommit:        v1.1.9-0-gccaecfc
+ docker-init:
+  Version:          0.19.0
+  GitCommit:        de40ad0
+
+```
+
+```bash
+# 下载docker compose
+curl -SL https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+# 添加可执行权限
+chmod +x /usr/local/bin/docker-compose
+# 将文件copy到 /usr/bin/目录下
+ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+# 查看版本
+docker-compose --version
+
+```
+
+</details>
 
 ## 常用命令
 
@@ -122,6 +261,7 @@ docker logs -f -t --tail 100 529a4d9afd8e
 docker exec -it 4992272fdf45 /bin/bash  # 进入容器内部
 docker cp host_path containerID:container_path # 从主机复制到容器
 
+
 ```
 
 ## 6. 参考
@@ -131,37 +271,3 @@ docker cp host_path containerID:container_path # 从主机复制到容器
 - [Docker 教程（图文讲解）](https://www.quanxiaoha.com/docker/docker-tutorial.html)
 - [pdaiTeck-Docker](https://pdai.tech/md/devops/docker/docker-00-overview.html)
 -
-
-## 5. 常用软件的安装
-
-### 安装 redis
-
-<!--@include: ./docker/snippet/redis.snippet.md-->
-
-### 安装 MySQL
-
-<!--@include: ./docker/snippet/mysql.snippet.md-->
-
-### 安装 nexus
-
-<!--@include: ./docker/snippet/nexus.snippet.md-->
-
-### 安装 rocketmq
-
-<!--@include: ./docker/snippet/rocketmq.snippet.md-->
-
-### 安装 Rabbitmq
-
-<!--@include: ./docker/snippet/rabbitmq.snippet.md-->
-
-### 安装 sentinel
-
-<!--@include: ./docker/snippet/sentinel.snippet.md-->
-
-### 安装 ng
-
-<!--@include: ./docker/snippet/nginx.snippet.md-->
-
-### 安装 elasticsearch + kinaba
-
-<!--@include: ./docker/snippet/elasticsearch+kinaba.snippet.md-->

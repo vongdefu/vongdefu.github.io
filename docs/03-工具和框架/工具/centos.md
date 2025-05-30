@@ -172,795 +172,13 @@ history -c
 
 :::
 
-## 常用软件的安装
-
-<details class="details custom-block">
-
-<summary>JDK</summary>
-
-```bash
-// 把下载好的jdk安装包上传至 centos
-➜  Downloads scp -r jdk-8u144-linux-x64.tar.gz root@192.168.1.150:/mnt/doc/package
-
-// 解压到安装路径下
-[root@home jdk1.8.0_144]# tar zxvf /mnt/doc/package/jdk-8u144-linux-x64.tar.gz -C /usr/setup/
-
-// 修改环境变量
-[root@home jdk1.8.0_144]# vi /etc/profile
-
-// 最后一行添加
-export JAVA_HOME=/usr/setup/jdk1.8.0_144
-export JRE_HOME=$JAVA_HOME/jre
-export CLASSPATH=./:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
-export PATH=$PATH:$JAVA_HOME/bin
-
-// 使环境变量生效
-[root@home jdk1.8.0_144]# source /etc/profile
-
-```
-
-</details>
-
-<details class="details custom-block">
-
-<summary>nacos-server-2.2.3</summary>
-
-```bash
-// nacos运行环境依赖于jdk环境，因此需要先安装jdk。
-// 在mac上把从GitHub上下载下来的安装包上传至centos
-➜  Downloads scp -r nacos-server-2.2.3.tar.gz root@192.168.1.150:/mnt/doc/package
-nacos-server-2.2.3.tar.gz
-
-// 解压到安装目录下
-[root@home package]# tar zxvf nacos-server-2.2.3.tar.gz -C /usr/setup/
-
-// 修改start.sh启动脚本，添加jdk的环境变量
-[root@home bin]# vi /usr/setup/nacos/bin/startup.sh
-...
-# limitations under the License.
-
-cygwin=false
-darwin=false
-os400=false
-case "`uname`" in
-CYGWIN*) cygwin=true;;
-Darwin*) darwin=true;;
-OS400*) os400=true;;
-esac
-error_exit ()
-{
-    echo "ERROR: $1 !!"
-    exit 1
-}
-
-[ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/usr/setup/jdk1.8.0_144 ## 添加这一行
-[ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=$HOME/jdk/java
-[ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/usr/java
-[ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/opt/taobao/java
-[ ! -e "$JAVA_HOME/bin/java" ] && unset JAVA_HOME
-...
-
-// 开机自启动
-// 在 /usr/lib/systemd/system 目录下创建 nacos.service ，并添加以下内容
-[root@home bin]# vi /usr/lib/systemd/system/nacos.service
-
-[Unit]
-Description=nacos
-After=network.target
-
-[Service]
-Type=forking
-ExecStart=/usr/setup/nacos/bin/startup.sh -m standalone
-ExecReload=/usr/setup/nacos/bin/shutdown.sh
-ExecStop=/usr/setup/nacos/bin/shutdown.sh
-PrivateTmp=true
-
-[Install]
-WantedBy=multi-user.target
-
-// 开启自启动服务
-systemctl enable nacos.service
-
-// 重新加载自启动服务
-systemctl daemon-reload
-
-// 查看是否假如自启动服务
-systemctl is-enabled nacos.service
-
-// 开放端口
-firewall-cmd --zone=public --add-port=8848/tcp --permanent
-firewall-cmd --reload
-
-// 访问地址： ip:8848/nacos
-
-// 用户名密码： nacos / nacos
-
-```
-
-</details>
-
-<details class="details custom-block">
-
-<summary>nacos-server-1.2.1</summary>
-
-```bash
-
-// 下载
-# wget https://github.com/alibaba/nacos/releases/download/1.2.1/nacos-server-1.2.1.tar.gz
-
-// 解压到安装目录
-# tar zxvf nacos-server-1.2.1.tar.gz -C /usr/setup/
-// 进入bin目录，启动
-# ./startup.sh -m standalone
-
-// 开放端口
-# firewall-cmd --zone=public --add-port=8848/tcp --permanent
-# firewall-cmd --reload
-
-
-// <---- start 配置开机自启动
-// 在 /usr/lib/systemd/system 目录下创建 nacos.service ，并添加以下内容
-
-[Unit]
-Description=nacos
-After=network.target
-
-[Service]
-Type=forking
-ExecStart=/usr/setup/nacos/bin/startup.sh -m standalone
-ExecReload=/usr/setup/nacos/bin/shutdown.sh
-ExecStop=/usr/setup/nacos/bin/shutdown.sh
-PrivateTmp=true
-
-[Install]
-WantedBy=multi-user.target
-
-// 开启自启动服务
-# systemctl enable nacos.service
-
-// 重新加载自启动服务
-# systemctl daemon-reload
-// 配置开机自启动 end ---->
-
-// 修改启动文件中jdk的目录
-vi /usr/setup/nacos/bin/startup.sh
-
-# limitations under the License.
-
-cygwin=false
-darwin=false
-os400=false
-case "`uname`" in
-CYGWIN*) cygwin=true;;
-Darwin*) darwin=true;;
-OS400*) os400=true;;
-esac
-error_exit ()
-{
-    echo "ERROR: $1 !!"
-    exit 1
-}
-
-[ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/usr/setup/jdk1.8.0_144 ## 添加这一行
-[ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=$HOME/jdk/java
-[ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/usr/java
-[ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/opt/taobao/java
-[ ! -e "$JAVA_HOME/bin/java" ] && unset JAVA_HOME
-
-```
-
-</details>
-
-<details class="details custom-block">
-
-<summary>Docker 和 Docker-compose</summary>
-
-```bash
-// 扩展阅读： yum出问题后： https://www.cnblogs.com/lxzcloud/p/18349036
-// docker-registry :  https://cloud.tencent.com/developer/article/2516747
-
-// 安装yum源的工具包
-yum install -y yum-utils
-
-// 配置docker的安装源
-yum-config-manager \
---add-repo \
-https://download.docker.com/linux/centos/docker-ce.repo
-
-// 安装docker
-yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
-
-// 设置开机自启
-systemctl enable docker
-
-
-// 配置阿里云的镜像源，帮助文档： https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
-mkdir -p /etc/docker
-tee /etc/docker/daemon.json <<-'EOF'
-{
-"registry-mirrors": ["https://hpifphoh.mirror.aliyuncs.com"]
-}
-EOF
-systemctl daemon-reload
-systemctl restart docker
-
-// 查看安装之后的docker信息，最后可以看到配置的阿里云的镜像源
-[root@home ～]# docker info
-Client: Docker Engine - Community
- Version:    24.0.6
- Context:    default
- Debug Mode: false
- Plugins:
-  buildx: Docker Buildx (Docker Inc.)
-    Version:  v0.11.2
-    Path:     /usr/libexec/docker/cli-plugins/docker-buildx
-  compose: Docker Compose (Docker Inc.)
-    Version:  v2.21.0
-    Path:     /usr/libexec/docker/cli-plugins/docker-compose
-
-Server:
- Containers: 0
-  Running: 0
-  Paused: 0
-  Stopped: 0
- Images: 0
- Server Version: 24.0.6
- Storage Driver: overlay2
-  Backing Filesystem: xfs
-  Supports d_type: true
-  Using metacopy: false
-  Native Overlay Diff: true
-  userxattr: false
- Logging Driver: json-file
- Cgroup Driver: cgroupfs
- Cgroup Version: 1
- Plugins:
-  Volume: local
-  Network: bridge host ipvlan macvlan null overlay
-  Log: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog
- Swarm: inactive
- Runtimes: io.containerd.runc.v2 runc
- Default Runtime: runc
- Init Binary: docker-init
- containerd version: 61f9fd88f79f081d64d6fa3bb1a0dc71ec870523
- runc version: v1.1.9-0-gccaecfc
- init version: de40ad0
- Security Options:
-  seccomp
-   Profile: builtin
- Kernel Version: 3.10.0-1160.71.1.el7.x86_64
- Operating System: CentOS Linux 7 (Core)
- OSType: linux
- Architecture: x86_64
- CPUs: 8
- Total Memory: 23.26GiB
- Name: home.centos
- ID: bf0036ec-e56a-4c78-ae07-d8e224f11480
- Docker Root Dir: /var/lib/docker
- Debug Mode: false
- Experimental: false
- Insecure Registries:
-  127.0.0.0/8
- Registry Mirrors:
-  https://hpifphoh.mirror.aliyuncs.com/
- Live Restore Enabled: false
-
-// 查看docker的版本信息
-[root@home ~]# docker version
-Client: Docker Engine - Community
- Version:           24.0.6
- API version:       1.43
- Go version:        go1.20.7
- Git commit:        ed223bc
- Built:             Mon Sep  4 12:35:25 2023
- OS/Arch:           linux/amd64
- Context:           default
-
-Server: Docker Engine - Community
- Engine:
-  Version:          24.0.6
-  API version:      1.43 (minimum version 1.12)
-  Go version:       go1.20.7
-  Git commit:       1a79695
-  Built:            Mon Sep  4 12:34:28 2023
-  OS/Arch:          linux/amd64
-  Experimental:     false
- containerd:
-  Version:          1.6.24
-  GitCommit:        61f9fd88f79f081d64d6fa3bb1a0dc71ec870523
- runc:
-  Version:          1.1.9
-  GitCommit:        v1.1.9-0-gccaecfc
- docker-init:
-  Version:          0.19.0
-  GitCommit:        de40ad0
-
-```
-
-```bash
-# 下载docker compose
-curl -SL https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
-# 添加可执行权限
-chmod +x /usr/local/bin/docker-compose
-# 将文件copy到 /usr/bin/目录下
-ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-
-# 查看版本
-docker-compose --version
-
-```
-
-</details>
-
-<details class="details custom-block">
-
-<summary>FFMpeg</summary>
-
-```bash
-
-wget http://www.ffmpeg.org/releases/ffmpeg-4.3.2.tar.gz
-tar -zxvf ffmpeg-4.3.2.tar.gz
-
-// 安装 yasm 汇编编译器
-yum install yasm -y
-
-// 重新安装 ffmpeg
-cd ffmpeg-4.3.2
-./configure --prefix=/usr/local/ffmpeg
-make && make install
-
-vi /etc/ld.so.conf 文件后面添加： /usr/local/ffmpeg/lib
-
-执行 ldconfig
-
-vi /etc/profile
-
-#set ffmpeg environment
-export PATH=$PATH:/usr/local/ffmpeg/bin
-
-
-source /etc/profile
-
-
-ffmpeg -version
-```
-
-</details>
-
-<details class="details custom-block">
-
-<summary>Redis5</summary>
-
-- 安装 gcc 编译工具包
-
-```
-$ yum update -y
-$ yum install -y gcc
-```
-
-- 解压
-
-```
-$ tar zxf /opt/package/redis5.0.3.tar.gz -C /opt/unziped/
-```
-
-- 创建文件夹
-
-```
-$ mkdir /usr/setup/redis5.0.3
-$ mkdir /usr/setup/redis5.0.3/log
-$ mkdir /usr/setup/redis5.0.3/data
-```
-
-- 进入解压后的 redis 目录并执行 make 命令
-
-```
-$ make
-```
-
-- 执行安装命令
-
-```
-$ make install PREFIX=/usr/setup/redis5.0.3
-```
-
-- 拷贝配置文件
-
-```
-$ cp /opt/unziped/redis5.0.3/6379.conf /usr/setup/redis5.0.3
-```
-
-- 打开守护进程运行模式
-
-```
-// 修改配置文件，将daemonize的值改为yes
-$ vi /usr/setup/redis5.0.3/6379.conf
-port 6379
-bind 191.168.1.150
-daemonize yes
-requirepass 123456
-appendonly yes
-```
-
-- 加入开机自启
-
-```
-$ ./opt/unziped/redis5.0.3/utils/install_server.sh
-Welcome to the redis service installer
-This script will help you easily set up a running redis server
-Please select the redis port for this instance: [6379]
-Selecting default: 6379
-Please select the redis config file name [/etc/redis/6379.conf] /usr/setup/redis5.0.3/6379.conf
-Please select the redis log file name [/var/log/redis_6379.log] /usr/setup/redis5.0.3/log/redis.log
-Please select the data directory for this instance [/var/lib/redis/6379] /usr/setup/redis5.0.3/data/6379
-Please select the redis executable path [] /usr/setup/redis5.0.3/bin/redis-server
-Selected config:
-Port           : 6379
-Config file    : /usr/setup/redis5.0.3/6379.conf
-Log file       : /usr/setup/redis5.0.3/log/6379.log
-Data dir       : /usr/setup/redis5.0.3/data
-Executable     : /usr/setup/redis5.0.3/bin/redis-server
-Cli Executable : /usr/setup/redis5.0.3/bin/redis-cli
-Is this ok? Then press ENTER to go on or Ctrl-C to abort.
-Copied /tmp/6379.conf => /etc/init.d/redis_6379
-Installing service...
-Successfully added to chkconfig!
-Successfully added to runlevels 345!
-Starting Redis server...
-Installation successful!
-```
-
-- 开启端口，并重启防火墙
-
-```
-$ firewall-cmd --zone=public --permanent --add-port=6379/tcp
-$ firewall-cmd --reload
-```
-
-- 重启后测试
-
-```
-1. 本机连接测试
-$ cd /usr/setup/redis5.0.3/bin/
-$ ./redis-cli -h 192.168.1.150 -p 6379
-127.0.0.1:6379> info
-
-2. 开发机连接测试
-cmd: redis-cli.exe -h 10.168.0.120 -p 6379
-```
-
-```bash
-[root@localhost redis5.0.7]# cd /home/redis-5.0.7/utils/
-[root@localhost utils]# ll
-total 52
--rw-rw-r--. 1 root root  593 Nov 20  2019 build-static-symbols.tcl
--rw-rw-r--. 1 root root 1303 Nov 20  2019 cluster_fail_time.tcl
--rw-rw-r--. 1 root root 1098 Nov 20  2019 corrupt_rdb.c
-drwxrwxr-x. 2 root root   60 Nov 20  2019 create-cluster
--rwxrwxr-x. 1 root root 2149 Nov 20  2019 generate-command-help.rb
-drwxrwxr-x. 3 root root   31 Nov 20  2019 graphs
-drwxrwxr-x. 2 root root   39 Nov 20  2019 hashtable
-drwxrwxr-x. 2 root root   70 Nov 20  2019 hyperloglog
--rwxrwxr-x. 1 root root 9567 Nov 20  2019 install_server.sh
-drwxrwxr-x. 2 root root   63 Nov 20  2019 lru
--rw-rw-r--. 1 root root 1277 Nov 20  2019 redis-copy.rb
--rwxrwxr-x. 1 root root 1352 Nov 20  2019 redis_init_script
--rwxrwxr-x. 1 root root 1047 Nov 20  2019 redis_init_script.tpl
--rw-rw-r--. 1 root root 1762 Nov 20  2019 redis-sha1.rb
-drwxrwxr-x. 2 root root  135 Nov 20  2019 releasetools
--rwxrwxr-x. 1 root root 3787 Nov 20  2019 speed-regression.tcl
--rwxrwxr-x. 1 root root  693 Nov 20  2019 whatisdoing.sh
-[root@localhost utils]# ./install_server.sh
-Welcome to the redis service installer
-This script will help you easily set up a running redis server
-
-Please select the redis port for this instance: [6379]
-Selecting default: 6379
-Please select the redis config file name [/etc/redis/6379.conf] /usr/setup/redis5.0.7/redis.conf
-Please select the redis log file name [/var/log/redis_6379.log] /usr/setup/redis5.0.7/log/6379.log
-Please select the data directory for this instance [/var/lib/redis/6379] /usr/setup/redis5.0.7/data
-Please select the redis executable path [] /usr/setup/redis5.0.7/bin/redis-server
-Selected config:
-Port           : 6379
-Config file    : /usr/setup/redis5.0.7/redis.conf
-Log file       : /usr/setup/redis5.0.7/log/6379.log
-Data dir       : /usr/setup/redis5.0.7/data
-Executable     : /usr/setup/redis5.0.7/bin/redis-server
-Cli Executable : /usr/setup/redis5.0.7/bin/redis-cli
-Is this ok? Then press ENTER to go on or Ctrl-C to abort.
-Copied /tmp/6379.conf => /etc/init.d/redis_6379
-Installing service...
-Successfully added to chkconfig!
-Successfully added to runlevels 345!
-Starting Redis server...
-Installation successful!
-
-```
-
-</details>
-
-<details class="details custom-block">
-
-<summary>安装并使用 nexus2.x</summary>
-
-### 安装
-
-- 安装依赖
-
-```
-$ java -version
-java version "1.8.0_144"
-Java(TM) SE Runtime Environment (build 1.8.0_144-b01)
-Java HotSpot(TM) 64-Bit Server VM (build 25.144-b01, mixed mode)
-```
-
-- 上传到`/opt/package`目录
-
-- 解压到解压目录
-
-```
-$ tar zxf /opt/package/nexus-2.14.5-02-bundle.tar.gz -C /usr/setup/
-```
-
-- 移动
-
-```
-$ mv -f /usr/setup/sonatype-work/ /opt/
-```
-
-- 配置 nexus
-
-```
-$ vi /usr/setup/nexus-2.14.5-02/conf/nexus.properties
-// 修改后：
-application-host=10.168.0.120
-nexus-work=/opt/sonatype-work/nexus
-
-$ vi /usr/setup/nexus-2.14.5-02/bin/nexus
-// 修改后：
-NEXUS_HOME="/usr/setup/nexus-2.14.5-02"
-RUN_AS_USER=root
-
-$ vi /usr/setup/nexus-2.14.5-02/bin/jsw/conf/wrapper.conf
-// 修改后：
-wrapper.java.command=/usr/setup/jdk1.8.0_144/bin/java
-```
-
-- 开放端口
-
-```
-$ firewall-cmd --zone=public --permanent --add-port=8081/tcp
-$ firewall-cmd --reload
-```
-
-- 设置服务
-
-```
-$ vi /etc/systemd/system/nexus.service
-[Unit]
-Description=nexus
-After=network.target
-[Service]
-Type=forking
-ExecStart=/usr/setup/nexus-2.14.5-02/bin/nexus start
-ExecReload=/usr/setup/nexus-2.14.5-02/bin/nexus restart
-ExecStop=/usr/setup/nexus-2.14.5-02/bin/nexus stop
-PrivateTmp=true
-[Install]
-WantedBy=multi-user.target
-
-$ systemctl enable nexus
-$ systemctl start nexus
-```
-
-- 测试
-
-```
-浏览器输入：http://10.168.0.120:8081/nexus
-```
-
-### 使用 nexus2.x
-
-#### 权限管理
-
-1. 用户
-2. 角色
-
-#### 仓库类型
-
-几种仓库类型的简单介绍
-
-#### 查看日志
-
-如何查看 nexus 的执行日志
-
-#### 下载中央仓库索引
-
-1. 设置仓库开关
-2. 创建任务
-
-#### 设置项目连接私服
-
-- 单个项目连接私服
-
-```
-// 只需要在项目的pom文件中添加下面内容即可
-
-<repositories>
-    <repository>
-        <id>Nexus</id>
-        <name>10.168.0.120-Nexus</name>
-        <url>http://10.168.0.120:8081/nexus/content/groups/public/</url>
-    </repository>
-</repositories>
-
-```
-
-- 全局连接私服
-
-```
-// 在maven的setting.xml文件中配置下面内容即可
-
-<mirrors>
-    <mirror>
-        <id>devnexus</id>
-        <name>devnexus</name>
-        <mirrorOf>*</mirrorOf>
-        <url>http://10.168.0.120:8081/nexus/content/groups/public/</url>
-    </mirror>
-</mirrors>
-```
-
-#### 本地开发的 jar 发布到 nexus 上面
-
-- 第一步：配置 setting.xml 文件
-
-```
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
-
-
-    <localRepository>D:\maven\my_local_repository</localRepository>
-
-    <pluginGroups>
-    </pluginGroups>
-
-    <proxies>
-    </proxies>
-
-
-    <!--设置 Nexus 认证信息-->
-    <servers>
-        <server>
-            <id>nexus-releases</id>
-            <username>admin</username>
-            <password>admin123</password>
-        </server>
-        <server>
-            <id>nexus-snapshots</id>
-            <username>admin</username>
-            <password>admin123</password>
-        </server>
-    </servers>
-
-
-    <!--设置 Nexus 镜像，后面只要本地没对应的以来，则到 Nexus 去找-->
-    <mirrors>
-        <mirror>
-            <id>nexus-releases</id>
-            <mirrorOf>*</mirrorOf>
-            <url>http://10.168.0.120:8081/repository/maven-releases/</url>
-        </mirror>
-        <mirror>
-            <id>nexus-snapshots</id>
-            <mirrorOf>*</mirrorOf>
-            <url>http://10.168.0.120:8081/repository/maven-snapshots/</url>
-        </mirror>
-        <mirror>
-            <id>maven-aliyun</id>
-            <name>aliyun maven</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-            <mirrorOf>central</mirrorOf>
-        </mirror>
-    </mirrors>
-
-    <profiles>
-        <profile>
-            <id>nexus</id>
-            <repositories>
-                <repository>
-                    <id>nexus-releases</id>
-                    <url>http://nexus-releases</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </repository>
-                <repository>
-                    <id>nexus-snapshots</id>
-                    <url>http://nexus-snapshots</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>nexus-releases</id>
-                    <url>http://nexus-releases</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </pluginRepository>
-                <pluginRepository>
-                    <id>nexus-snapshots</id>
-                    <url>http://nexus-snapshots</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </pluginRepository>
-            </pluginRepositories>
-        </profile>
-    </profiles>
-
-    <activeProfiles>
-        <activeProfile>nexus</activeProfile>
-    </activeProfiles>
-
-</settings>
-```
-
-- 第二步：在 pom 文件中添加：
-
-```
-<distributionManagement>
-    <repository>
-        <id>nexus-releases</id>
-        <url>http://10.168.0.120:8081/repository/maven-releases/</url>
-    </repository>
-    <snapshotRepository>
-        <id>nexus-snapshots</id>
-        <url>http://10.168.0.120:8081/repository/maven-snapshots/</url>
-    </snapshotRepository>
-</distributionManagement>
-```
-
-#### 附：java 项目不同模块的划分
-
-划分的背景
-划分方法
-参考地址
-
-</details>
-
 ## 服务管理
 
-https://blog.csdn.net/Mr_Yang__/article/details/84133783
+```bash
 
-- http://blog.csdn.net/tiantang_1986/article/details/53704966
-- http://blog.csdn.net/fresh123456/article/details/50925038
-- http://blog.csdn.net/chenxiabinffff/article/details/51374635
-
-## 1. Nginx 服务自启动
-
-### 1. 编写服务文件
-
+# 创建自启service文件
 vi /usr/lib/systemd/system/nginx.service
-注意修改安装路径
 
-```
 [Unit]
 Description=nginx - high performance web server
 After=network.target remote-fs.target nss-lookup.target
@@ -973,126 +191,634 @@ ExecStop=/softwares/nginx-1.12.2/sbin/nginx -s stop
 
 [Install]
 WantedBy=multi-user.target
-```
 
-### 2. 赋予 754 权限
+# 设置开机自启
+systemctl enable nginx.service
 
-```shell
-[root@200 system]# chmod 754 /usr/lib/systemd/system/nginx.service
-```
-
-### 3. 设置开机自启动
-
-```shell
-[root@200 system]# systemctl enable nginx.service
-Created symlink from /etc/systemd/system/multi-user.target.wants/nginx.service to /usr/lib/systemd/system/nginx.service.
-[root@200 system]# systemctl enable nginx.service
-```
-
-### 4. 其他命令
-
-```shell
+# 其它命令
 systemctl [start | enable | disable | status | restart | stop] nginx.service
 ```
 
-## 2. 其他软件开机自启动
+## centos7.5 的防火墙
 
-### 1. 编写服务文件
+- 样例
 
-#### 1. php-fpm
+```
+添加
+firewall-cmd --zone=public --add-port=80/tcp --permanent    （--permanent永久生效，没有此参数重启后失效）
 
-vi /usr/lib/systemd/system/php-fpm.service
+重新载入
+firewall-cmd --reload
+
+查看
+firewall-cmd --zone=public --list-ports
+
+删除
+firewall-cmd --zone= public --remove-port=80/tcp --permanent
+```
+
+- firewalld 的基本使用
+
+```
+启动：  systemctl start firewalld
+查状态：systemctl status firewalld
+停止：  systemctl disable firewalld
+禁用：  systemctl stop firewalld
+在开机时启用一个服务：systemctl enable firewalld.service
+在开机时禁用一个服务：systemctl disable firewalld.service
+查看服务是否开机启动：systemctl is-enabled firewalld.service
+查看已启动的服务列表：systemctl list-unit-files|grep enabled
+查看启动失败的服务列表：systemctl --failed
+```
+
+- 配置 firewalld-cmd
+
+```
+查看版本： firewall-cmd --version
+查看帮助： firewall-cmd --help
+显示状态： firewall-cmd --state
+查看所有打开的端口： firewall-cmd --zone=public --list-ports
+更新防火墙规则： firewall-cmd --reload
+查看区域信息:  firewall-cmd --get-active-zones
+查看指定接口所属区域： firewall-cmd --get-zone-of-interface=eth0
+拒绝所有包：firewall-cmd --panic-on
+取消拒绝状态： firewall-cmd --panic-off
+查看是否拒绝： firewall-cmd --query-panic
+```
+
+- 那怎么开启一个端口呢
+
+```
+添加
+firewall-cmd --zone=public(作用域) --add-port=80/tcp(端口和访问类型) --permanent(永久生效)
+firewall-cmd --zone=public --add-service=http --permanent
+firewall-cmd --reload    ## 重新载入，更新防火墙规则
+firewall-cmd --zone= public --query-port=80/tcp  ##查看
+firewall-cmd --zone= public --remove-port=80/tcp --permanent  ## 删除
+
+firewall-cmd --list-services
+firewall-cmd --get-services
+firewall-cmd --add-service=<service>
+firewall-cmd --delete-service=<service>
+在每次修改端口和服务后/etc/firewalld/zones/public.xml文件就会被修改,所以也可以在文件中之间修改,然后重新加载
+使用命令实际也是在修改文件，需要重新加载才能生效。
+
+firewall-cmd --zone=public --query-port=80/tcp
+firewall-cmd --zone=public --query-port=8080/tcp
+firewall-cmd --zone=public --query-port=3306/tcp
+firewall-cmd --zone=public --add-port=8080/tcp --permanent
+firewall-cmd --zone=public --add-port=3306/tcp --permanent
+firewall-cmd --zone=public --query-port=3306/tcp
+firewall-cmd --zone=public --query-port=8080/tcp
+firewall-cmd --reload  ## 重新加载后才能生效
+firewall-cmd --zone=public --query-port=3306/tcp
+firewall-cmd --zone=public --query-port=8080/tcp
+```
+
+- 参数解释
+
+```
+–add-service ##添加的服务
+–zone ##作用域
+–add-port=80/tcp ##添加端口，格式为：端口/通讯协议
+–permanent ##永久生效，没有此参数重启后失效
+```
+
+- 详细使用
+
+```
+firewall-cmd --permanent --zone=public --add-rich-rule='rule family="ipv4" source address="192.168.0.4/24" service name="http" accept'    //设置某个ip访问某个服务
+firewall-cmd --permanent --zone=public --remove-rich-rule='rule family="ipv4" source address="192.168.0.4/24" service name="http" accept' //删除配置
+firewall-cmd --permanent --add-rich-rule 'rule family=ipv4 source address=192.168.0.1/2 port port=80 protocol=tcp accept'     //设置某个ip访问某个端口
+firewall-cmd --permanent --remove-rich-rule 'rule family=ipv4 source address=192.168.0.1/2 port port=80 protocol=tcp accept'     //删除配置
+
+firewall-cmd --query-masquerade  ## 检查是否允许伪装IP
+firewall-cmd --add-masquerade    ## 允许防火墙伪装IP
+firewall-cmd --remove-masquerade ## 禁止防火墙伪装IP
+
+firewall-cmd --add-forward-port=port=80:proto=tcp:toport=8080   ## 将80端口的流量转发至8080
+firewall-cmd --add-forward-port=proto=80:proto=tcp:toaddr=192.168.1.0.1 ## 将80端口的流量转发至192.168.0.1
+firewall-cmd --add-forward-port=proto=80:proto=tcp:toaddr=192.168.0.1:toport=8080 ## 将80端口的流量转发至192.168.0.1的8080端口
+```
+
+## selinux
+
+- 查看
+
+```
+getenforce 或 /usr/sbin/sestatus -v
+```
+
+- 临时关闭
+
+```
+setenforce 0
+```
+
+- 永久关闭
+
+```
+vi /etc/selinux/config
+SELINUX=disabled
+```
+
+- 查看 Linux 状态
+
+```
+sestatus
+```
+
+- selinux 的知识点
+
+```
+https://blog.csdn.net/yanjun821126/article/details/80828908
+```
+
+## 创建用户并赋权
+
+### 3.1. 创建新用户
 
 ```shell
-[Unit]
-Description=php
-After=network.target remote-fs.target nss-lookup.target
+[root@VM_0_6_centos ~]# adduser northmeter
+[root@VM_0_6_centos ~]# passwd northmeter
+Changing password for user northmeter.
+New password:
+Retype new password:
+passwd: all authentication tokens updated successfully.
 
-[Service]
-Type=forking
-ExecStart=/usr/sbin/php-fpm
+# 授权
 
-[Install]
-WantedBy=multi-user.target
+[root@VM_0_6_centos ~]# ls -l /etc/sudoers
+-r--r-----. 1 root root 3938 Jun  7  2017 /etc/sudoers
+[root@VM_0_6_centos ~]# chmod -v u+w /etc/sudoers
+mode of ‘/etc/sudoers’ changed from 0440 (r--r-----) to 0640 (rw-r-----)
+[root@VM_0_6_centos ~]# vi /etc/sudoers
+## Allow root to run any commands anywhere
+root    ALL=(ALL)       ALL
+northmeter      ALL=(ALL)       ALL
+
+[root@VM_0_6_centos ~]# chmod -v u-w /etc/sudoers
+mode of ‘/etc/sudoers’ changed from 0640 (rw-r-----) to 0440 (r--r-----)
 ```
 
-#### 2. redis
-
-vi /usr/lib/systemd/system/redis.service
+### 3.3. 登录
 
 ```shell
-[Unit]
-Description=Redis
-After=network.target remote-fs.target nss-lookup.target
-
-[Service]
-Type=forking
-ExecStart=/softwares/redis-4.0.6/bin/redis-server /softwares/redis-4.0.6/bin/redis.conf
-ExecStop=kill -INT 'cat /var/run/redis_6379.pid'
-[Install]
-WantedBy=multi-user.target
+[root@200 ~]# ssh northmeter@193.112.249.36
+northmeter@193.112.249.36's password:
+Last login: Tue Jun  5 12:37:45 2018 from 218.17.157.121
 ```
 
-#### 3. tomcat7
-
-##### 1. tomcat7/bin 下面新建 setenv.sh 配置
-
-```
-#add tomcat pid
-CATALINA_PID="$CATALINA_BASE/tomcat.pid"
-#add java opts
-JAVA_OPTS="-server-XX:PermSize=256M -XX:MaxPermSize=1024m -Xms512M -Xmx1024M-XX:MaxNewSize=256m"
-```
-
-##### 2. 修改 bin/setclasspath.sh
-
-export JAVA_HOME=/softwares/jdk1.8.0_111
-
-export JRE_HOME=/softwares/jdk1.8.0_111/jre
-
-##### 3. 新建 service 文件
-
-vi /usr/lib/systemd/system/tomcat7.service
+### 3.4. 测试
 
 ```shell
-[Unit]
-Description=Tomcat
-After=syslog.targetnetwork.target remote-fs.target nss-lookup.target
+[root@VM_0_6_centos ~]# su northmeter
+[northmeter@VM_0_6_centos root]$ sudo cat /etc/passwd
 
-[Service]
-Type=forking
-PIDFile=/softwares/apache-tomcat-7.0.70/bin/tomcat.pid
-ExecStart=/softwares/apache-tomcat-7.0.70/bin/startup.sh
-ExecStop=kill -INT 'cat /softwares/apache-tomcat-7.0.70/bin/tomcat.pid'
-PrivateTmp=true
+We trust you have received the usual lecture from the local System
+Administrator. It usually boils down to these three things:
 
-[Install]
-WantedBy=multi-user.target
+    #1) Respect the privacy of others.
+    #2) Think before you type.
+    #3) With great power comes great responsibility.
+
+[sudo] password for northmeter:
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+sync:x:5:0:sync:/sbin:/bin/sync
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+operator:x:11:0:operator:/root:/sbin/nologin
+games:x:12:100:games:/usr/games:/sbin/nologin
+ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
+nobody:x:99:99:Nobody:/:/sbin/nologin
+systemd-network:x:192:192:systemd Network Management:/:/sbin/nologin
+dbus:x:81:81:System message bus:/:/sbin/nologin
+polkitd:x:999:997:User for polkitd:/:/sbin/nologin
+libstoragemgmt:x:998:996:daemon account for libstoragemgmt:/var/run/lsm:/sbin/nologin
+abrt:x:173:173::/etc/abrt:/sbin/nologin
+rpc:x:32:32:Rpcbind Daemon:/var/lib/rpcbind:/sbin/nologin
+ntp:x:38:38::/etc/ntp:/sbin/nologin
+postfix:x:89:89::/var/spool/postfix:/sbin/nologin
+chrony:x:997:995::/var/lib/chrony:/sbin/nologin
+sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin
+tcpdump:x:72:72::/:/sbin/nologin
+syslog:x:996:994::/home/syslog:/bin/false
+centos:x:1000:1000:Cloud User:/home/centos:/bin/bash
+northmeter:x:1001:1001::/home/northmeter:/bin/bash
 ```
 
-#### 4. apollo1.8.0
+---
+
+# 定时任务
+
+## 前言
+
+## 查看服务相关信息
 
 ```shell
-[Unit]
-Description=apollo1.8.0
-After=syslog.targetnetwork.target remote-fs.target nss-lookup.target
-
-[Service]
-Type=forking
-ExecStart=/usr/setup/apollo1.8.0/start.sh
-ExecStop=/usr/setup/apollo1.8.0/shutdown.sh
-PrivateTmp=true
-
-[Install]
-WantedBy=multi-user.target
+$ systemctl status crond		// crond状态
+$ systemctl is-enabled crond	// 是否开机自启
 ```
 
-### 2. 赋予权限
+## 基础知识
 
-### 3. 开启自动重启
+### Cron 时间表达式详解
 
-systemctl enable XXX.service
+#### 表达式概述
 
-### 4. 测试
+```
+.---------------- minute (0 - 59)：代表分钟，取值范围00-59
+|  .------------- hour (0 - 23)：代表小时，取值范围00-23
+|  |  .---------- day of month (1 - 31)：代表月份中的日期，取值范围01-31
+|  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...：代表月份，取值范围01-12
+|  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+|  |  |  |  |
+*  *  *  *  * user-name  command to be executed
+```
 
-测试时需要保证软件已经处于关闭状态。
+#### 特殊符号含义
+
+| 特殊符号 | 含义                                                                                                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| \*       | 表示任意时间都，也是”每”的意思，举例：如 00 23 \* \* \*cmd 表示每月每周每日的 23:00 都执行 cmd 任务                                                                                                     |
+| -        | 表示分隔符，表示一个时间段范围段，如 17-19 点，每小时的 00 分执行任务，00 17-19 \* \* \* cmd 。就是 17,18,19 点整点分别执行的意思                                                                       |
+| ,        | 表示分隔时段的意思，30 17,18,19 \* \* _ /bin.sh /scripts/dingjian.sh 表示每天 17,18 和 19 点的半点时刻执行/scripts/dingjian.sh 脚本。也可以和”-”结合使用，如：30 3-5,17-19 _ \* \* /scripts/dingjian.sh |
+| /n       | 即”每隔 n 单位时间”，如：每 10 分钟执行一次任务可以写成 _/10 _ \* \* _ cmd,其中“_/10”的范围是 0-59，因此也可以写成 0-59/10                                                                              |
+
+### 命令概述
+
+#### 指定语法
+
+```shell
+crontab [-u user] file
+        crontab -u user
+                (default operation is replace, per 1003.2)
+        -e      (edit user's crontab)      编辑用户命令
+        -l      (list user's crontab)       列表
+        -r      (delete user's crontab)    删除用户任务
+        -i      (prompt before deleting user's crontab)     在删除前确认
+        -s      (selinux context)
+```
+
+| 参数 | 含义                                             | 示例              |
+| ---- | ------------------------------------------------ | ----------------- |
+| -l   | 查看 crontab 文件内容，提示:l 为 list 的缩写     | crontab -l        |
+| -e   | 编辑 crontab 文件内容，提示：e 可为 edit  的缩写 | crontab -e        |
+| -i   | 删除 crontab 文件内容，删除前会提示确认，用得少  | crontab -ri       |
+| -r   | 删除 crontab 文件内容，用得很少                  | crontab -r        |
+| -u   | 指定使用的用户执行任务                           | crontab -u boy -l |
+
+-I –r 参数在生产中很少用，没什么需求必须要用-e 进去编辑即可
+
+补充: crontab {-l|-e} 实际上就是在操作/var/spool/cron/当前用户这样的文件
+
+### 相关文件
+
+| 文件             |                                                                     |
+| ---------------- | ------------------------------------------------------------------- |
+| /etc/cron.deny   | 该文件中所列用户不允许使用 crontab 命令                             |
+| /etc/cron.allow  | 该文件中所列用户允许使用 crontab 命令，优先于/etc/cron.deny         |
+| /var/spool/cron/ | 所有用户 crontab 配置文件默认都存放在此目录，**文件名以用户名命名** |
+| /var/log/cron    | 定时任务的执行日志                                                  |
+
+## 示例
+
+```shell
+// 1. 查看当前用户的定时任务
+	$ crontab -l
+
+// 2. 为当前用户编辑一个定时任务
+	$ crontab -e
+
+// 3. 清空当前用户的定时任务
+	$ crontab -r
+
+// 4. 每分钟打印一次自己的英文名字到 /home/test/name.txt 的文件中
+方式一：
+    $ mkdir /home/test // 创建文件目录
+    $ crontab -e // 输入以下内容
+
+    # print my name
+    * * * * * echo "zeanzai"  >> /home/test/name.txt
+
+    $ cat /home/test/name.txt // 查看输出
+    zeanzai
+
+方式二：
+    $ mkdir /home/test // 创建文件目录
+    $ vi /var/spool/cron/root // 编辑定时任务配置文件，输入以下内容
+    # print my name
+    * * * * * echo "zeanzai"  >> /home/test/name.txt
+
+// 5. 查看定时任务执行的日志
+	$ tail -f /var/log/cron
+
+// 6. 查看定时任务的配置文件
+方式一：
+    $ ll /var/spool/cron/
+    $ cat root
+
+方式二：
+    $ crontab -l
+
+// 7. 删除定时任务
+    $ crontab -ir
+    yes
+
+
+// 8. 每天00:01打包昨天的日志文件到tar文件，并删除昨天的日志文件
+$ mkdir /home/logs/school-hydroelectricity/tar
+$ vi /etc/scripts/tar.sh
+cd /home/logs/school-hydroelectricity
+tar zcf ./tar/$(date +'%Y-%m-%d' -d '-1 days').tar.gz ./$(date +'%Y-%m-%d' -d '-1 days')
+rm -rf ./$(date +'%Y-%m-%d' -d '-1 days')
+
+$ ./etc/scripts/tar.sh
+$ crontab -e
+# 每天00:01打包昨天的日志文件到tar目录中，并删除昨天的日志文件，要求打包文件以日期命名
+* * * * * /bin/sh /etc/scripts/tar.sh
+```
+
+## 生产问题案例及解决过程
+
+面试题：维护的时候，创建文件提示”No space left on device”,请问你这是什么故障：
+
+解答：磁盘空间 block 满了或者 inode 被占满了
+
+### 故障描述及说明
+
+某年某月甘日某时，某人在工作中设置 crontab 定时任务规则保存时，提示” No space left on device”，此时用 df -h 检查磁盘，发现还有剩余空间，用 df -I  检查则显示/var 目录己占用 100%的 inode 数量，看来是 inode 数量耗尽，导致系统无法在/var 目录下创建文件，因为定时任务的配置在/var/spool/cron 下，ext3 文件系统中，每个文件需要占一个 inode。
+
+### 故障原因分析
+
+当系统中 crond 定时任务执行程序有输出内容时，输出内容会以邮件形式发给 crond 的用户（默认是 root），而 sendmail 等 mail 服务没有启动时，这些输出内容以为支在邮件队列临时目录，产生这些碎文件，导致消耗 inode 数量，一旦 inode 数量耗尽，就会导致系统无法写入文件，而报上述错误：No space left on device.
+
+### 亡羊补牢解决方法
+
+1. 尽量将 crontab 里面的命令或脚本中的命令结尾加上>/dev/null 2>&1，或在做定时执行脚本时，把屏幕输出定向到指定文件里
+
+2. 当然也可以开启邮件服务，不过最好不做，因为邮件服务会带来安全问题
+
+3. 优化系统，加定时清理任务，如 find /var/spool/clientmqueue/ -type f -mtime +30|xargs rm -f
+
+## 调试 crontab 定时任务
+
+1. **增加执行频率调试任务**
+2. **调整系统时间调试任务**
+3. **通过日志输出调试定时任务**
+4. **通过定时任务日志调试定时任务**
+
+## 参考
+
+1. http://blog.51cto.com/mrxiong2017/2084803
+2. https://blog.csdn.net/andrewgb/article/details/47374963
+3. https://www.cnblogs.com/javahr/p/8318728.html
+
+---
+
+## 1. 挂载 NTFS 硬盘
+
+由于家里的电脑原来装的是 windows 系统，并且我自己扩展了两块硬盘，原来 Windows 系统时，两块硬盘可以正常读写，但是在物理机上面安装上 centos7.5 以后，由于只是格式化 c 盘，把 centos7.5 系统安装到了 c 盘，所以之前自己扩展的两块硬盘就无法正常读写了，此时，需要在 centos 系统上读写两块硬盘内容，需要怎么处理呢？下面给出解决方案。
+
+### 1.1. 安装依赖包
+
+```
+yum install -y fuse ntfs-3g
+```
+
+### 1.2. 挂载硬盘
+
+```
+[root@home data]# mkdir -p /mnt/data/d /mnt/data/e
+
+[root@home data]# lsblk -f
+NAME                 FSTYPE      LABEL    UUID                                   MOUNTPOINT
+sda
+├─sda1               vfat                 B476-53D1                              /boot/efi
+├─sda2               xfs                  cd9c42b2-dafc-40dc-a780-28e8b5ed453a   /boot
+└─sda3               LVM2_member          pue3cy-Bdmo-txbs-f7vS-3Oef-78zY-ACq296
+  ├─centos_home-root xfs                  a1c1e8bc-3a27-47b6-a2aa-f329e4b77e86   /
+  ├─centos_home-swap swap                 4ff247c5-07b8-4143-93bc-1496ac3a7162   [SWAP]
+  └─centos_home-home xfs                  2d5c8133-4174-4689-906a-62c316aa6839   /home
+sdb
+└─sdb1               ntfs        Software 90769AF9769ADEF2
+sdc
+├─sdc1
+└─sdc2               ntfs        Zeanzai  D4947D40947D25E0
+
+[root@home data]# mount /dev/sdb1 /mnt/data/d
+[root@home data]# mount /dev/sdc2 /mnt/data/e
+
+```
+
+### 1.3. 自动挂载
+
+如果需要永久挂载，先查到该盘的 type 值：
+
+```
+
+[root@home ~]# blkid
+/dev/mapper/centos_home-root: UUID="a1c1e8bc-3a27-47b6-a2aa-f329e4b77e86" TYPE="xfs"
+/dev/sda3: UUID="pue3cy-Bdmo-txbs-f7vS-3Oef-78zY-ACq296" TYPE="LVM2_member" PARTUUID="3f965157-bb9c-49b5-9aeb-20726f024e6f"
+/dev/sdb1: LABEL="Software" UUID="90769AF9769ADEF2" TYPE="ntfs" PARTLABEL="Basic data partition" PARTUUID="8ba8c6a7-4a88-47d2-b94e-97d2d97a144e"
+/dev/sdc1: PARTLABEL="Microsoft reserved partition" PARTUUID="6207f65b-8b11-46bd-bd4a-d14f2d5a0c6e"
+/dev/sdc2: LABEL="Zeanzai" UUID="D4947D40947D25E0" TYPE="ntfs" PARTLABEL="Basic data partition" PARTUUID="3220d24a-a508-4dfb-af5e-ae2a749c9d9f"
+/dev/sda1: SEC_TYPE="msdos" UUID="B476-53D1" TYPE="vfat" PARTLABEL="EFI System Partition" PARTUUID="82eac0f4-625e-4b70-80c7-221bee59c290"
+/dev/sda2: UUID="cd9c42b2-dafc-40dc-a780-28e8b5ed453a" TYPE="xfs" PARTUUID="1075528c-e57e-4734-a6c9-74a798184fcb"
+/dev/mapper/centos_home-swap: UUID="4ff247c5-07b8-4143-93bc-1496ac3a7162" TYPE="swap"
+/dev/mapper/centos_home-home: UUID="2d5c8133-4174-4689-906a-62c316aa6839" TYPE="xfs"
+```
+
+在最下面添加两行
+
+```
+
+#
+# /etc/fstab
+# Created by anaconda on Sun Jun 27 13:23:19 2021
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/centos_home-root /                       xfs     defaults        0 0
+UUID=cd9c42b2-dafc-40dc-a780-28e8b5ed453a /boot                   xfs     defaults        0 0
+UUID=B476-53D1          /boot/efi               vfat    umask=0077,shortname=winnt 0 0
+/dev/mapper/centos_home-home /home                   xfs     defaults        0 0
+/dev/mapper/centos_home-swap swap                    swap    defaults        0 0
+
+/dev/sdb1 /mnt/data/d           ntfs defaults 0 0
+/dev/sdc2 /mnt/data/e           ntfs defaults 0 0
+```
+
+注意是 ntfs，不是其他。
+
+如果遇到无法正常启动时，可以参考 https://blog.csdn.net/weixin_34401479/article/details/94316392
+
+### 1.4. 其它命令
+
+```
+# 查看所有磁盘的分区情况
+fdisk -l
+
+# 卸载
+umount /dev/sdd1
+
+# 查看已挂载磁盘使用情况
+df -h
+```
+
+### 1.5. 挂载 exFat 磁盘驱动器
+
+```
+yum install epel-release
+rpm -v --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
+rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
+yum install exfat-utils fuse-exfat
+
+
+[root@home data]# mount -t exfat /dev/sdd1 /mnt/data/f
+```
+
+---
+
+# 磁盘扩展
+
+## 场景描述
+
+早上起来使用 jenkins 自动化部署时，发现日志中提示磁盘已满的问题，在查询解决此问题的过程中，有很多博客都建议修改构件保存天数。笔者在自动化部署的设置过程中，本身设置的保存天数就很小。然后查看一下磁盘的使用情况，发现 root 分区已使用 100%。只能使用修改分区的方式进行修改了。
+在此问题出现的头一天晚上，重启了一下服务器，然后 rabbitmq 就再也启动不起来了，查看日志文件，网上也说是因为磁盘已满的问题。
+早上过来发现，showdoc 也挂掉了，但是挂掉一段时间之后自动又好了。
+
+## 解决过程
+
+### 查看磁盘使用情况
+
+```
+[root@dev ~]# df -h
+文件系统                     容量  已用  可用 已用% 挂载点
+/dev/mapper/centos_dev-root  118G  118G   20K  100% /
+devtmpfs                      32G     0   32G    0% /dev
+tmpfs                         32G     0   32G    0% /dev/shm
+tmpfs                         32G  9.8M   32G    1% /run
+tmpfs                         32G     0   32G    0% /sys/fs/cgroup
+/dev/sda1                   1014M  186M  829M   19% /boot
+/dev/mapper/centos_dev-home  7.2T   26G  7.2T    1% /home
+tmpfs                        6.3G     0  6.3G    0% /run/user/0
+```
+
+### 备份 home
+
+```
+[root@dev ~]# cp -r /home/ /dev/homebak
+```
+
+### 卸载 home
+
+```
+[root@dev ~]# umount /home
+```
+
+### 删除 home 所在的 lv
+
+```
+[root@dev ~]# lvremove -y /dev/mapper/centos_dev-home
+  Logical volume "home" successfully removed
+```
+
+### 显示 lvm 卷组信息
+
+```
+[root@dev ~]# vgdisplay
+  --- Volume group ---
+  VG Name               centos_dev
+  System ID
+  Format                lvm2
+  Metadata Areas        2
+  Metadata Sequence No  5
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                2
+  Open LV               2
+  Max PV                0
+  Cur PV                2
+  Act PV                2
+  VG Size               7.27 TiB
+  PE Size               4.00 MiB
+  Total PE              1907041
+  Alloc PE / Size       38240 / <149.38 GiB
+  Free  PE / Size       1868801 / <7.13 TiB
+  VG UUID               js7DO7-igaq-Si7p-lAef-PkXA-FS3W-5hnfSu
+```
+
+### 扩展 root 所在的 lv
+
+```
+[root@dev ~]# lvextend -L +3T /dev/mapper/centos_dev-root
+  Size of logical volume centos_dev/root changed from 118.00 GiB (30208 extents) to <3.12 TiB (816640 extents).
+  Logical volume centos_dev/root successfully resized.
+```
+
+### 扩展 root 文件系统
+
+```
+[root@dev ~]# xfs_growfs /dev/mapper/centos_dev-root
+meta-data=/dev/mapper/centos_dev-root isize=512    agcount=4, agsize=7733248 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0 spinodes=0
+data     =                       bsize=4096   blocks=30932992, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal               bsize=4096   blocks=15104, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+data blocks changed from 30932992 to 836239360
+```
+
+### 重新创建 home 的 lv
+
+```
+[root@dev ~]# lvcreate -L 4T -n home centos_dev
+  Logical volume "home" created.
+```
+
+### 创建 home 文件系统
+
+```
+[root@dev centos_dev]# mkfs.xfs /dev/centos_dev/home
+meta-data=/dev/centos_dev/home   isize=512    agcount=4, agsize=268435455 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=1073741820, imaxpct=5
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=521728, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+```
+
+### 挂载 home 并恢复备份
+
+```
+[root@dev centos_dev]# mount /dev/centos_dev/home /home
+[root@dev centos_dev]# cp -r /dev/homebak/ /home/
+[root@dev ~]# df -h
+文件系统                     容量  已用  可用 已用% 挂载点
+/dev/mapper/centos_dev-root  3.2T  118G  3.1T    4% /
+devtmpfs                      32G   26G  6.3G   81% /dev
+tmpfs                         32G     0   32G    0% /dev/shm
+tmpfs                         32G  9.8M   32G    1% /run
+tmpfs                         32G     0   32G    0% /sys/fs/cgroup
+/dev/sda1                   1014M  186M  829M   19% /boot
+tmpfs                        6.3G     0  6.3G    0% /run/user/0
+/dev/mapper/centos_dev-home  4.0T   29G  4.0T    1% /home
+```
+
+## 参考链接
+
+1. https://blog.csdn.net/huqigang/article/details/79710201

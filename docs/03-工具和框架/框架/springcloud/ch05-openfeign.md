@@ -14,6 +14,18 @@
 
 OpenFeign 是 SpringCloud 官方提供的远程服务调用的组件，我们“别无选择”，就它了。需要注意的是，SpringCloud 还提供了 RestTemplate 组件，也可以完成远程服务调用。关于 RestTemplate 方式调用和 OpenFeign 方式的简单调用，也可以参考笔者的系列文章的《服务治理之 Nacos》章节进行查阅。
 
+### 什么是 Feign
+
+Feign 是一个声明式 Web Service 客户端。它主要作用是使 Web Service 客户端变得很简单。原来的 HttpClient 的方式是需要声明客户端的地址、端口、请求头、请求体、解码器、协议内容等等，然后创建链接后调用。而 Feign 则是通过添加注解，屏蔽底层通用的细节，调用远程服务。这种调用方式跟本地方法一样，用户几乎无感知。
+
+有具体以下特性：
+
+- 可插拔的注解支持
+- 支持可插拔的 HTTP 编码器和解码器
+- 支持 Hystrix 和它的 Fallback
+- 支持 Ribbon 的负载均衡
+- 支持 HTTP 请求和响应的压缩
+
 ## 3. 实战
 
 要想使用 OpenFeign，我们就要先明白它的大概原理： 服务生产者与服务消费者都注册到服务治理中心上，服务调用者在调用过程中，先从服务治理中心获取服务生产者的地址，然后再组装实际的调用地址，之后完成服务的调用。因此我们还需要一个服务治理中心，这里我们还是使用 Nacos。
@@ -155,6 +167,23 @@ public class HelloController {
 > 1. 服务生产者对外暴露接口；
 > 2. 服务消费者创建 service 链接接口；
 > 3. 控制层注入 service 后进行消费；
+
+#### Feign 的工作原理
+
+- 在主程序入口中添加@EnableFeignClients 注解开启对 Client 包的扫描，并在服务提供方接口上添加@FeignClient 注解。
+- 程序启动时，容器会自动扫描@EnableFeignClients 注解中配置的包，并把所有带@FeignClient 注解的类注入到 IOC 容器中，当定义的 Feign 接口中的方法被调用时，就通过 jdk 代理的方式，来生成具体的 RequestTemplate，生成代理时，feign 会为每一个接口创建一个 RequestTemplate 对象，这个对象封装了 HTTP 请求需要的全部信息。
+- 然后由 RequestTemplate 生成 Request，并把 Request 交给 Client（指的是 JDK 原生的 URLConnection、HttpClient、OkHttp）去处理，最后 Client 被封装到 LoadBalanceClient 类，这个类结合 Ribbon 负载均衡使用。
+
+#### FeignClient 注解剖析
+
+- 作用到接口上
+- 常用属性归纳
+  - name
+  - url
+  - configuration
+  - fallback
+  - path
+  - decode404
 
 ### 3.2. OpenFeign 高级特性
 

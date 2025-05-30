@@ -1,5 +1,4 @@
-
-``` sh
+```sh
 
 docker search rabbitmq
 
@@ -25,4 +24,4 @@ docker update rabbitmq --restart=always
 
 ```
 
-![image.png](./rabbitmq.snippet/image/1726243665825.png)
+![image.png](./rabbitmq/image/1726243665825.png)
