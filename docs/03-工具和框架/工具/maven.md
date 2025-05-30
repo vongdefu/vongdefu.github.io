@@ -1,5 +1,58 @@
 # maven
 
+大纲：
+
+1. Maven 没有出现之前遇到的问题？
+2. Maven 主要作用是个啥？
+3. 安装与配置（安装过程、配置本地仓库地址、配置 profile、配置阿里源、配置私服）
+4. Maven 概念
+   1. 约定大于配置： 项目文档目录、软件生命周期管理、依赖关系（继承和聚合）、项目模块类型（Web、Java）
+   2. 配置文件讲解
+   3. POM
+   4. 坐标
+   5. 依赖排除
+5. 下载 jar 的原理
+
+## centos 上安装 Maven
+
+- 解压
+
+```shell
+tar -zxf apache-maven-3.5.4-bin.tar.gz -C /usr/setup/
+```
+
+- 配置环境变量
+
+```shell
+vi /etc/profile
+
+export MAVEN_HOME=/usr/setup/apache-maven-3.5.4
+export PATH=$PATH:$JAVA_HOME/bin:$MAVEN_HOME/bin
+```
+
+- 使环境变量生效
+
+```shell
+source /etc/profile
+```
+
+- 测试
+
+```shell
+mvn -version
+```
+
+- 修改仓库地址
+
+```shell
+mkdir /opt/repository
+vi /usr/setup/apache-maven-3.5.4/conf/settings.xml
+
+<localRepository>/opt/repository</localRepository>
+```
+
+## windows
+
 1. 解压安装包到指定目录
 2. 修改配置文件：
 
@@ -64,19 +117,6 @@
    </activeProfiles>
 
    ```
-
-大纲：
-
-1. Maven 没有出现之前遇到的问题？
-2. Maven 主要作用是个啥？
-3. 安装与配置（安装过程、配置本地仓库地址、配置 profile、配置阿里源、配置私服）
-4. Maven 概念
-   1. 约定大于配置： 项目文档目录、软件生命周期管理、依赖关系（继承和聚合）、项目模块类型（Web、Java）
-   2. 配置文件讲解
-   3. POM
-   4. 坐标
-   5. 依赖排除
-5. 下载 jar 的原理
 
 ## 1. 配置
 

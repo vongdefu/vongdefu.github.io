@@ -2,6 +2,50 @@
 
 ![1745156420826](./git/image/1745156420826.png)
 
+## 安装过程
+
+```sh
+- 查看 yum 库中的版本：
+yum info git
+
+- 查看是否安装
+git --version
+
+- 安装依赖包
+yum install -y curl-devel expat-devel gettext-devel openssl-devel zlib-devel gcc perl-ExtUtils-MakeMaker
+
+- 查看是否安装
+git --version
+
+- 卸载旧版本
+yum remove git
+
+- 下载 https://github.com/git/git/releases
+
+- 上传到制定目录
+
+- 解压
+tar zxf git-2.18.0.tar.gz
+
+- 安装
+make prefix=/usr/setup/git_2.18.0 all
+make prefix=/usr/setup/git_2.18.0 install
+
+- 配置环境变量
+vi /etc/profile
+
+export GIT_HOME=/usr/setup/git_2.18.0
+export PATH=$PATH:$GIT_HOME/bin
+source /etc/profile
+
+- 查看是否安装
+git --version
+
+- 配置
+git config --global user.name "zeanzai"
+git config --global user.email "438123371@qq.com"
+```
+
 ## Git 常用命令
 
 ```bash
@@ -355,3 +399,207 @@ jobs:
 ```
 
 :::
+
+## jenkins 工作流
+
+- tomcat 启动中
+
+- 移动 war 包到 webapps 下
+
+- 浏览器中输入
+
+`http://10.168.0.120:8080/jenkins`
+
+- 初始化安装
+
+- 全局工具设置
+
+```
+jdk： jdk1.8.0_144
+      /usr/setup/jdk1.8.0_144
+
+maven： apache-maven-3.5.4
+        /usr/setup/apache-maven-3.5.4
+```
+
+- 新建任务
+
+```
+输入任务名->自由风格->丢弃旧的构建->Subversion->轮询SCM（H 2 * * *）->构建（clean package -DskipTests）->执行shell（cp target/*.war /usr/setup/latestTomcat/webapps/）
+```
+
+- 执行构建
+
+```
+查看控制台输出
+当然是未成功了
+因为没有下载pom中依赖的jar
+需要进入工作区（/usr/setup/apache-tomcat-8.5.32/.jenkins/workspace），手动执行 compile 、 package、clean package等目标（目的是为了下载仓库jar）
+```
+
+- 执行完成之后
+
+需要将 target 文件夹删除
+
+- 再次构建
+
+如果还没有成功，就是因为没有下载好 jar，需要执行 mvn 的相关目标，或将开发环境下面的仓库拷贝到服务器上
+
+- 构建成功
+
+```
+构建成功，但是tomcat没有启动成功，查看catalina.out 日志
+（日志文件更改所属文件夹的属性）
+```
+
+## gitlab
+
+### 前言
+
+gitlab 作为版本控制器被广泛应用，可以看做工作单位自建的 GitHub 服务器。
+
+### 信息统计
+
+- 下载地址：https://packages.gitlab.com/gitlab/gitlab-ce
+- 版本：gitlab-ce-11.5.0-ce.0.el7.x86_64.rpm
+- 占用端口：8888
+- ng 代理端口：8103
+
+### 安装
+
+- 安装依赖
+
+```
+$ yum -y install policycoreutils policycoreutils-python openssh-server openssh-clients postfix
+```
+
+- 设置 postfix 开机自启，并启动，postfix 支持 gitlab 发信功能
+
+```
+$ systemctl enable postfix && systemctl start postfix
+```
+
+- 上传
+
+```
+[root@study package]# rpm -ivh gitlab-ce-11.5.0-ce.0.el7.x86_64.rpm
+警告：gitlab-ce-11.5.0-ce.0.el7.x86_64.rpm: 头V4 RSA/SHA1 Signature, 密钥 ID f27eab47: NOKEY
+准备中...                          ################################# [100%]
+正在升级/安装...
+   1:gitlab-ce-11.5.0-ce.0.el7        ################################# [100%]
+It looks like GitLab has not been configured yet; skipping the upgrade script.
+
+       *.                  *.
+      ***                 ***
+     *****               *****
+    .******             *******
+    ********            ********
+   ,,,,,,,,,***********,,,,,,,,,
+  ,,,,,,,,,,,*********,,,,,,,,,,,
+  .,,,,,,,,,,,*******,,,,,,,,,,,,
+      ,,,,,,,,,*****,,,,,,,,,.
+         ,,,,,,,****,,,,,,
+            .,,,***,,,,
+                ,*,.
+
+
+
+     _______ __  __          __
+    / ____(_) /_/ /   ____ _/ /_
+   / / __/ / __/ /   / __ `/ __ \
+  / /_/ / / /_/ /___/ /_/ / /_/ /
+  \____/_/\__/_____/\__,_/_.___/
+
+
+Thank you for installing GitLab!
+GitLab was unable to detect a valid hostname for your instance.
+Please configure a URL for your GitLab instance by setting `external_url`
+configuration in /etc/gitlab/gitlab.rb file.
+Then, you can start your GitLab instance by running the following command:
+  sudo gitlab-ctl reconfigure
+
+For a comprehensive list of configuration options please see the Omnibus GitLab readme
+https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md
+
+```
+
+- 修改配置文件
+
+```
+$ vi /etc/gitlab/gitlab.rb
+external_url 'http://192.168.100.200:8888'
+
+// 关闭SMTP，开启postfix
+gitlab_rails['smtp_enable'] = false
+
+// 修改额外设置
+unicorn['listen'] = '127.0.0.1'
+unicorn['port'] = 8001
+```
+
+- 开放端口
+
+```
+firewall-cmd --zone=public --add-port=8888/tcp --permanent
+firewall-cmd --reload
+```
+
+- 重置并重启
+
+```
+$ gitlab-ctl reconfigure
+$ gitlab-ctl restart
+```
+
+- 浏览器中输入
+
+```
+http://{ip}:8888
+```
+
+- 用户管理
+
+直接点击创建用户，创建完用户后，使用终端，对创建的用户进行激活
+
+```
+[root@home packages]# gitlab-rails console
+--------------------------------------------------------------------------------
+ Ruby:         ruby 2.7.2p137 (2020-10-01 revision 5445e04352) [x86_64-linux]
+ GitLab:       14.0.0 (f1926d2aa64) FOSS
+ GitLab Shell: 13.19.0
+ PostgreSQL:   12.6
+--------------------------------------------------------------------------------
+Loading production environment (Rails 6.1.3.2)
+irb(main):001:0> user = User.find_by_username("zeanzai")
+=> #<User id:2 @zeanzai>
+irb(main):002:0> user.state = "active"
+=> "active"
+irb(main):003:0> user.save
+=> true
+irb(main):004:0> exit
+
+```
+
+### 问题解决
+
+- 错误消息： 502 错误！
+
+- 原因 1：日志文件没有权限
+
+解决步骤：Gitlab 文件需要给予读写的权限 `chmod -R 755 /var/log/gitlab`
+
+- 原因 2：端口冲突
+
+解决步骤：Gitlab 的默认启动端口是 80,8080，所以有肯能会与其他的端口产生冲突，所以需要修改文件 `vi /etc/gitlab/gitlab.rb`
+
+```
+unicorn['listen'] = '127.0.0.1'
+unicorn['port'] = 8001    # 为unicorn worker的工作端口，默认为8080，如果你的8080端口被占用的，这一项需要更改。
+
+$ gitlab-ctl reconfigure
+$ gitlab-ctl restart
+```
+
+- 原因 3：内存不足
+
+解决步骤：安装 gitlab 的时候，已经说明你的空余内存需要有 4G 左右的内存，所以在安装 gitlab 的时候，请给足内存，在安装。
