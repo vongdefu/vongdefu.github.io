@@ -49,15 +49,6 @@ ORDER BY salary DESC, name ASC;
 
 通常情况下，添加索引就能解决大部分性能问题。对于一些热点数据，还可以通过增加 Redis 缓存，来减轻数据库的访问压力。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 1 Java 后端技术一面面试原题：你平时用到的数据库
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯云智面经同学 16 一面面试原题：数据库用过哪些，对哪个比较熟？
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 360 面经同学 3 Java 后端技术一面面试原题：用过哪些数据库
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的招商银行面经同学 6 招银网络科技面试原题：了解 MySQL、Redis 吗？
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的国企零碎面经同学 9 面试原题：数据库用什么多（说了 Mysql 和 Redis）
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 vivo 面经同学 10 技术一面面试原题：怎么删除/创建一张表和设定主键
->    ，举例用 sql 实现升序降序
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的滴滴面经同学 3 网约车后端开发一面原题：MySQL 性能慢的原因
-
 ### 1.两张表怎么进行连接？
 
 可以通过内连接 `inner join`、外连接 `outer join`、交叉连接 `cross join` 来合并多个表的查询结果。
@@ -92,12 +83,12 @@ LEFT JOIN orders ON users.id = orders.user_id;
 
 查询前：
 
-| users | orders |
-| ----- | ------ | ------- |
-| id    | name   | user_id |
-| 1     | 王二   | 1       |
-| 2     | 张三   | 2       |
-| 3     | 李四   | 无      |
+|     | users | orders  |
+| --- | ----- | ------- |
+| id  | name  | user_id |
+| 1   | 王二  | 1       |
+| 2   | 张三  | 2       |
+| 3   | 李四  | 无      |
 
 查询后：
 
@@ -176,21 +167,15 @@ LIMIT 2;
 
 ![技术派实战项目：右连接查询结果](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240308185525.png)
 
-> 1.  [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯 Java 后端实习一面原题：请说说 MySQL 的内联、左联、右联的区别。
-
-memo：2025 年 2 月 27 日修改至此。给大家看[一条球友的面经](https://t.zsxq.com/1g4gI)，基本上都是面渣逆袭中常见的八股，所以只要能把面渣中的高频题拿下，面试 OC 的概率真的很大，真心话。
-
-![二哥编程星球的球友：小赢科技 OC了](https://cdn.tobebetterjavaer.com/stutymore/mysql-20250227084922.png)
-
 ### 3.说一下数据库的三大范式？
 
 ![三分恶面渣逆袭：数据库三范式](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-16e74a6b-a42a-464e-9b10-0252ee7ecc6e.jpg)
 
-第一范式，确保表的每一列都是不可分割的基本数据单元，比如说用户地址，应该拆分成省、市、区、详细地址等 4 个字段。
+第一范式，**确保表的每一列都是不可分割的基本数据单元**，比如说用户地址，应该拆分成省、市、区、详细地址等 4 个字段。
 
 ![Ruthless：第一范式](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240418093235.png)
 
-第二范式，要求表中的每一列都和主键直接相关。比如在订单表中，商品名称、单位、商品价格等字段应该拆分到商品表中。
+第二范式，**要求表中的每一列都和主键直接相关**。比如订单要关联商品，所以只需要在订单表中保留商品 id 即可，商品信息，如商品名称、单位、商品价格等字段应该拆分到商品表中。
 
 ![Ruthless：不符合第二范式](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240418093351.png)
 
@@ -198,22 +183,25 @@ memo：2025 年 2 月 27 日修改至此。给大家看[一条球友的面经](h
 
 ![Ruthless：订单商品关联表](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240418093726.png)
 
-第三范式，非主键列应该只依赖于主键列。比如说在设计订单信息表的时候，可以把客户名称、所属公司、联系方式等信息拆分到客户信息表中，然后在订单信息表中用客户编号进行关联。
+第三范式，**非主键列应该只依赖于主键列**。比如说在设计订单信息表的时候，可以把客户名称、所属公司、联系方式等信息拆分到客户信息表中，然后在订单信息表中用客户编号进行关联。
 
 ![Ruthless：第三范式](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240418094332.png)
 
 #### 建表的时候需要考虑哪些问题？
 
+1. 尽量选择 utf8mb4 字符集（utf8mb4 既支持中英文，又支持表情符号等）；
+2. 尽量选择合适的数据类型；
+3. 尽量满足三大范式；
+4. 尽量不要使用外键，尽量减少表与表之间的关联；
+5. 建立合适的索引；
+
 首先需要考虑表是否符合数据库的三大范式，确保字段不可再分，消除非主键依赖，确保字段仅依赖于主键等。
 
 然后在选择字段类型时，应该尽量选择合适的数据类型。
 
-在字符集上，尽量选择 utf8mb4，这样不仅可以支持中文和英文，还可以支持表情符号等。
+在字符集上，尽量选择 utf8mb4 ，这样不仅可以支持中文和英文，还可以支持表情符号等。
 
 当数据量较大时，比如上千万行数据，需要考虑分表。比如订单表，可以采用水平分表的方式来分散单表存储压力。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 13 Java 后端二面面试原题：什么是三大范式，为什么要有三大范式，什么场景下不用遵循三大范式，举一个场景
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 5 Java 后端技术一面面试原题：建表考虑哪些问题
 
 ### 4.varchar 与 char 的区别？
 
@@ -238,21 +226,14 @@ blob 用于存储二进制数据，比如图片、音频、视频、文件等；
 
 text 用于存储文本数据，比如文章、评论、日志等。
 
-> memo：2025 年 2 月 28 日修改至此。今天有球友反馈拿到了理想汽车的补录 offer， 真的恭喜了！
-
-![别问，问就是给的薪资待遇很 ok](https://cdn.tobebetterjavaer.com/stutymore/mysql-20250301165545.png)
-
 ### 6.DATETIME 和 TIMESTAMP 有什么区别？
 
-DATETIME 直接存储日期和时间的完整值，与时区无关。
-
-TIMESTAMP 存储的是 Unix 时间戳，1970-01-01 00:00:01 UTC 以来的秒数，受时区影响。
-
-![三分恶面渣逆袭：DATETIME 和 TIMESTAMP](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-d94e5e1c-2614-4b8b-acdb-efb333032854.jpg)
-
-另外，DATETIME 的默认值为 null，占用 8 个字节；TIMESTAMP 的默认值为当前时间——CURRENT_TIMESTAMP，占 4 个字节，实际开发中更常用，因为可以自动更新。
-
-![二哥的 Java 进阶之路：更新时不用 set 更新时间](https://cdn.tobebetterjavaer.com/stutymore/mysql-20250301170530.png)
+|          | DATETIME            | TIMESTAMP                                       |
+| -------- | ------------------- | ----------------------------------------------- |
+| 存储内容 | 日期和时间的完整值  | Unix 时间戳，1970-01-01 00:00:01 UTC 以来的秒数 |
+| 时区相关 | 无关                | 有关                                            |
+| 默认值   | null，占用 8 个字节 | 为当前时间，，更常用，可自动更新                |
+| 所占空间 | 8 个字节            | 占 4 个字节                                     |
 
 ### 7.in 和 exists 的区别？
 
@@ -281,8 +262,6 @@ WHERE EXISTS (SELECT 1 FROM orders o
 
 `EXISTS`: 对 `NULL` 值的处理更加直接。`EXISTS` 只是检查子查询是否返回行，不关心行的具体值，因此不受 `NULL` 值的影响。
 
-memo：2025 年 3 月 1 日修改至此。
-
 ### 8.记录货币用什么字段类型比较好？
 
 货币在数据库中 MySQL 常用 Decimal 和 Numeric 类型表示，这两种类型被 MySQL 实现为同样的类型。他们被用于保存与货币有关的数据。
@@ -304,8 +283,6 @@ ALTER TABLE mytable CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 MySQL 8.0 已经默认支持 utf8mb4 字符集，可以通过 `SHOW VARIABLES WHERE Variable_name LIKE 'character\_set\_%' OR Variable_name LIKE 'collation%';` 查看。
 
 ![二哥的 Java 进阶之路](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240418103116.png)
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 13 Java 后端二面面试原题：mysql 怎么存 emoji，怎么编码
 
 ### 10.drop、delete 与 truncate 的区别？
 
@@ -338,6 +315,10 @@ MySQL 8.0 已经默认支持 utf8mb4 字符集，可以通过 `SHOW VARIABLES WH
 
 **执行速度**：
 
+有主键： count(主键) > count(1) > count(\*)
+无主键： count(1) > count(\*)
+只有一列： count（\*）最优
+
 - 列名为主键，count(列名)会比 count(1)快
 - 列名不为主键，count(1)会比 count(列名)快
 - 如果表多个列并且没有主键，则 count（1） 的执行效率优于 count（\*）
@@ -366,173 +347,114 @@ MySQL 8.0 已经默认支持 utf8mb4 字符集，可以通过 `SHOW VARIABLES WH
 
 ![](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240313093551.png)
 
-#### 说说数据库操作命令？
+<details class="details custom-block">
 
-①、**创建数据库**:
+<summary>常用命令</summary>
 
 ```sql
+----------------------------------
+-- 操作数据库
+----------------------------------
+-- 创建数据库
 CREATE DATABASE database_name;
-```
 
-②、**删除数据库**:
-
-```sql
+-- 删除数据库
 DROP DATABASE database_name;
-```
 
-③、**选择数据库**:
-
-```sql
+-- 选择数据库
 USE database_name;
-```
 
-#### 说说表操作命令？
-
-①、**创建表**:
-
-```sql
+----------------------------------
+-- 操作表
+----------------------------------
+-- 建表
 CREATE TABLE table_name (
     column1 datatype,
     column2 datatype,
     ...
 );
-```
 
-②、**删除表**:
-
-```sql
+-- 删表
 DROP TABLE table_name;
-```
 
-③、**显示所有表**:
-
-```sql
+-- 显示所有表
 SHOW TABLES;
-```
 
-④、**查看表结构**:
-
-```sql
+-- 查看表结构
 DESCRIBE table_name;
-```
 
-⑤、**修改表**（添加列）:
-
-```sql
+-- 修改表结构： 添加列
 ALTER TABLE table_name ADD column_name datatype;
-```
 
-#### 说说 CRUD 命令？
-
-①、**插入数据**:
-
-```sql
+----------------------------------
+-- 数据操作
+----------------------------------
+-- 插入
 INSERT INTO table_name (column1, column2, ...) VALUES (value1, value2, ...);
-```
 
-②、**查询数据**:
-
-```sql
+-- 查询
 SELECT column_names FROM table_name WHERE condition;
-```
 
-③、**更新数据**:
-
-```sql
+-- 更新
 UPDATE table_name SET column1 = value1, column2 = value2 WHERE condition;
-```
 
-④、**删除数据**:
-
-```sql
+-- 删除
 DELETE FROM table_name WHERE condition;
-```
 
-#### 说说索引和约束的创建修改命令？
-
-①、**创建索引**:
-
-```sql
+----------------------------------
+-- 索引和约束
+----------------------------------
+-- 创建索引
 CREATE INDEX index_name ON table_name (column_name);
-```
 
-②、**添加主键约束**:
-
-```sql
+-- 添加主键约束
 ALTER TABLE table_name ADD PRIMARY KEY (column_name);
-```
 
-③、**添加外键约束**:
-
-```sql
+-- 添加外键约束
 ALTER TABLE table_name ADD CONSTRAINT fk_name FOREIGN KEY (column_name) REFERENCES parent_table (parent_column_name);
-```
 
-#### 说说用户和权限管理的命令？
-
-①、**创建用户**:
-
-```sql
+----------------------------------
+-- 用户和权限管理
+----------------------------------
+-- 创建用户
 CREATE USER 'username'@'host' IDENTIFIED BY 'password';
-```
 
-②、**授予权限**:
-
-```sql
-GRANT ALL PRIVILEGES ON database_name.table_name TO 'username'@'host';
-```
-
-③、**撤销权限**:
-
-```sql
-REVOKE ALL PRIVILEGES ON database_name.table_name FROM 'username'@'host';
-```
-
-④、**删除用户**:
-
-```sql
+-- 删除用户
 DROP USER 'username'@'host';
-```
 
-#### 说说事务控制的命令？
+-- 给用户授予权限
+GRANT ALL PRIVILEGES ON database_name.table_name TO 'username'@'host';
 
-①、**开始事务**:
+-- 撤销用户权限
+REVOKE ALL PRIVILEGES ON database_name.table_name FROM 'username'@'host';
 
-```sql
+----------------------------------
+-- 事务管理
+----------------------------------
+-- 开始一个事务
 START TRANSACTION;
-```
 
-②、**提交事务**:
-
-```sql
+-- 提交一个事务
 COMMIT;
-```
 
-③、**回滚事务**:
-
-```sql
+-- 回滚
 ROLLBACK;
+
 ```
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的用友金融一面原题：介绍一下 MySQL 的常用命令
+</details>
 
 ### 15.MySQL bin 目录下的可执行文件了解吗（补充）
 
-> 2024 年 03 月 13 日增补
-
-推荐阅读：[MySQL bin 目录下的一些可执行文件](https://javabetter.cn/mysql/bin.html)
-
-- mysql：客户端程序，用于连接 MySQL 服务器
-- mysqldump：一个非常实用的 MySQL 数据库备份工具，用于创建一个或多个 MySQL 数据库级别的 SQL 转储文件，包括数据库的表结构和数据。对数据备份、迁移或恢复非常重要。
-- mysqladmin：mysql 后面加上 admin 就表明这是一个 MySQL 的管理工具，它可以用来执行一些管理操作，比如说创建数据库、删除数据库、查看 MySQL 服务器的状态等。
-- mysqlcheck：mysqlcheck 是 MySQL 提供的一个命令行工具，用于检查、修复、分析和优化数据库表，对数据库的维护和性能优化非常有用。
-- mysqlimport：用于从文本文件中导入数据到数据库表中，非常适合用于批量导入数据。
-- mysqlshow：用于显示 MySQL 数据库服务器中的数据库、表、列等信息。
-- mysqlbinlog：用于查看 MySQL 二进制日志文件的内容，可以用于恢复数据、查看数据变更等。
+- mysql ：客户端程序，用于连接 MySQL 服务器
+- mysqldump ：一个非常实用的 MySQL 数据库备份工具，用于创建一个或多个 MySQL 数据库级别的 SQL 转储文件，包括数据库的表结构和数据。对数据备份、迁移或恢复非常重要。
+- mysqladmin ：mysql 后面加上 admin 就表明这是一个 MySQL 的管理工具，它可以用来执行一些管理操作，比如说创建数据库、删除数据库、查看 MySQL 服务器的状态等。
+- mysqlcheck ：mysqlcheck 是 MySQL 提供的一个命令行工具，用于检查、修复、分析和优化数据库表，对数据库的维护和性能优化非常有用。
+- mysqlimport ：用于从文本文件中导入数据到数据库表中，非常适合用于批量导入数据。
+- mysqlshow ：用于显示 MySQL 数据库服务器中的数据库、表、列等信息。
+- mysqlbinlog ：用于查看 MySQL 二进制日志文件的内容，可以用于恢复数据、查看数据变更等。
 
 ### 16.MySQL 第 3-10 条记录怎么查？（补充）
-
-> 2024 年 03 月 30 日增补
 
 在 MySQL 中，要查询第 3 到第 10 条记录，可以使用 limit 语句，结合偏移量 offset 和行数 row_count 来实现。
 
@@ -542,27 +464,27 @@ limit 语句用于限制查询结果的数量，偏移量表示从哪条记录�
 SELECT * FROM table_name LIMIT 2, 8;
 ```
 
-- 2：偏移量，表示跳过前两条记录，从第三条记录开始。
-- 8：行数，表示从偏移量开始，返回 8 条记录。
+- 2 ：偏移量，表示跳过前两条记录，从第三条记录开始。
+- 8 ：行数，表示从偏移量开始，返回 8 条记录。
 
 偏移量是从 0 开始的，即第一条记录的偏移量是 0；如果想从第 3 条记录开始，偏移量就应该是 2。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 16 暑期实习一面面试原题：MySQL 第 3-10 条记录怎么查？
-
 ### 17.用过哪些 MySQL 函数？（补充）
 
-> 2024 年 04 月 12 日增补
-
-MySQL 支持很多内置函数，包括执行计算、格式转换、日期处理等。我说一些自己常用的（~~挑一些自己熟悉的~~）。
+MySQL 支持很多内置函数，包括执行计算、格式转换、日期处理等。
 
 #### 用过哪些字符串函数来处理文本？
 
-- `CONCAT()`: 连接两个或多个字符串。
-- `LENGTH()`: 返回字符串的长度。
-- `SUBSTRING()`: 从字符串中提取子字符串。
-- `REPLACE()`: 替换字符串中的某部分。
-- `LOWER()` 和 `UPPER()`: 分别将字符串转换为小写或大写。
-- `TRIM()`: 去除字符串两侧的空格或其他指定字符。
+<details class="details custom-block">
+
+<summary>实验示例</summary>
+
+- `CONCAT()` : 连接两个或多个字符串。
+- `LENGTH()` : 返回字符串的长度。
+- `SUBSTRING()` : 从字符串中提取子字符串。
+- `REPLACE()` : 替换字符串中的某部分。
+- `LOWER()` 和 `UPPER()` : 分别将字符串转换为小写或大写。
+- `TRIM()` : 去除字符串两侧的空格或其他指定字符。
 
 ```sql
 -- 连接字符串
@@ -587,13 +509,19 @@ SELECT UPPER('hello world') AS upper_case;
 SELECT TRIM('  沉默 王二  ') AS trimmed_string;
 ```
 
+</details>
+
 #### 用过哪些数值函数？
 
-- `ABS()`: 返回一个数的绝对值。
-- `CEILING()`: 返回大于或等于给定数值的最小整数。
-- `FLOOR()`: 返回小于或等于给定数值的最大整数。
-- `ROUND()`: 四舍五入到指定的小数位数。
-- `MOD()`: 返回除法操作的余数。
+- `ABS()` : 返回一个数的绝对值。
+- `CEILING()` : 返回大于或等于给定数值的最小整数。
+- `FLOOR()` : 返回小于或等于给定数值的最大整数。
+- `ROUND()` : 四舍五入到指定的小数位数。
+- `MOD()` : 返回除法操作的余数。
+
+<details class="details custom-block">
+
+<summary>示例</summary>
 
 ```sql
 -- 返回绝对值
@@ -612,7 +540,11 @@ SELECT ROUND(123.4567, 2) AS rounded_value;
 SELECT MOD(10, 3) AS modulus;
 ```
 
+</details>
+
 #### 用过哪些日期和时间函数？
+
+<details class="details custom-block">
 
 - `NOW()`: 返回当前的日期和时间。
 - `CURDATE()`: 返回当前的日期。
@@ -620,6 +552,8 @@ SELECT MOD(10, 3) AS modulus;
 - `DATE_ADD()` 和 `DATE_SUB()`: 在日期上加上或减去指定的时间间隔。
 - `DATEDIFF()`: 返回两个日期之间的天数。
 - `DAY()`, `MONTH()`, `YEAR()`: 分别返回日期的日、月、年部分。
+
+<summary>示例</summary>
 
 ```sql
 -- 返回当前日期和时间
@@ -641,13 +575,19 @@ SELECT DATEDIFF('2024-12-31', '2024-01-01') AS days_difference;
 SELECT YEAR(CURDATE()) AS current_year;
 ```
 
+</details>
+
 #### 用过哪些汇总函数？
 
-- `SUM()`: 计算数值列的总和。
-- `AVG()`: 计算数值列的平均值。
-- `COUNT()`: 计算某列的行数。
-- `MAX()` 和 `MIN()`: 分别返回列中的最大值和最小值。
-- `GROUP_CONCAT()`: 将多个行值连接为一个字符串。
+- `SUM()` : 计算数值列的总和。
+- `AVG()` : 计算数值列的平均值。
+- `COUNT()` : 计算某列的行数。
+- `MAX()` 和 `MIN()` : 分别返回列中的最大值和最小值。
+- `GROUP_CONCAT()` : 将多个行值连接为一个字符串。
+
+<details class="details custom-block">
+
+<summary>示例</summary>
 
 ```sql
 -- 创建一个表并插入数据进行聚合查询
@@ -673,11 +613,17 @@ SELECT COUNT(*) AS total_entries FROM sales;
 SELECT MAX(sales_amount) AS max_sale, MIN(sales_amount) AS min_sale FROM sales;
 ```
 
+</details>
+
 #### 用过哪些逻辑函数？
 
-- `IF()`: 如果条件为真，则返回一个值；否则返回另一个值。
-- `CASE`: 根据一系列条件返回值。
-- `COALESCE()`: 返回参数列表中的第一个非 NULL 值。
+- `IF()` : 如果条件为真，则返回一个值；否则返回另一个值。
+- `CASE` : 根据一系列条件返回值。
+- `COALESCE()` : 返回参数列表中的第一个非 NULL 值。
+
+<details class="details custom-block">
+
+<summary>示例</summary>
 
 ```sql
 -- IF函数
@@ -690,21 +636,22 @@ SELECT CASE WHEN 1 > 0 THEN 'True' ELSE 'False' END AS case_expression;
 SELECT COALESCE(NULL, NULL, 'First Non-Null Value', 'Second Non-Null Value') AS first_non_null;
 ```
 
-#### 用过哪些格式化函数？
+</details>
 
-- `FORMAT()`: 格式化数字为格式化的字符串，通常用于货币显示。
+#### 其它
+
+- `FORMAT()` : 格式化数字为格式化的字符串，通常用于货币显示。
+- `CAST()` : 将一个值转换为指定的数据类型。
+- `CONVERT()` : 类似于`CAST()`，用于类型转换。
+
+<details class="details custom-block">
+
+<summary>示例</summary>
 
 ```sql
 -- 格式化数字
 SELECT FORMAT(1234567.8945, 2) AS formatted_number;
-```
 
-#### 用过哪些类型转换函数？
-
-- `CAST()`: 将一个值转换为指定的数据类型。
-- `CONVERT()`: 类似于`CAST()`，用于类型转换。
-
-```sql
 -- CAST函数
 SELECT CAST('2024-01-01' AS DATE) AS casted_date;
 
@@ -712,14 +659,11 @@ SELECT CAST('2024-01-01' AS DATE) AS casted_date;
 SELECT CONVERT('123', SIGNED INTEGER) AS converted_number;
 ```
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为 OD 面经同学 1 一面面试原题：用过哪些 MySQL 函数？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 小公司面经合集好未来测开面经同学 3 测开一面面试原题：知道 MySQL 的哪些函数，如 order by count()
+</details>
 
 ### 18.说说 SQL 的隐式数据类型转换？（补充）
 
-> 2024 年 04 月 25 日增补
-
-在 SQL 中，当不同数据类型的值进行运算或比较时，会发生隐式数据类型转换。
+在 SQL 中，当不同数据类型的值进行**运算或比较**时，会发生隐式数据类型转换。
 
 比如说，当一个整数和一个浮点数相加时，整数会被转换为浮点数，然后再进行相加。
 
@@ -733,9 +677,7 @@ SELECT 1 + 1.0; -- 结果为 2.0
 SELECT '1' + 1; -- 结果为 2
 ```
 
-数据类型隐式转换会导致意想不到的结果，所以要尽量避免隐式转换。
-
-![二哥的 Java 进阶之路](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240425111246.png)
+数据类型隐式转换会导致意想不到的结果，所以**要尽量避免隐式转换**。
 
 可以通过显式转换来规避这种情况。
 
@@ -743,11 +685,9 @@ SELECT '1' + 1; -- 结果为 2
 SELECT CAST('1' AS SIGNED INTEGER) + 1; -- 结果为 2
 ```
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小公司面经合集同学 1 Java 后端面试原题：说说 SQL 的隐式数据类型转换？
+> 生产实践时，应尽量避免执行函数运算，一般情况下，都是映射成 JavaBean 之后，进行运算。
 
 ### 19. 说说 SQL 的语法树解析？（补充）
-
-> 2024 年 09 月 19 日增补
 
 语法树（或抽象语法树，AST）是 SQL 解析过程中的中间表示，它使用树形结构表示 SQL 语句的层次和逻辑。语法树由节点（Node）组成，每个节点表示 SQL 语句中的一个语法元素。
 
@@ -784,8 +724,6 @@ SELECT name, age FROM users WHERE age > 18;
 
 条件节点：WHERE 子树表示查询条件，包含条件表达式 `age > 18`。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 21 抖音商城一面面试原题：sql 的语法树解析
-
 ## 数据库架构
 
 ### 20.说说 MySQL 的基础架构？
@@ -794,41 +732,28 @@ MySQL 的架构大致可以分为三层，从上到下依次是：连接层、�
 
 ![三分恶面渣逆袭：Redis 的基础架构](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-77626fdb-d2b0-4256-a483-d1c60e68d8ec.jpg)
 
-①、连接层主要负责客户端连接的管理，包括验证用户身份、权限校验、连接管理等。可以通过数据库连接池来提升连接的处理效率。
+①、**连接层**主要负责客户端连接的管理，包括验证用户身份、权限校验、连接管理等。生产实践时，大多采用连接池的方式来提高性能。
 
-②、服务层是 MySQL 的核心，主要负责查询解析、优化、执行等操作。在这一层，SQL 语句会经过解析、优化器优化，然后转发到存储引擎执行，并返回结果。这一层包含查询解析器、优化器、执行计划生成器、缓存（如查询缓存）、日志模块等。
+②、**服务层**是 MySQL 的核心，主要负责查询解析、优化、执行等操作。在这一层，SQL 语句会经过解析、优化器优化，然后转发到存储引擎执行，并返回结果。这一层包含查询解析器、优化器、执行计划生成器、缓存（如查询缓存）、日志模块等。
 
-③、存储引擎层负责数据的实际存储和提取，是 MySQL 架构中与数据交互最直接的层。MySQL 支持多种存储引擎，如 InnoDB、MyISAM、Memory 等。
+③、**存储引擎层**负责数据的实际存储和提取，是 MySQL 架构中与数据交互最直接的层。MySQL 支持多种存储引擎，如 InnoDB 、MyISAM 、Memory 等。
 
 #### binlog 写入在哪一层？
 
 binlog 在服务层，负责记录 SQL 语句的变化。它记录了所有对数据库进行更改的操作，用于数据恢复、主从复制等。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 21 抖音商城一面面试原题：mysql 分为几层？binlog 写入在哪一层
-
 ### 21.一条查询语句如何执行？
 
 ![二哥的 Java 进阶之路：SQL 执行](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240415102041.png)
 
-第一步，客户端发送 SQL 查询语句到 MySQL 服务器。
-
-第二步，MySQL 服务器的连接器开始处理这个请求，跟客户端建立连接、获取权限、管理连接。
-
-~~第三步（MySQL 8.0 以后已经干掉了），连接建立后，MySQL 服务器的查询缓存组件会检查是否有缓存的查询结果。如果有，直接返回给客户端；如果没有，进入下一步~~。
-
-第三步，解析器对 SQL 语句进行解析，检查语句是否符合 SQL 语法规则，确保引用的数据库、表和列都是存在的，并处理 SQL 语句中的名称解析和权限验证。
-
-第四步，优化器负责确定 SQL 语句的执行计划，这包括选择使用哪些索引，以及决定表之间的连接顺序等。
-
-第五步，执行器会调用存储引擎的 API 来进行数据的读写。
-
-第六步，MySQL 的存储引擎是插件式的，不同的存储引擎在细节上面有很大不同。例如，InnoDB 是支持事务的，而 MyISAM 是不支持的。之后，会将执行结果返回给客户端
-
-第七步，客户端接收到查询结果，完成这次查询请求。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 2 Java 后端技术一面面试原题：MySQL 执行语句的整个过程了解吗？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 18 成都到家面试原题：mysql 一条数据的查询过程
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 19 番茄小说一面面试原题：MySQL 中一条 SQL 的执行流程
+1. 第一步，客户端发送 SQL 查询语句到 MySQL 服务器。
+2. 第二步，MySQL 服务器的连接器开始处理这个请求，跟客户端建立连接、获取权限、管理连接。
+3. ~~第三步（MySQL 8.0 以后已经干掉了），连接建立后，MySQL 服务器的查询缓存组件会检查是否有缓存的查询结果。如果有，直接返回给客户端；如果没有，进入下一步~~。
+4. 第三步，解析器对 SQL 语句进行解析，检查语句是否符合 SQL 语法规则，确保引用的数据库、表和列都是存在的，并处理 SQL 语句中的名称解析和权限验证。
+5. 第四步，优化器负责确定 SQL 语句的执行计划，这包括选择使用哪些索引，以及决定表之间的连接顺序等。
+6. 第五步，执行器会调用存储引擎的 API 来进行数据的读写。
+7. 第六步，MySQL 的存储引擎是可插拔式的，不同的存储引擎在细节上面有很大不同。例如，InnoDB 是支持事务的，而 MyISAM 是不支持的。之后，会将执行结果返回给客户端。
+8. 第七步，客户端接收到查询结果，完成这次查询请求。
 
 ### 22.一条更新语句怎么执行的？
 
@@ -836,21 +761,17 @@ binlog 在服务层，负责记录 SQL 语句的变化。它记录了所有对�
 
 ![update 执行](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-812fb038-39de-4204-ac9f-93d8b7448a18.jpg)
 
-1.  执行器先找引擎获取 ID=2 这一行。ID 是主键，存储引擎检索数据，找到这一行。如果 ID=2 这一行所在的数据页本来就在内存中，就直接返回给执行器；否则，需要先从磁盘读入内存，然后再返回。
-2.  执行器拿到引擎给的行数据，把这个值加上 1，比如原来是 N，现在就是 N+1，得到新的一行数据，再调用引擎接口写入这行新数据。
-3.  引擎将这行新数据更新到内存中，同时将这个更新操作记录到 redo log 里面，此时 redo log 处于 prepare 状态。然后告知执行器执行完成了，随时可以提交事务。
-4.  执行器生成这个操作的 binlog，并把 binlog 写入磁盘。
-5.  执行器调用引擎的提交事务接口，引擎把刚刚写入的 redo log 改成提交（commit）状态，更新完成。
+1. 执行器先找引擎获取 ID=2 这一行。ID 是主键，存储引擎检索数据，找到这一行。如果 ID=2 这一行所在的数据页本来就在内存中，就直接返回给执行器；否则，需要先从磁盘读入内存，然后再返回。
+2. 执行器拿到引擎给的行数据，把这个值加上 1，比如原来是 N，现在就是 N+1，得到新的一行数据，再调用引擎接口写入这行新数据。
+3. 引擎将这行新数据更新到内存中，同时将这个更新操作记录到 redolog 里面，此时 redolog 处于 prepare 状态。然后告知执行器执行完成了，随时可以提交事务。
+4. 执行器生成这个操作的 binlog，并把 binlog 写入磁盘。
+5. 执行器调用引擎的提交事务接口，引擎把刚刚写入的 redolog 改成提交（commit）状态，更新完成。
 
-从上图可以看出，MySQL 在执行更新语句的时候，在服务层进行语句的解析和执行，在引擎层进行数据的提取和存储；同时在服务层对 binlog 进行写入，在 InnoDB 内进行 redo log 的写入。
+从上图可以看出，MySQL 在执行更新语句的时候，在服务层进行语句的解析和执行，在引擎层进行数据的提取和存储；同时在服务层对 binlog 进行写入，在 InnoDB 内进行 redolog 的写入。
 
-不仅如此，在对 redo log 写入时有两个阶段的提交，一是 binlog 写入之前`prepare`状态的写入，二是 binlog 写入之后`commit`状态的写入。
+不仅如此，在对 redolog 写入时有两个阶段的提交，一是 binlog 写入之前`prepare`状态的写入，二是 binlog 写入之后`commit`状态的写入。
 
 ### 23.说说 MySQL 的数据存储形式（补充）
-
-> 2024 年 04 月 26 日增补
-
-推荐阅读：[了解 MySQL 的数据行、行溢出机制吗？](https://www.cnblogs.com/ZhuChangwu/p/14035330.html)
 
 MySQL 是以表的形式存储数据的，而表空间的结构则由段、区、页、行组成。
 
@@ -870,41 +791,37 @@ MySQL 是以表的形式存储数据的，而表空间的结构则由段、区�
 
 也就意味着数据库每次读写都是以 16 KB 为单位的，一次最少从磁盘中读取 16KB 的数据到内存，一次最少写入 16KB 的数据到磁盘。
 
-④、行（Row）：InnoDB 采用行存储方式，意味着数据按照行进行组织和管理，行数据可能有多个格式，比如说 COMPACT、REDUNDANT、DYNAMIC 等。
+④、行（Row）：InnoDB 采用行存储方式，意味着数据按照行进行组织和管理，行数据可能有多个格式，比如说 COMPACT 、REDUNDANT 、DYNAMIC 等。
 
-MySQL 8.0 默认的行格式是 DYNAMIC，由 COMPACT 演变而来，意味着这些数据如果超过了页内联存储的限制，则会被存储在溢出页中。
+MySQL 8.0 默认的行格式是 DYNAMIC ，由 COMPACT 演变而来，意味着这些数据如果超过了页内联存储的限制，则会被存储在溢出页中。
 
-可以通过 `show table status like '%article%'` 查看行格式。
+可以通过 `show table status like '%table_name%'` 查看行格式。
 
-![二哥的 Java 进阶之路：行格式](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240515123301.png)
+// TODO 三种行数据格式的区别。
 
 ## 存储引擎
 
 ### 24.MySQL 有哪些常见存储引擎？
 
-MySQL 支持多种存储引擎，常见的有 MyISAM、InnoDB、MEMORY 等。
+MySQL 支持多种存储引擎，常见的有 MyISAM 、InnoDB 、MEMORY 等。
 
-![存储引擎](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240408073338.png)
-
-我来做一个表格对比：
-
-| 功能          | InnoDB | MyISAM | MEMORY |
-| ------------- | ------ | ------ | ------ |
-| 支持事务      | Yes    | No     | No     |
-| 支持全文索引  | Yes    | Yes    | No     |
-| 支持 B+树索引 | Yes    | Yes    | Yes    |
-| 支持哈希索引  | Yes    | No     | Yes    |
-| 支持外键      | Yes    | No     | No     |
+| 功能           | InnoDB | MyISAM | MEMORY |
+| -------------- | ------ | ------ | ------ |
+| 支持事务       | Yes    | No     | No     |
+| 支持全文索引   | Yes    | Yes    | No     |
+| 支持 B+ 树索引 | Yes    | Yes    | Yes    |
+| 支持哈希索引   | Yes    | No     | Yes    |
+| 支持外键       | Yes    | No     | No     |
 
 除此之外，我还了解到：
 
-①、MySQL 5.5 之前，默认存储引擎是 MyISAM，5.5 之后是 InnoDB。
+①、MySQL 5.5 之前，默认存储引擎是 MyISAM ，5.5 之后是 InnoDB。
 
 ②、InnoDB 支持的哈希索引是自适应的，不能人为干预。
 
 ③、InnoDB 从 MySQL 5.6 开始，支持全文索引。
 
-④、InnoDB 的最小表空间略小于 10M，最大表空间取决于页面大小（page size）。
+④、InnoDB 的最小表空间略小于 10M ，最大表空间取决于页面大小（page size）。
 
 ![MySQL 官网：innodb-limits.html](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240408074630.png)
 
@@ -918,19 +835,11 @@ ALTER TABLE your_table_name ENGINE=InnoDB;
 
 不过不建议，应该提前设计好到底用哪一种存储引擎。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 1 Java 后端技术一面面试原题：MySQL 支持哪些存储引擎?
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的用友面试原题：innodb 引擎和 hash 引擎有什么区别
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的国企零碎面经同学 9 面试原题：MySQL 的存储引擎
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东同学 4 云实习面试原题：mysql 的数据引擎有哪些, 区别(innodb,MyISAM,Memory)
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的阿里系面经同学 19 饿了么面试原题：存储引擎介绍
-
 ### 25.那存储引擎应该怎么选择？
 
 - 大多数情况下，使用默认的 InnoDB 就对了，InnoDB 可以提供事务、行级锁、外键、B+ 树索引等能力。
-- MyISAM 适合读更多的场景。
-- MEMORY 适合临时表，数据量不大的情况。由于数据都存放在内存，所以速度非常快。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手同学 2 一面面试原题：MySQL 的 InnoDB 特点？为什么用 B+树？而不是 B 树，区别？
+- MyISAM 适合**读更多**的场景。
+- MEMORY 适合**临时表，数据量不大**的情况。由于数据都存放在内存，所以速度非常快。
 
 ### 26.InnoDB 和 MyISAM 主要有什么区别？
 
@@ -940,18 +849,18 @@ InnoDB 和 MyISAM 之间的区别主要表现在存储结构、事务支持、�
 
 **①、存储结构**：
 
-- MyISAM：用三种格式的文件来存储，.frm 文件存储表的定义；.MYD 存储数据；.MYI 存储索引。
-- InnoDB：用两种格式的文件来存储，.frm 文件存储表的定义；.ibd 存储数据和索引。
+- MyISAM ：用三种格式的文件来存储，.frm 文件存储表的定义；.MYD 存储数据；.MYI 存储索引。
+- InnoDB ：用两种格式的文件来存储，.frm 文件存储表的定义；.ibd 存储数据和索引。
 
 **②、事务支持**：
 
-- MyISAM：不支持事务。
-- InnoDB：支持事务。
+- MyISAM ：不支持事务。
+- InnoDB ：支持事务。
 
 **③、最小锁粒度**：
 
-- MyISAM：表级锁，高并发中写操作存在性能瓶颈。
-- InnoDB：行级锁，并发写入性能高。
+- MyISAM ： 表级锁，高并发中写操作存在性能瓶颈。
+- InnoDB ： 行级锁，并发写入性能高。
 
 **④、索引类型**：
 
@@ -963,20 +872,15 @@ InnoDB 为聚簇索引，索引和数据不分开。
 
 ![yangh124：InnoDB](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240403130508.png)
 
-**⑤、外键支持**：MyISAM 不支持外键；InnoDB 支持外键。
+**⑤、外键支持** ： MyISAM 不支持外键；InnoDB 支持外键。
 
-**⑥、主键必需**：MyISAM 表可以没有主键；InnoDB 表必须有主键。
+**⑥、主键必需** ： MyISAM 表可以没有主键；InnoDB 表必须有主键。
 
-**⑦、表的具体行数**：MyISAM 表的具体行数存储在表的属性中，查询时直接返回；InnoDB 表的具体行数需要扫描整个表才能返回。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 1 Java 后端技术一面面试原题：MyISAM 和 InnoDB 的区别有哪些？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团同学 9 一面面试原题：mysql 存储的数据都是什么样的？
+**⑦、表的具体行数** ： MyISAM 表的具体行数存储在表的属性中，查询时直接返回；InnoDB 表的具体行数需要扫描整个表才能返回。
 
 ### 27. InnoDB 的 Buffer Pool 了解吗？（补充）
 
-> 2024 年 11 月 04 日增补
-
-Buffer Pool 是 InnoDB 存储引擎中的一个内存缓冲区，它会将数据以页（page）的单位保存在内存中，当查询请求需要读取数据时，优先从 Buffer Pool 获取数据，避免直接访问磁盘。
+Buffer Pool 是 InnoDB 存储引擎中的一个内存缓冲区，它会将数据以页（page）为单位保存在内存中，当查询请求需要读取数据时，优先从 Buffer Pool 获取数据，避免直接访问磁盘。
 
 ![图片来源于网络](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241104200915.png)
 
@@ -986,15 +890,13 @@ Buffer Pool 是 InnoDB 存储引擎中的一个内存缓冲区，它会将数据
 
 脏页不会立刻写回到磁盘。
 
-InnoDB 会定期将这些脏页刷新到磁盘，保证数据的一致性。通常采用改良的 LRU 算法来管理缓存页，也就是将最近最少使用的数据移出缓存，为新数据腾出空间。
+InnoDB 会定期将这些脏页刷新到磁盘，保证数据的一致性。通常采用改良的 LRU 算法来管理缓存页，也就是将**最近最少使用**的数据移出缓存，为新数据腾出空间。
 
 ![极客时间：改良的 LRU 算法](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241104202752.png)
 
 Buffer Pool 能够显著减少对磁盘的访问，从而提升数据库的读写性能。
 
-在调优方面，我们可以设置合理的 Buffer Pool 大小（通常为物理内存的 70%），并配置多个 Buffer Pool 实例（通过 innodb_buffer_pool_instances）来提升并发能力。此外，还可以通过调整刷新策略参数，比如 innodb_flush_log_at_trx_commit，来平衡性能和数据持久性。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 15 点评后端技术面试原题：bufferpool
+在调优方面，我们可以设置合理的 Buffer Pool 大小（通常为物理内存的 70%），并配置多个 Buffer Pool 实例（通过 innodb_buffer_pool_instances ）来提升并发能力。此外，还可以通过调整刷新策略参数，比如 innodb_flush_log_at_trx_commit ，来平衡性能和数据持久性。
 
 ## 日志
 
@@ -1004,21 +906,19 @@ Buffer Pool 能够显著减少对磁盘的访问，从而提升数据库的读�
 
 MySQL 的日志文件主要包括：
 
-①、**错误日志**（Error Log）：记录 MySQL 服务器启动、运行或停止时出现的问题。
+①、**错误日志**（Error Log） ： 记录 MySQL 服务器启动、运行或停止时出现的问题。
 
-②、**慢查询日志**（Slow Query Log）：记录执行时间超过 long_query_time 值的所有 SQL 语句。这个时间值是可配置的，默认情况下，慢查询日志功能是关闭的。可以用来识别和优化慢 SQL。
+②、**慢查询日志**（Slow Query Log） ： 记录执行时间超过 long_query_time 值的所有 SQL 语句。这个时间值是可配置的，默认情况下，慢查询日志功能是关闭的。可以用来识别和优化慢 SQL。
 
-③、**一般查询日志**（General Query Log）：记录所有 MySQL 服务器的连接信息及所有的 SQL 语句，不论这些语句是否修改了数据。
+③、**一般查询日志**（General Query Log） ： 记录所有 MySQL 服务器的连接信息及所有的 SQL 语句，不论这些语句是否修改了数据。
 
-④、**二进制日志**（Binary Log）：记录了所有修改数据库状态的 SQL 语句，以及每个语句的执行时间，如 INSERT、UPDATE、DELETE 等，但不包括 SELECT 和 SHOW 这类的操作。
+④、**二进制日志**（Binary Log）：记录了所有修改数据库状态的 SQL 语句，以及每个语句的执行时间，如 INSERT 、UPDATE 、DELETE 等，但不包括 SELECT 和 SHOW 这类的操作。
 
-⑤、**重做日志**（Redo Log）：记录了对于 InnoDB 表的每个写操作，不是 SQL 级别的，而是物理级别的，主要用于崩溃恢复。
+⑤、**重做日志**（redolog） ： 记录了对于 InnoDB 表的每个写操作，不是 SQL 级别的，而是物理级别的，主要用于崩溃恢复。
 
-⑥、**回滚日志**（Undo Log，或者叫事务日志）：记录数据被修改前的值，用于事务的回滚。
+⑥、**回滚日志**（undolog，或者叫事务日志） ： 记录数据被修改前的值，用于事务的回滚。
 
 #### 请重点说说 binlog？
-
-推荐阅读：[带你了解 MySQL Binlog 不为人知的秘密](https://www.cnblogs.com/rickiyang/p/13841811.html)
 
 binlog 是一种物理日志，会在磁盘上记录下数据库的所有修改操作，以便进行数据恢复和主从复制。
 
@@ -1032,7 +932,7 @@ binlog 包括两类文件：
 
 binlog 默认是没有启用的。要启用它，需要在 MySQL 的配置文件（my.cnf 或 my.ini）中设置 log_bin 参数。
 
-```
+```txt
 log_bin = mysql-bin #开启binlog
 
 #mysql-bin.*日志文件最大字节（单位：字节）
@@ -1076,9 +976,9 @@ sync_binlog=0
 
 ⑥、`sync_binlog=0`
 
-这条配置设置了每多少次 binlog 写操作会触发一次磁盘同步操作。默认值 0 表示 MySQL 不会主动触发同步操作，而是依赖操作系统的磁盘缓存策略。
+这条配置设置了每多少次 binlog 写操作会触发一次磁盘同步操作。
 
-即当执行写操作时，数据会先写入操作系统的缓存，当缓存区满了再由操作系统将数据写入磁盘。
+默认值 0 表示 MySQL 不会主动触发同步操作，而是依赖操作系统的磁盘缓存策略。即当执行写操作时，数据会先写入操作系统的缓存，当缓存区满了再由操作系统将数据写入磁盘。
 
 设置为 1 意味着每次 binlog 写操作后都会同步到磁盘，这可以提高数据安全性，但可能会对性能产生影响。
 
@@ -1088,77 +988,71 @@ sync_binlog=0
 
 #### 有了 binlog 为什么还要 undolog redolog？
 
-binlog 主要用于数据恢复和主从复制。它记录了所有对数据库执行的修改操作（如 INSERT、UPDATE、DELETE），以逻辑日志的形式保存。binlog 是 MySQL Server 层提供的日志，独立于存储引擎。
+binlog 主要用于数据恢复和主从复制。它记录了所有对数据库执行的修改操作（如 INSERT 、UPDATE 、DELETE ），以逻辑日志的形式保存。binlog 是 MySQL Server 层提供的日志，独立于存储引擎。
 
-redo log 主要用于数据持久化和崩溃恢复。redo log 是 InnoDB 存储引擎特有的日志，用于记录数据的物理修改，确保数据库在崩溃或异常宕机后能够恢复到一致状态。
+redolog 主要用于数据持久化和崩溃恢复。**redolog 是 InnoDB 存储引擎特有的日志**，用于记录数据的物理修改，确保数据库在崩溃或异常宕机后能够恢复到一致状态。
 
-undo log 主要用于支持事务回滚和多版本并发控制（MVCC）。undo log 是 InnoDB 存储引擎提供的逻辑日志，用于记录数据的逻辑操作，如删除、更新前的数据快照。
+undolog 主要用于支持事务回滚和多版本并发控制（MVCC）。**undolog 是 InnoDB 存储引擎提供的逻辑日志**，用于记录数据的逻辑操作，如删除、更新前的数据快照。
 
-当一个事务在 MySQL 中执行时，redo log、undo log 和 binlog 共同协作以确保数据的可靠性和一致性：
+当一个事务在 MySQL 中执行时，redolog、undolog 和 binlog 共同协作以确保数据的可靠性和一致性：
 
-1. 事务启动时，undo log 开始记录修改前的数据快照，以便在发生错误或显式回滚时恢复数据。
-2. 数据被修改时，InnoDB 会将修改记录到 redo log 中，同时也会生成相应的 undo log。
-3. 事务提交时，InnoDB 首先将 redo log 刷入磁盘，然后再将整个事务的操作记录到 binlog 中。这一过程称为“两阶段提交”，确保 binlog 和 redo log 的一致性。
-4. 如果数据库发生崩溃，InnoDB 会使用 redo log 进行恢复，确保数据不会丢失。binlog 则可以用来做主从复制或数据恢复到特定时间点。
+1. 事务启动时，undolog 开始记录修改前的数据快照，以便在发生错误或显式回滚时恢复数据。
+2. 数据被修改时，InnoDB 会将修改记录到 redolog 中，同时也会生成相应的 undolog 。
+3. 事务提交时，InnoDB 首先将 redolog 刷入磁盘，然后再将整个事务的操作记录到 binlog 中。这一过程称为“两阶段提交”，确保 binlog 和 redolog 的一致性。
+4. 如果数据库发生崩溃，InnoDB 会使用 redolog 进行恢复，确保数据不会丢失。binlog 则可以用来做主从复制或数据恢复到特定时间点。
 
 #### 说说 redolog 的工作机制？
 
-redo log 由两部分组成：ib_logfile0 和 ib_logfile1。这两个文件的总大小是固定的，默认情况下每个文件为 48MB，总共 96MB。它们以循环的方式写入，即当写满后，从头开始覆盖旧的日志。
+redolog 由两部分组成 ： ib_logfile0 和 ib_logfile1 。这两个文件的总大小是固定的，默认情况下每个文件为 48MB ，总共 96MB。它们以循环的方式写入，即当写满后，从头开始覆盖旧的日志。
 
-每次修改数据时，都会生成一个新的日志序列号（Log Sequence Number），用于标记 redo log 中的日志位置，以确保数据恢复的一致性。
+每次修改数据时，都会生成一个新的日志序列号（Log Sequence Number），用于标记 redolog 中的日志位置，以确保数据恢复的一致性。
 
-当一个事务对数据进行修改时，InnoDB 会首先将这些修改记录到 redo log 中，而不是直接写入磁盘的数据文件。具体步骤分为三步：
+当一个事务对数据进行修改时，InnoDB 会首先将这些修改记录到 redolog 中，而不是直接写入磁盘的数据文件。具体步骤分为三步：
 
 1. 在缓冲池（Buffer Pool）中修改数据页。
-2. 将修改操作记录到 redo log buffer 中（这是内存中的一个日志缓冲区）。
-3. 当事务提交时，InnoDB 会将 redo log buffer 中的数据刷新到磁盘上的 redo log 文件中（ib_logfile0、ib_logfile1 等），保证事务的持久性。
-4. 当 MySQL 发生崩溃后，InnoDB 会在重启时读取 redo log，找到最近一次的检查点（checkpoint），然后从该检查点开始，重放（replay） redo log 中的日志记录，将所有已提交事务的修改重做一遍，恢复数据库到崩溃前的一致性状态。
+2. 将修改操作记录到 redolog buffer 中（这是内存中的一个日志缓冲区）。
+3. 当事务提交时，InnoDB 会将 redolog buffer 中的数据刷新到磁盘上的 redolog 文件中（ib_logfile0、ib_logfile1 等），保证事务的持久性。
+4. 当 MySQL 发生崩溃后，InnoDB 会在重启时读取 redolog，找到最近一次的检查点（checkpoint），然后从该检查点开始，重放（replay） redolog 中的日志记录，将所有已提交事务的修改重做一遍，恢复数据库到崩溃前的一致性状态。
 
 #### 说说 WAL？
 
-WAL（Write-Ahead Logging，预写日志）的核心思想是**先写日志，再写数据**，即在对数据进行任何修改之前，必须先将修改的日志记录（redo log）持久化到磁盘。
+WAL（Write-Ahead Logging，预写日志）的核心思想是**先写日志，再写数据**，即在对数据进行任何修改之前，必须先将修改的日志记录（redolog）持久化到磁盘。
 
 通过先写日志，确保系统在发生故障时可以通过重做日志恢复数据。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为面经同学 8 技术二面面试原题：MySQL 中的 bin log 的作用是什么？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 2 Java 后端技术一面面试原题：说说 MySQL 的三大日志？
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 21 抖音商城一面面试原题：redolog undolog binlog，有了 binlog 为什么还要 undolog redolog，redolog 的工作机制，说说 WAL
+### 29. binlog 和 redolog 有什么区别？
 
-### 29.binlog 和 redo log 有什么区别？
+binlog，即二进制日志，对所有存储引擎都可用，是 MySQL 服务器级别的日志，用于数据的复制、恢复和备份。而 redolog 主要用于保证事务的持久性，是 InnoDB 存储引擎特有的日志类型。
 
-binlog，即二进制日志，对所有存储引擎都可用，是 MySQL 服务器级别的日志，用于数据的复制、恢复和备份。而 redo log 主要用于保证事务的持久性，是 InnoDB 存储引擎特有的日志类型。
+binlog 记录的是逻辑 SQL 语句，而 redolog 记录的是物理数据页的修改操作，不是具体的 SQL 语句。
 
-binlog 记录的是逻辑 SQL 语句，而 redo log 记录的是物理数据页的修改操作，不是具体的 SQL 语句。
-
-redo log 是固定大小的，通常配置为一组文件，使用环形方式写入，旧的日志会在空间需要时被覆盖。binlog 是追加写入的，新的事件总是被添加到当前日志文件的末尾，当文件达到一定大小后，会创建新的 binlog 文件继续记录。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团同学 2 优选物流调度技术 2 面面试原题：redo log、bin log
+redolog 是固定大小的，通常配置为一组文件，使用环形方式写入，旧的日志会在空间需要时被覆盖。binlog 是追加写入的，新的事件总是被添加到当前日志文件的末尾，当文件达到一定大小后，会创建新的 binlog 文件继续记录。
 
 ### 30.为什么要两阶段提交呢？
 
 为什么要两阶段提交呢？直接提交不行吗？
 
-我们可以假设不采用两阶段提交的方式，而是采用“单阶段”进行提交，即要么先写入 redo log，后写入 binlog；要么先写入 binlog，后写入 redo log。这两种方式的提交都会导致原先数据库的状态和被恢复后的数据库的状态不一致。
+我们可以假设不采用两阶段提交的方式，而是采用“单阶段”进行提交，即要么先写入 redolog ，后写入 binlog；要么先写入 binlog，后写入 redolog 。这两种方式的提交都会导致原先数据库的状态和被恢复后的数据库的状态不一致。
 
-**先写入 redo log，后写入 binlog：**
+**先写入 redolog ，后写入 binlog ：**
 
-在写完 redo log 之后，数据此时具有`crash-safe`能力，因此系统崩溃，数据会恢复成事务开始之前的状态。但是，若在 redo log 写完时候，binlog 写入之前，系统发生了宕机。此时 binlog 没有对上面的更新语句进行保存，导致当使用 binlog 进行数据库的备份或者恢复时，就少了上述的更新语句。从而使得`id=2`这一行的数据没有被更新。
+在写完 redolog 之后，数据此时具有`crash-safe`能力，因此系统崩溃，数据会恢复成事务开始之前的状态。但是，若在 redolog 写完时候， binlog 写入之前，系统发生了宕机。此时 binlog 没有对上面的更新语句进行保存，导致当使用 binlog 进行数据库的备份或者恢复时，就少了上述的更新语句。从而使得`id=2`这一行的数据没有被更新。
 
-![先写 redo log，后写 bin log 的问题](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-75d5226b-cab9-461a-89a9-befcb2dfb996.jpg)
+![先写 redolog，后写 bin log 的问题](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-75d5226b-cab9-461a-89a9-befcb2dfb996.jpg)
 
-**先写入 binlog，后写入 redo log：**
+**先写入 binlog，后写入 redolog：**
 
-写完 binlog 之后，所有的语句都被保存，所以通过 binlog 复制或恢复出来的数据库中 id=2 这一行的数据会被更新为 a=1。但是如果在 redo log 写入之前，系统崩溃，那么 redo log 中记录的这个事务会无效，导致实际数据库中`id=2`这一行的数据并没有更新。
+写完 binlog 之后，所有的语句都被保存，所以通过 binlog 复制或恢复出来的数据库中 id=2 这一行的数据会被更新为 a=1。但是如果在 redolog 写入之前，系统崩溃，那么 redolog 中记录的这个事务会无效，导致实际数据库中`id=2`这一行的数据并没有更新。
 
-![先写 bin log，后写 redo log 的问题](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-869c309b-9b93-46e1-8414-b35128e287a5.jpg)
+![先写 bin log，后写 redolog 的问题](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-869c309b-9b93-46e1-8414-b35128e287a5.jpg)
 
-简单说，redo log 和 binlog 都可以用于表示事务的提交状态，而两阶段提交就是让这两个状态保持逻辑上的一致。
+简单说，redolog 和 binlog 都可以用于表示事务的提交状态，而两阶段提交就是让这两个状态保持逻辑上的一致。
 
-### 31.redo log 怎么刷入磁盘？
+### 31.redolog 怎么刷入磁盘？
 
-redo log 的写入不是直接落到磁盘，而是在内存中设置了一片称之为`redo log buffer`的连续内存空间，也就是`redo 日志缓冲区`。
+redolog 的写入不是直接落到磁盘，而是在内存中设置了一片称之为`redolog buffer`的连续内存空间，也就是`redo 日志缓冲区`。
 
-![redo log 缓冲](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-e1f59341-0695-45db-b759-30db73314e39.jpg)
+![redolog 缓冲](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-e1f59341-0695-45db-b759-30db73314e39.jpg)
 
 > **什么时候会刷入磁盘？**
 
@@ -1174,24 +1068,24 @@ log buffer 的大小是有限的，如果不停的往这个有限大小的 log b
 
 - 后台线程输入
 
-有一个后台线程，大约每秒都会刷新一次`log buffer`中的`redo log`到磁盘。
+有一个后台线程，大约每秒都会刷新一次`log buffer`中的`redolog`到磁盘。
 
 - 正常关闭服务器时
 - **触发 checkpoint 规则**
 
-重做日志缓存、重做日志文件都是以**块（block）**的方式进行保存的，称之为**重做日志块（redo log block）**,块的大小是固定的 512 字节。我们的 redo log 它是固定大小的，可以看作是一个逻辑上的 **log group**，由一定数量的**log block** 组成。
+重做日志缓存、重做日志文件都是以**块（block）**的方式进行保存的，称之为**重做日志块（redolog block）**,块的大小是固定的 512 字节。redolog 是固定大小的，可以看作是一个逻辑上的 **log group**，由一定数量的**log block** 组成。
 
-![redo log 分块和写入](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-8d944e76-89ba-4fa6-9066-64ff4f55b532.jpg)
+![redolog 分块和写入](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-8d944e76-89ba-4fa6-9066-64ff4f55b532.jpg)
 
 它的写入方式是从头到尾开始写，写到末尾又回到开头循环写。
 
 其中有两个标记位置：
 
-`write pos`是当前记录的位置，一边写一边后移，写到第 3 号文件末尾后就回到 0 号文件开头。`checkpoint`是当前要擦除的位置，也是往后推移并且循环的，擦除记录前要把记录更新到磁盘。
+`write pos`是当前记录的位置，一边写一边后移，写到第 3 号文件末尾后就回到 0 号文件开头。`checkpoint`是当前要擦除的位置，也是往后推移并且循环的，擦除记录前会把记录更新到磁盘。
 
 ![write pos 和 checkpoint](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-31a14149-b261-45d9-bd3b-6afaec16e136.jpg)
 
-当`write_pos`追上`checkpoint`时，表示 redo log 日志已经写满。这时候就不能接着往里写数据了，需要执行`checkpoint`规则腾出可写空间。
+当`write_pos`追上`checkpoint`时，表示 redolog 日志已经写满。这时候就不能接着往里写数据了，需要执行`checkpoint`规则腾出可写空间。
 
 所谓的**checkpoint 规则**，就是 checkpoint 触发后，将 buffer 中日志页都刷到磁盘。
 
@@ -1225,18 +1119,19 @@ log buffer 的大小是有限的，如果不停的往这个有限大小的 log b
 
 SQL 执行过程中，优化器通过成本计算预估出执行效率最高的方式，基本的预估维度为：
 
-- IO 成本：从磁盘读取数据到内存的开销。
-- CPU 成本：CPU 处理内存中数据的开销。
+- IO 成本 ：从磁盘读取数据到内存的开销。
+- CPU 成本 ：CPU 处理内存中数据的开销。
 
 基于这两个维度，可以得出影响 SQL 执行效率的因素有：
 
 **①、IO 成本**
 
-- 数据量：数据量越大，IO 成本越高。所以要避免 `select *`；尽量分页查询。
-- 数据从哪读取：尽量通过索引加快查询。
+- 数据量 ： 数据量越大，IO 成本越高。所以要避免 `select *`；尽量分页查询。
+- 数据从哪读取 ： 尽量通过索引加快查询。
 
 **②、CPU 成本**
 
+- 尽量避免使用函数，减少运算时间。
 - 尽量避免复杂的查询条件，如有必要，考虑对子查询结果进行过滤。
 - 尽量缩减计算成本，比如说为排序字段加上索引，提高排序效率；比如说使用 union all 替代 union，减少去重处理。
 
@@ -1248,7 +1143,7 @@ SQL 执行过程中，优化器通过成本计算预估出执行效率最高的�
 
 ![二哥的java 进阶之路：技术派当前正在执行的 sql](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241115145204.png)
 
-或者在业务基建中加入对慢 SQL 的监控，常见的方案有字节码插桩、连接池扩展、ORM 框架扩展。
+或者在业务基建中加入对慢 SQL 的监控，常见的方案有`字节码插桩`、`连接池扩展`、`ORM 框架扩展`。
 
 ![二哥的Java 进阶之路：技术派会在日志中记录请求的执行时间](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241115145401.png)
 
@@ -1278,14 +1173,6 @@ SET GLOBAL slow_query_log = 'ON';
 SET GLOBAL slow_query_log_file = '/var/log/mysql/slow.log';
 SET GLOBAL long_query_time = 2;
 ```
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯云智面经同学 16 一面面试原题：场景题：sql 查询很慢怎么排查
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手面经同学 5 面试原题：慢 sql 日志怎么开启？
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 3 Java 后端技术一面面试原题：如何判断 sql 的效率，怎样排查效率比较低的 sql
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的作业帮面经同学 1 Java 后端一面面试原题：mysql 中如何定位慢查询
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的同学 1 贝壳找房后端技术一面面试原题：慢查询怎么分析
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 27 云后台技术一面面试原题：如何优化慢查询语句？
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的虾皮面经同学 13 一面面试原题：mysql 慢查询
 
 ### 33.有哪些方式优化 SQL？
 
@@ -1410,7 +1297,7 @@ alter table test add index index2(email(6));
 
 **④、避免列上使用函数**
 
-在 where 子句中直接对列使用函数会导致索引失效，因为数据库需要对每行的列应用函数后再进行比较，无法直接利用索引。
+**在 where 子句中直接对列使用函数会导致索引失效**，因为数据库需要对每行的列应用函数后再进行比较，无法直接利用索引。
 
 ```sql
 select name from test where date_format(create_time,'%Y-%m-%d')='2021-01-01';
@@ -1426,7 +1313,7 @@ select name from test where create_time>='2021-01-01 00:00:00' and create_t
 
 **⑤、正确使用联合索引**
 
-正确地使用联合索引可以极大地提高查询性能，联合索引的创建应遵循最左前缀原则，即索引的顺序应根据列在查询中的使用频率和重要性来安排。
+正确地使用联合索引可以极大地提高查询性能，**联合索引的创建应遵循最左前缀原则，即索引的顺序应根据列在查询中的使用频率和重要性来安排**。
 
 ```sql
 select * from messages where sender_id=1 and receiver_id=2 and is_read=0;
@@ -1480,7 +1367,7 @@ select order_id,product_name from orders;
 
 **④、避免使用 JOIN 关联太多的表**
 
-《[阿里巴巴 Java 开发手册](https://javabetter.cn/pdf/ali-java-shouce.html)》上就规定，不要使用 join 关联太多的表，最多不要超过 3 张表。
+《[阿里巴巴 Java 开发手册](https://javabetter.cn/pdf/ali-java-shouce.html)》上就规定，**不要使用 join 关联太多的表，最多不要超过 3 张表。**
 
 因为 join 太多表会降低查询的速度，返回的数据量也会变得非常大，不利于后续的处理。
 
@@ -1527,14 +1414,6 @@ SELECT * FROM B WHERE id = 1;
 
 通过将查询条件下推到 UNION 的每个分支中，每个分支查询都只处理满足条件的数据，减少了不必要的数据合并和过滤。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 22 暑期实习一面面试原题：查询优化、联合索引、覆盖索引
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为面经同学 8 技术二面面试原题：说说 SQL 该如何优化
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为面经同学 6 Java 通用软件开发一面面试原题：说说 SQL 该如何优化
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的微众银行同学 1 Java 后端一面的原题：MySQL 索引如何优化？
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的携程面经同学 10 Java 暑期实习一面面试原题：讲一讲 MySQL 的索引，如何优化 SQL？
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的用友面试原题：了解 mysql 怎么优化吗
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的阿里系面经同学 19 饿了么面试原题：查询如何优化
-
 ### 34.怎么看执行计划 explain，如何理解其中各个字段的含义？
 
 explain 是 MySQL 提供的一个用于查看查询执行计划的工具，可以帮助我们分析查询语句的性能瓶颈，找出慢 SQL 的原因。
@@ -1549,50 +1428,39 @@ explain select * from students where id =9
 
 explain 的输出结果中包含了很多字段，下面是一些常见的字段含义：
 
-①、**id** 列：查询的标识符。
-
-②、**select_type** 列：查询的类型。常见的类型有：
-
-- SIMPLE：简单查询，不包含子查询或者 UNION 查询。
-- PRIMARY：查询中如果包含子查询，则最外层查询被标记为 PRIMARY。
-- SUBQUERY：子查询。
-- DERIVED：派生表的 SELECT，FROM 子句的子查询。
-
-③、**table** 列：查的哪个表。
-
-④、**type** 列：表示 MySQL 在表中找到所需行的方式，性能从最优到最差分别为：system > const > eq_ref > ref > range > index > ALL。
-
-- system，表只有一行，一般是系统表，往往不需要进行磁盘 IO，速度非常快
-- const：表中只有一行匹配，或通过主键或唯一索引获取单行记录。通常用于使用主键或唯一索引的精确匹配查询，性能非常高。
-- eq_ref：对于每个来自上一张表的记录，最多只返回一条匹配记录，通常用于多表关联且使用主键或唯一索引的查询。效率非常高，适合多表关联查询。
-- ref：使用非唯一索引或前缀索引查询的情况，返回符合条件的多行记录。通常用于普通索引或联合索引查询，效率较高，但不如 const 和 eq_ref。
-- range：只检索给定范围的行，使用索引来检索。在`where`语句中使用 `bettween...and`、`<`、`>`、`<=`、`in` 等条件查询 `type` 都是 `range`。
-- index：全索引扫描，即扫描整个索引而不访问数据行。
-- ALL：全表扫描，效率最低。
-
-⑤、**possible_keys** 列：可能会用到的索引，但并不一定实际被使用。
-
-⑥、**key** 列：实际使用的索引。如果为 NULL，则没有使用索引。
-
-⑦、**key_len** 列：MySQL 决定使用的索引长度（以字节为单位）。当表有多个索引可用时，key_len 字段可以帮助识别哪个索引最有效。通常情况下，更短的 key_len 意味着数据库在比较键值时需要处理更少的数据。
-
-⑧、**ref** 列：用于与索引列比较的值来源。
-
-- const：表示常量，这个值是在查询中被固定的。例如在 WHERE `column = 'value'`中。
-- 一个或多个列的名称，通常在 JOIN 操作中，表示 JOIN 条件依赖的字段。
-- NULL，表示没有使用索引，或者查询使用的是全表扫描。
-
-⑨、**rows** 列：估算查到结果集需要扫描的数据行数，原则上 rows 越少越好。
-
-⑩、**Extra** 列：附加信息。
-
-- Using index：表示只利用了索引。
-- Using where：表示使用了 WHERE 过滤。
-- Using temporary ：表示使用了临时表来存储中间结果。
+1. **id** 列：查询结果的主键。
+2. **select_type** 列：查询的类型。枚举值有：
+   - SIMPLE ： 简单查询，不包含子查询或者 UNION 查询。
+   - PRIMARY ： 查询中如果包含子查询，则最外层查询被标记为 PRIMARY。
+   - SUBQUERY ： 子查询。
+   - DERIVED ： 派生表的 SELECT，FROM 子句的子查询。
+3. **table** 列 ： 查的哪个表。
+4. **type** 列 ： 表示 MySQL 在表中找到所需行的方式，性能从最优到最差分别为：system > const > eq_ref > ref > range > index > ALL。
+   - system ： 表只有一行，一般是系统表，往往不需要进行磁盘 IO，速度非常快
+   - const ： 表中只有一行匹配，或通过主键或唯一索引获取单行记录。通常用于使用主键或唯一索引的精确匹配查询，性能非常高。
+   - eq_ref ： 对于每个来自上一张表的记录，最多只返回一条匹配记录，通常用于多表关联且使用主键或唯一索引的查询。效率非常高，适合多表关联查询。
+   - ref ： 使用非唯一索引或前缀索引查询的情况，返回符合条件的多行记录。通常用于普通索引或联合索引查询，效率较高，但不如 const 和 eq_ref。
+   - range ： 只检索给定范围的行，使用索引来检索。在`where`语句中使用 `bettween...and`、`<`、`>`、`<=`、`in` 等条件查询 `type` 都是 `range`。
+   - index ： 全索引扫描，即扫描整个索引而不访问数据行。
+   - ALL ： 全表扫描，效率最低。
+5. **possible_keys** 列：可能会用到的索引，但并不一定实际被使用。
+6. **key** 列：实际使用的索引。如果为 NULL，则没有使用索引。
+7. **key_len** 列：MySQL 决定使用的索引长度（以字节为单位）。当表有多个索引可用时，key_len 字段可以帮助识别哪个索引最有效。通常情况下，更短的 key_len 意味着数据库在比较键值时需要处理更少的数据。
+8. **ref** 列：用于与索引列比较的值来源。
+   - const ：表示常量，这个值是在查询中被固定的。例如在 WHERE `column = 'value'`中。
+   - 一个或多个列的名称，通常在 JOIN 操作中，表示 JOIN 条件依赖的字段。
+   - NULL，表示没有使用索引，或者查询使用的是全表扫描。
+9. **rows** 列：估算查到结果集需要扫描的数据行数，原则上 rows 越少越好。
+10. **Extra** 列：附加信息。
+    - Using index ：表示只利用了索引。
+    - Using where ：表示使用了 WHERE 过滤。
+    - Using temporary ：表示使用了临时表来存储中间结果。
 
 示例：
 
 ![二哥的 Java 进阶之路](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240417092646.png)
+
+// TODO ： 补充一些复杂的用例；
 
 #### type 的执行效率等级，达到什么级别比较合适？
 
@@ -1604,15 +1472,11 @@ explain 的输出结果中包含了很多字段，下面是一些常见的字段
 
 通常要避免出现 ALL 类型，因为它表示全表扫描，性能最低。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为面经同学 8 技术二面面试原题：怎么看走没走索引，如何分析 SQL
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的作业帮面经同学 1 Java 后端一面面试原题：key-len 和 key 没什么区别，什么时候会用到 key-len，你还会查看 explain 中的哪些字段，extra 有哪些类型
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的同学 1 贝壳找房后端技术一面面试原题：explain 分析后， type 的执行效率等级，达到什么级别比较合适
-
 ## 索引
 
 ### 35.为什么使用索引会加快查询？
 
-数据库文件是存储在磁盘上的，磁盘 I/O 是数据库操作中最耗时的部分之一。没有索引时，数据库会进行全表扫描（Sequential Scan），这意味着它必须读取表中的每一行数据来查找匹配的行（时间效率为 O(n)）。当表的数据量非常大时，就会导致大量的磁盘 I/O 操作。
+数据库文件是存储在磁盘上的，磁盘 I/O 是数据库操作中最耗时的部分之一。没有索引时，数据库会进行`全表扫描`（Sequential Scan），这意味着它必须读取表中的每一行数据来查找匹配的行（时间效率为 O(n)）。当表的数据量非常大时，就会导致大量的磁盘 I/O 操作。
 
 有了索引，就可以直接跳到索引指示的数据位置，而不必扫描整张表，从而大大减少了磁盘 I/O 操作的次数。
 
@@ -1622,8 +1486,6 @@ MySQL 的 InnoDB 存储引擎默认使用 B+ 树来作为索引的数据结构�
 
 索引就好像书的目录，通过目录去查找对应的章节内容会比一页一页的翻书快很多。
 
-![三分恶面渣逆袭：索引加快查询远离](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-6b9c9901-9bf3-46ed-a5c4-c1b781965c1e.jpg)
-
 可通过 `create index` 创建索引，比如：
 
 ```sql
@@ -1632,7 +1494,7 @@ create index idx_name on students(name);
 
 #### 索引优化举例？
 
-在实际开发中，我们可以通过合理使用单字段索引、复合索引和覆盖索引来优化查询。例如，如果要加速查询 age 字段的条件，我们可以在 age 字段上创建索引。
+在实际开发中，我们可以通过合理使用`单字段索引`、`复合索引`和`覆盖索引`来优化查询。例如，如果要加速查询 age 字段的条件，我们可以在 age 字段上创建索引。
 
 ```sql
 CREATE INDEX idx_age ON users(age);
@@ -1652,13 +1514,7 @@ CREATE INDEX idx_age_name ON users(age, name);
 
 由于 age 和 name 字段都在索引中，MySQL 直接从索引中获取结果，无需回表查找。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 23 QQ 后台技术一面面试原题：MySQL 索引，为什么用 B+树
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小米面经同学 E 第二个部门 Java 后端技术一面面试原题：为什么需要索引
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小公司面经同学 5 Java 后端面试原题：数据库索引讲一下，然后为什么会加快查询速度，我讲到了 B+树，然后问了 B 数与 B+树区别
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的去哪儿面经同学 1 技术二面面试原题：mysql 为什么用索引
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 OPPO 面经同学 1 面试原题：对 MySQL 索引的理解
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 vivo 面经同学 10 技术一面面试原题：索引，索引优化举例，为什么使用索引更快
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 27 云后台技术一面面试原题：介绍下索引？底层是啥？
+> 覆盖索引： 就是要查询的字段，恰好是某个索引中的一个字段。
 
 ### 36.能简单说一下索引的分类吗？
 
@@ -1735,11 +1591,11 @@ CREATE FULLTEXT INDEX idx_article_content ON articles(content);
 
 #### 02、说说从数据结构上分类？
 
-①、B+树索引：最常见的索引类型，一种将索引值按照一定的算法，存入一个树形的数据结构中（二叉树），每次查询都从树的根节点开始，一次遍历叶子节点，找到对应的值。查询效率是 O(logN)。
+①、B+ 树索引：最常见的索引类型，一种将索引值按照一定的算法，存入一个树形的数据结构中（二叉树），每次查询都从树的根节点开始，一次遍历叶子节点，找到对应的值。查询效率是 O(logN)。
 
 也是 **InnoDB 存储引擎的默认索引类型**。
 
-B+ 树是 B 树的升级版，B+ 树中的非叶子节点都不存储数据，只存储索引。叶子节点中存储了所有的数据，并且构成了一个从小到大的有序双向链表，使得在完成一次树的遍历定位到范围查询的起点后，可以直接通过叶子节点间的指针顺序访问整个查询范围内的所有记录，而无需对树进行多次遍历。这在处理大范围的查询时特别高效。
+B+ 树是 B 树的升级版， B+ 树中的非叶子节点都不存储数据，只存储索引。叶子节点中存储了所有的数据，并且构成了一个从小到大的有序双向链表，使得在完成一次树的遍历定位到范围查询的起点后，可以直接通过叶子节点间的指针顺序访问整个查询范围内的所有记录，而无需对树进行多次遍历。这在处理大范围的查询时特别高效。
 
 ![一颗剽悍的种子：B+树的结构](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240312092745.png)
 
@@ -1795,31 +1651,7 @@ SHOW VARIABLES LIKE 'innodb_adaptive_hash_index';
 
 ![代码敲上天.非聚簇索引，以 age 为索引](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240311231611.png)
 
-InnoDB 存储引擎的主键使用的是聚簇索引，MyISAM 存储引擎不管是主键索引，还是二级索引使用的都是非聚簇索引。
-
-想要了解 B 树和 B+树的更多区别，推荐阅读：
-
-- [GitHub：B 树和 B+树详解](https://github.com/wardseptember/notes/blob/master/docs/B%E6%A0%91%E5%92%8CB+%E6%A0%91%E8%AF%A6%E8%A7%A3.md)
-- [思否：面试官问你 B 树和 B+树，就把这篇文章丢给他](https://segmentfault.com/a/1190000020416577)
-- [极客时间：为什么用 B+树来做索引？](https://time.geekbang.org/column/article/112298)
-- [一颗剽悍的种子：用 16 张图就给你讲明白 MySQL 为什么要用 B+树做索引](https://mp.weixin.qq.com/s/muOwXKNTvPjXjrLsFRveIw)
-
-想要了解更多聚簇索引和非聚簇索引，推荐阅读：
-
-- [磊哥：聚簇索引和非聚簇索引有什么区别？](https://www.cnblogs.com/vipstone/p/16370305.html)
-- [浅谈聚簇索引与非聚簇索引](https://learnku.com/articles/50096)
-- [聚簇索引、非聚簇索引、联合索引、唯一索引](https://blog.csdn.net/m0_52226803/article/details/135494499)
-- [松哥：再聊 MySQL 聚簇索引](https://mp.weixin.qq.com/s/F0cEzIqecF4sWg7ZRmHKRQ)
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的科大讯飞非凡计划研发类面经原题：聊聊 MySQL 的索引
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 23 QQ 后台技术一面面试原题：MySQL 索引，为什么用 B+树
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的携程面经同学 10 Java 暑期实习一面面试原题：讲一讲 MySQL 的索引，如何优化 SQL？
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的阿里面经同学 5 阿里妈妈 Java 后端技术一面面试原题：索引的分类，创建索引的最佳实践
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 360 面经同学 3 Java 后端技术一面面试原题：mysql 的索引用过哪些
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的用友面试原题：索引是什么？有哪些索引
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的作业帮面经同学 1 Java 后端一面面试原题：普通索引的叶子节点存储的是什么
-> 8. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的作业帮面经同学 1 Java 后端一面面试原题：innodb 底层有哪些数据结构
-> 9. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的比亚迪面经同学 12 Java 技术面试原题：索引有哪些，区别是什么
+**InnoDB 存储引擎的主键使用的是聚簇索引，MyISAM 存储引擎不管是主键索引，还是二级索引使用的都是非聚簇索引。**
 
 ### 37.创建索引有哪些注意点？
 
@@ -1832,20 +1664,12 @@ InnoDB 存储引擎的主键使用的是聚簇索引，MyISAM 存储引擎不管
 ②、避免过多的索引
 
 - 因为每个索引都需要占用额外的磁盘空间。
-- 更新表（INSERT、UPDATE、DELETE 操作）的时候，索引都需要被更新。
+- 更新表（INSERT、UPDATE、DELETE 操作）的时候，索引也会被更新。
 
 ③、利用前缀索引和索引列的顺序
 
 - 对于字符串类型的列，可以考虑使用前缀索引来减少索引大小。
 - 在创建联合索引时，应该根据查询条件将最常用的放在前面，遵守最左前缀原则。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的用友金融一面原题：索引的作用，加索引需要注意什么
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东同学 10 后端实习一面的原题：查询和更新都频繁的字段是否适合创建索引，为什么
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小米春招同学 K 一面面试原题：索引怎么设计才是最好的
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 1 Java 技术一面面试原题：MySQL 索引结构，建立索引的策略
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的阿里面经同学 5 阿里妈妈 Java 后端技术一面面试原题：索引的分类，创建索引的最佳实践
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 oppo 面经同学 8 后端开发秋招一面面试原题：建索引的时候应该注意什么
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 5 Java 后端技术一面面试原题：建立索引考虑哪些问题
 
 ### 38.索引哪些情况下会失效呢？
 
@@ -1854,18 +1678,11 @@ InnoDB 存储引擎的主键使用的是聚簇索引，MyISAM 存储引擎不管
 - **使用 LIKE 语句，但通配符在前面**：以“%”或者“\_”开头，索引也无法使用。例如：`SELECT * FROM table WHERE column LIKE '%abc'`。
 - 联合索引，但 WHERE 不满足最左前缀原则，索引无法起效。例如：`SELECT * FROM table WHERE column2 = 2`，联合索引为 `(column1, column2)`。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 1 Java 后端技术一面面试原题：where b =5 是否一定会命中索引？（索引失效场景）
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 1 Java 技术一面面试原题：索引失效的情况
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小公司面经合集同学 1 Java 后端面试原题：编写 SQL 语句哪些情况会导致索引失效？
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的比亚迪面经同学 12 Java 技术面试原题：索引失效场景
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 OPPO 面经同学 1 面试原题：什么情况下索引失效？
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 5 Java 后端技术一面面试原题：索引失效情况
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的理想汽车面经同学 2 一面面试原题：什么操作会导致索引失效？
-
 ### 39.索引不适合哪些场景呢？
 
 - **数据表较小**：当表中的数据量很小，或者查询需要扫描表中大部分数据时，数据库优化器可能会选择全表扫描而不是使用索引。在这种情况下，维护索引的开销可能大于其带来的性能提升。
 - **频繁更新的列**：对于经常进行更新、删除或插入操作的列，使用索引可能会导致性能下降。因为每次数据变更时，索引也需要更新，这会增加额外的写操作负担。
+- **区分度低的列**：对于区分度低的列添加索引，得不偿失。
 
 #### 性别字段要建立索引吗？
 
@@ -1876,6 +1693,8 @@ InnoDB 存储引擎的主键使用的是聚簇索引，MyISAM 存储引擎不管
 如果性别字段确实经常用于查询条件，数据规模也比较大，可以将性别字段作为复合索引的一部分，与选择性较高的字段一起加索引，会更好一些。
 
 #### 什么是区分度？
+
+> 区分度= 对字段所有的值去重的总数/总的记录数，区分度越接近 1，说明字段区分度越高；值越低，说明区分度越低。
 
 区分度（Selectivity）是衡量一个字段在数据库表中唯一值的比例，用来表示该字段在索引优化中的有效性。
 
@@ -1901,19 +1720,16 @@ FROM
 适合加索引的字段包括：
 
 - 经常出现在 WHERE 子句中的字段，如 `SELECT * FROM users WHERE age = 30` 中的 age 字段，加上索引后可以快速定位到满足条件的记录。
-- 经常用于 JOIN 的字段，如 `SELECT * FROM users u JOIN orders o ON u.id = o.user_id` 中的 user_id 字段，加上索引后可以避免多表扫描。
+- 经常用于 JOIN ... on ... 语句中的 on 字段上的字段，如 `SELECT * FROM users u JOIN orders o ON u.id = o.user_id` 中的 user_id 字段，加上索引后可以避免多表扫描。
 - 经常出现在 ORDER BY 或 GROUP BY 子句中的字段，如 `SELECT * FROM users ORDER BY age` 中的 age 字段。加上索引后可以避免额外的排序操作。
 - 高区分度的字段，查询时可以有效减少返回的数据行，比如用户 ID、邮箱等。
 
 对应的，不适合加索引的字段包括：
 
-- 低区分度字段，如性别、状态等。
+- 低区分度字段，如性别、状态、城市等。
 - 经常更新的字段，如用户的登录时间、登录次数等。
 - 不经常出现在查询条件中的字段，如用户的生日、地址等。
 - 使用函数、运算符的字段。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 1 技术二面面试原题：性别字段要建立索引吗？为什么？什么是区分度？MySQL 查看字段区分度的命令？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手同学 2 一面面试原题：什么样的字段适合加索引？什么不适合？
 
 ### 40.索引是不是建的越多越好？
 
@@ -1934,18 +1750,16 @@ FROM
 - 创建组合索引时，应将查询中最常用、区分度高的列放在前面。对于查询条件 `WHERE age = 18 AND gender = '女' AND city = '洛阳'`，如果 age 列的值相对较为分散，可以优先考虑将 age 放在组合索引的第一位。
 - 使用 SELECT 语句时，尽量选择覆盖索引来避免不必要的回表操作，也就是说，索引中包含了查询所需的所有列；但要注意，覆盖索引的列数不宜过多，否则会增加索引的存储空间。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的比亚迪面经同学 12 Java 技术面试原题：索引优化的思路
-
 ### 41.为什么 InnoDB 要使用 B+树作为索引？
 
 1. 推荐阅读：[终于把 B 树搞明白了](https://www.bilibili.com/video/BV1mY4y1W7pS)
 2. 推荐阅读：[一篇文章讲透 MySQL 为什么要用 B+树实现索引](https://cloud.tencent.com/developer/article/1543335)
 
-MySQL 的默认存储引擎是 InnoDB，它采用的是 B+树索引，是 B 树的升级版。
+MySQL 的默认存储引擎是 InnoDB，它采用的是 B+ 树索引，是 B 树的升级版。
 
 B 树是一种自平衡的多路查找树，和红黑树、二叉平衡树不同，B 树的每个节点可以有 m 个子节点，而红黑树和二叉平衡树都只有 2 个。
 
-换句话说，红黑树、二叉平衡树是细高个，而 B 树是矮胖子。
+换句话说，**红黑树、二叉平衡树是细高个，而 B 树是矮胖子**。
 
 ![二哥的 Java 进阶之路：B 树](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240322132606.png)
 
@@ -1975,7 +1789,7 @@ B 树的一个节点通常包括三个部分：
 
 不过，正所谓“祸兮福所倚，福兮祸所伏”，正是因为 B 树的每个节点上都存了数据，就导致每个节点能存储的键值和指针变少了，因为每一页的大小是固定的，对吧？
 
-于是 B+树就来了，B+树的非叶子节点只存储键值，不存储数据，而叶子节点存储了所有的数据，并且构成了一个有序链表。
+于是 B+ 树就来了，B+ 树的非叶子节点只存储键值，不存储数据，而叶子节点存储了所有的数据，并且构成了一个有序链表。
 
 ![用户1260737：B+树](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240322142950.png)
 
@@ -1985,28 +1799,28 @@ B 树的一个节点通常包括三个部分：
 
 再加上叶子节点构成了一个有序链表，范围查询时就可以直接通过叶子节点间的指针顺序访问整个查询范围内的所有记录，而无需对树进行多次遍历。
 
-**注**：在 InnoDB 存储引擎中，默认的页大小是 16KB。可以通过 `show variables like 'innodb_page_size';` 查看。
+**注**：在 InnoDB 存储引擎中，默认的页大小是 16KB 。可以通过 `show variables like 'innodb_page_size';` 查看。
 
 ![二哥的 Java 进阶之路：页的大小](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240322135441.png)
 
 #### 简版回答：
 
-MySQL 的默认存储引擎是 InnoDB，它采用的是 B+树索引，B+树是一种自平衡的多路查找树，和红黑树、二叉平衡树不同，B+树的每个节点可以有 m 个子节点，而红黑树和二叉平衡树都只有 2 个。
+MySQL 的默认存储引擎是 InnoDB，它采用的是 B+树索引，B+树是一种**自平衡的多路查找树**，和红黑树、二叉平衡树不同，B+树的每个节点可以有 m 个子节点，而红黑树和二叉平衡树都只有 2 个。
 
 ![William Johnson：b+树](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241104203402.png)
 
-和 B 树不同，B+树的非叶子节点只存储键值，不存储数据，而叶子节点存储了所有的数据，并且构成了一个有序链表。
+和 B 树不同，B+ 树的非叶子节点只存储键值，不存储数据，而叶子节点存储了所有的数据，并且构成了一个有序链表。
 
 这样做的好处是，非叶子节点上由于没有存储数据，就可以存储更多的键值对，再加上叶子节点构成了一个有序链表，范围查询时就可以直接通过叶子节点间的指针顺序访问整个查询范围内的所有记录，而无需对树进行多次遍历。查询的效率会更高。
 
-#### B+树的页是单向链表还是双向链表？如果从大值向小值检索，如何操作？
+#### B+ 树的页是单向链表还是双向链表？如果从大值向小值检索，如何操作？
 
 B+树的叶子节点是通过双向链表连接的，这样可以方便范围查询和反向遍历。
 
 - 当执行范围查询时，可以从范围的开始点或结束点开始，向前或向后遍历，这使得查询更为灵活。
 - 在需要对数据进行逆序处理时，双向链表非常有用。
 
-如果需要在 B+树中从大值向小值进行检索，可以按以下步骤操作：
+如果需要在 B+ 树中从大值向小值进行检索，可以按以下步骤操作：
 
 - 定位到最右侧节点：首先，找到包含最大值的叶子节点。这通常通过从根节点开始向右遍历树的方式实现。
 - 反向遍历：一旦定位到了最右侧的叶子节点，可以利用叶节点间的双向链表向左遍历。
@@ -2019,7 +1833,7 @@ B 树的特点是每个节点都存储数据，相邻的叶子节点之间没有
 
 ![孤独烟：B树](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240516125249.png)
 
-B+树的特点是非叶子节点只存储索引，叶子节点存储数据，并且相邻的叶子节点之间有指针链接。
+B+ 树的特点是非叶子节点只存储索引，叶子节点存储数据，并且相邻的叶子节点之间有指针链接。
 
 ![孤独烟：B+树](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240516125326.png)
 
@@ -2030,22 +1844,6 @@ B+树的特点是非叶子节点只存储索引，叶子节点存储数据，并
 而 B+ 树的叶子节点之间有指针链接，所以适合做范围查询，因为可以直接通过叶子节点间的指针顺序访问整个查询范围内的所有记录，而无需对树进行多次遍历。
 
 MySQL 属于关系型数据库，所以范围查询会比较多，所以采用了 B+树；但 MongoDB 属于非关系型数据库，在大多数情况下，只需要查询单条数据，所以 MongoDB 选择了 B 树。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动商业化一面的原题：说说 B+树，为什么 3 层容纳 2000W 条，为什么 2000w 条数据查的快
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的国企面试原题：说说 MySQL 的底层数据结构，B 树和 B+树的区别
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 22 暑期实习一面面试原题：MySQL 为什么选用 B+树
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小米面经同学 E 第二个部门 Java 后端技术一面面试原题：说一说 mysql 索引的底层机制
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 1 Java 技术一面面试原题：MySQL 索引结构，建立索引的策略
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯云智面经同学 16 一面面试原题：MySQL 索引结构，为什么用 B+树？
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小公司面经同学 5 Java 后端面试原题：数据库索引讲一下，然后为什么会加快查询速度，我讲到了 B+树，然后问了 B 数与 B+树区别
-> 8. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的百度面经同学 1 文心一言 25 实习 Java 后端面试原题：B+树的页是单向链表还是双向链表？如果从大值向小值检索，如何操作？
-> 9. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的得物面经同学 1 面试原题：项目索引，MySQL 索引，mongoDB 为什么用的 B 树，二者比较
-> 10. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 oppo 面经同学 8 后端开发秋招一面面试原题：Mysql 索引的数据结构，为什么选择这样的数据结构
-> 11. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 8 面试原题：索引
-> 12. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团同学 9 一面面试原题：B+树？
-> 13. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 15 点评后端技术面试原题：索引的数据结构
-> 14. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的得物面经同学 9 面试题目原题：B+树了解吗？底层呢？为什么这么用？
-> 15. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的滴滴面经同学 3 网约车后端开发一面原题：MySQL 索引原理，B+树更扁 有什么好处
 
 ### 42.一棵 B+树能存储多少条数据呢？
 
@@ -2061,13 +1859,13 @@ MySQL 属于关系型数据库，所以范围查询会比较多，所以采用�
 
 理论上，在 InnoDB 存储引擎中，B+树的高度一般为 2-4 层，就可以满足千万级数据的存储。查找数据的时候，一次页的查找代表一次 IO，当我们通过主键索引查询的时候，最多只需要 2-4 次 IO 就可以了。
 
-#### innodb 使用数据页存储数据？默认数据页大小 16K，我现在有一张表，有 2kw 数据，我这个 b+树的高度有几层？
+#### innodb 使用数据页存储数据？默认数据页大小 16K，我现在有一张表，有 2kw 数据，我这个 b+ 树的高度有几层？
 
 推荐阅读：[Innodb 引擎中 B+树一般有几层？能容纳多少数据量？](https://www.cnblogs.com/yifanSJ/p/17662132.html)
 
-在 MySQL 中，InnoDB 存储引擎的最小存储单元是页，默认大小是 16k。页可以用来存储 B+树叶子节点上的数据，也可以存放非叶子节点上的键值对。
+在 MySQL 中，InnoDB 存储引擎的最小存储单元是页，默认大小是 16k。页可以用来存储 B+ 树叶子节点上的数据，也可以存放非叶子节点上的键值对。
 
-在查找数据时，一次页的查找代表一次 IO，一般 B+树的高度为 2-4 层，所以通过主键索引查询时，最多只需要 2-4 次 IO 就可以了。
+在查找数据时，一次页的查找代表一次 IO，一般 B+ 树的高度为 2-4 层，所以通过主键索引查询时，最多只需要 2-4 次 IO 就可以了。
 
 已知非叶子节点可以存储 1170 个键值对。
 
@@ -2083,12 +1881,6 @@ MySQL 属于关系型数据库，所以范围查询会比较多，所以采用�
 
 B+ 树索引的每个叶子节点对应一个数据页，默认大小为 16KB。假设一条数据的大小为 1k，那么每个叶子节点可以存放 16 条数据。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动商业化一面的原题：说说 B+树，为什么 3 层容纳 2000W 条，为什么 2000w 条数据查的快
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的奇安信面经同学 1 Java 技术一面面试原题：innodb 使用数据页存储数据？默认数据页大小 16K，我现在有一张表，有 2kw 数据，我这个 b+树的高度有几层？
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 18 成都到家面试原题：一张表最多存多少数据（我答得 2kw，根据 b+树的三层高度计算）
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的得物面经同学 1 面试原题：MySQL B+树的度数越大越好吗，一般设多少
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 29 Java 后端一面原题：InnoDB 中一个三层的 B+树能存多少数据？每个叶子节点能存放多少条数据？
-
 ### 43.为什么不用普通二叉树？
 
 普通二叉树存在退化的情况，如果它退化成链表，就相当于全表扫描。
@@ -2102,9 +1894,6 @@ B+ 树索引的每个叶子节点对应一个数据页，默认大小为 16KB。
 ![二哥的Java 进阶之路：AVL 树](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241115151729.png)
 
 而 B+ 树是 N 叉，每一层可以存储更多的节点数据，树的高度就会降低，因此读取磁盘的次数就会下降，查询效率就快。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的百度面经同学 1 文心一言 25 实习 Java 后端面试原题：MySQL 索引为什么使用 B+树而不是用别的数据结构？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 27 云后台技术一面面试原题：为什么不用二叉树？为什么不用 AVL 树？
 
 ### 44.为什么用 B+ 树而不用 B 树呢？
 
@@ -2120,7 +1909,7 @@ B+ 树相比 B 树有 2 个显著优势：
 
 只需要找到符合条件的第一个叶子节点，顺序扫描后续的叶子节点就可以了。相比之下，B 树的每次范围查询都需要回溯到父节点，查询效率较低。
 
-#### B+树的时间复杂度是多少？
+#### B+ 树的时间复杂度是多少？
 
 树的高度 h 为：
 
@@ -2163,7 +1952,7 @@ B+ 树索引的范围查找主要依赖叶子节点之间的双向链表来完�
 
 ![oi-wiki：查找 45](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241223114806.png)
 
-第一步，从根节点开始，因为比 25 大，所以从右子树开始。因为 45 比 35 大，所以和右边的索引比较，右侧的索引也是 45，所以继续往右子树查找。
+第一步，从根节点开始，因为 45 比 25 大，所以从右子树开始。因为 45 比 35 大，所以和右边的索引比较，右侧的索引也是 45，所以继续往右子树查找。
 
 ![oi-wiki：从根节点开始](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241223114907.png)
 
@@ -2171,23 +1960,18 @@ B+ 树索引的范围查找主要依赖叶子节点之间的双向链表来完�
 
 ![oi-wiki：找到 45](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241223115300.png)
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的支付宝面经同学 2 春招技术一面面试原题：聚簇索引和非聚簇索引的区别？B+树叶子节点除了存数据还有什么？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的奇安信面经同学 1 Java 技术一面面试原题：b 树和 b+树有什么区别
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的百度面经同学 1 文心一言 25 实习 Java 后端面试原题：MySQL 索引为什么使用 B+树而不是用别的数据结构？
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 8 Java 后端实习一面面试原题：mysql b+树和 b 树的区别
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的作业帮面经同学 1 Java 后端一面面试原题：B+树有哪些优点
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的同学 1 贝壳找房后端技术一面面试原题：为什么用 b+树不用 b 树
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的阿里系面经同学 19 饿了么面试原题：索引为什么用 B+树不用 B 树 时间复杂度深究 b+树 快速排序...
-
 ### 45.Hash 索引和 B+ 树索引区别是什么？
 
 - B+ 树索引可以进行范围查询，Hash 索引不能。
 - B+ 树索引支持联合索引的最左侧原则，Hash 索引不支持。
 - B+ 树索引支持 order by 排序，Hash 索引不支持。
 - Hash 索引在等值查询上比 B+ 树索引效率更高。
-- B+ 树使用 like 进行模糊查询的时候，`LIKE 'abc%'` 的话可以起到索引优化的作用，Hash 索引无法进行模糊查询。
+- B+ 树使用 like 进行模糊查询的时候，`LIKE 'abc%'` 可以起到索引优化的作用，Hash 索引无法进行模糊查询。
 
 #### MySQL 模糊查询怎么查，什么情况下模糊查询不走索引？
+
+- 左模糊： `LIKE '%abc'`
+- 右模糊： `LIKE 'abc%'`
 
 MySQL 中进行模糊查询主要使用 LIKE 语句，结合通配符 %（代表任意多个字符）和 \_（代表单个字符）来实现。
 
@@ -2198,9 +1982,6 @@ SELECT * FROM table WHERE column LIKE '%xxx%';
 这个查询会返回所有 column 列中包含 xxx 的记录。
 
 但是，如果模糊查询的通配符 % 出现在搜索字符串的开始位置，如 `LIKE '%xxx'`，MySQL 将无法使用索引，因为数据库必须扫描全表以匹配任意位置的字符串。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 16 暑期实习一面面试原题：MySQL 模糊查询怎么查，什么情况下模糊查询不走索引
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的作业帮面经同学 1 Java 后端一面面试原题：为什么不用 hash 索引
 
 ### 46.聚簇索引与非聚簇索引的区别？
 
@@ -2218,14 +1999,6 @@ MySQL 默认的存储引擎是 InnoDB，InnoDB 的索引是按照 B+ 树结构�
 
 - InnoDB 采用的是聚簇索引，如果没有显式定义主键，InnoDB 会选择一个唯一的非空列作为隐式的聚簇索引；如果这样的列也不存在，InnoDB 会自动生成一个隐藏的行 ID 作为聚簇索引。这意味着数据与主键是紧密绑定的，行数据直接存储在索引的叶子节点上。
 - MyISAM 采用的是非聚簇索引，表数据存储在一个地方，而索引存储在另一个地方，索引指向数据行的物理位置。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小米春招同学 K 一面面试原题：mysql：聚簇索引和非聚簇索引区别
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的支付宝面经同学 2 春招技术一面面试原题：聚簇索引和非聚簇索引的区别？B+树叶子节点除了存数据还有什么？
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 1 Java 后端技术一面面试原题：聚簇索引是什么？非聚簇索引是什么？
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯云智面经同学 16 一面面试原题：聚簇索引和非聚簇索引的区别？
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手面经同学 1 部门主站技术部面试原题：Mysql 的聚簇索引和非聚簇索引的区别是什么?
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的作业帮面经同学 1 Java 后端一面面试原题：mysql 的聚簇索引是什么
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 29 Java 后端一面原题：MySQL 的索引怎么存储的？每个索引一个 B+树，还是多个索引放一个 B+树？叶子节点中存的是什么数据？
 
 ### 47.回表了解吗？
 
@@ -2272,12 +2045,9 @@ SELECT * FROM users WHERE name = '张三';
 
 索引覆盖（Covering Index）可以减少回表操作，将查询的字段都放在索引中，这样不需要回表就可以获取到查询结果了。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 1 Java 后端技术一面面试原题：使用非聚簇索引如何查找数据？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 1 技术二面面试原题：回表记录越多好吗？（回表的代价）
+> 覆盖索引： 要查询的字段就在索引上。
 
 ### 48.联合索引了解吗？（补充）
-
-> 2024 年 11 月 22 日增补
 
 联合索引指的是一个索引包含多个列。联合索引的创建语法如下：
 
@@ -2298,8 +2068,6 @@ CREATE INDEX index_name ON table_name (column1, column2, ...);
 比如说有这样一个联合索引 idx_c2_c3（c2 和 c3 列，主键是 c1），那么叶子节点存储的是 c2、c3 索引列的值和 c1 主键列的值。这样，当查询时，可以先通过联合索引找到对应的主键值，然后再通过主键值找到完整的数据行。
 
 ![小孩子：联合索引](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241122171938.png)
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的百度同学 4 面试原题：联合索引底层存储结构(和其他种类的索引存储结构有什么区别?)联合索引的叶子节点存的什么内容?
 
 ### 49.覆盖索引了解吗？
 
@@ -2334,12 +2102,9 @@ SELECT age, email FROM users WHERE name = "张三";
 
 ![三分恶面渣逆袭：覆盖索引](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-69e33c61-34bc-4f4b-912b-ca7beb9d5c7c.jpg)
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的作业帮面经同学 1 Java 后端一面面试原题：了解覆盖索引吗
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团同学 9 一面面试原题：索引覆盖，回表？
-
 ### 50.什么是最左前缀原则？
 
-在使用联合索引时，应当遵守最左前缀原则，或者叫最左匹配原则（最左前缀匹配原则）。
+在使用联合索引时，应当遵守**最左前缀原则**，或者叫最左匹配原则（最左前缀匹配原则）。
 
 它指的是在使用联合索引时，查询条件从索引的最左列开始并且不跳过中间的列。
 
@@ -2423,14 +2188,6 @@ select * from t where a > 2 and b = 2;
 
 `WHERE a = 1` 能有效利用联合索引，因为 a 是联合索引的第一个字段，符合最左前缀匹配原则。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的比亚迪面经同学 3 Java 技术一面面试原题：说一下数据库索引，最左匹配原则和索引的结构
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯云智面经同学 16 一面面试原题：说说最左前缀原则
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 3 Java 后端技术一面面试原题：最左匹配原则 索引失效
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的招银网络科技面经同学 9 Java 后端技术一面面试原题：Mysql 联合索引的设计原则
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的同学 1 贝壳找房后端技术一面面试原题：联合索引 (a, b)，where a = 1 和 where b = 1，效果是一样的吗
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 27 云后台技术一面面试原题：（联合索引）下面怎么走的索引？
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的滴滴面经同学 3 网约车后端开发一面原题：联合索引 (a, b, c)，where b = 1，能走吗，where a = 1，能走吗
-
 ### 51.什么是索引下推优化？
 
 索引下推`（Index Condition Pushdown (ICP) ）`是 MySQL 5.6 时添加的，它允许在访问索引时对数据进行过滤，从而减少回表的次数。
@@ -2449,8 +2206,6 @@ MySQL 会先根据 `name like '张%'` 查找条件匹配的数据，对于符合
 
 这就意味着不符合 age = 10 条件的记录将会在索引扫描时被过滤掉，从而减少了回表的次数。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团同学 9 一面面试原题：索引下推
-
 ### 52.如何查看是否用到了索引？（补充）
 
 > 2024 年 03 月 15 日增补。
@@ -2466,8 +2221,6 @@ EXPLAIN SELECT * FROM table WHERE column = 'value';
 ![二哥的 Java 进阶之路：explain 和索引](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240417092646.png)
 
 #### (A,B,C) 联合索引 `select * from tbn where a=? and b in (?,?) and c>?` 会走索引吗？
-
-> 2024 年 03 月 15 日增补。
 
 这个查询会使用到联合索引 `(A,B,C)`，因为条件是按照索引列 `A`、`B`、`C` 的顺序来的，这是理想的使用场景。
 
@@ -2523,9 +2276,7 @@ EXPLAIN SELECT * FROM tbn WHERE A=1 AND B IN (2, 3) AND C>3\G
 - **filtered**: 表示根据表的条件过滤后，剩余多少百分比的结果，这里是 `100.00`%，意味着所有扫描的行都会被返回。
 - **Extra**: 提供了关于查询执行的额外信息。`Using index condition` 表示 MySQL 使用了索引条件推送（Index Condition Pushdown，ICP），这是 MySQL 的一个优化方式，它允许在索引层面过滤数据，减少访问表数据的需要。
 
-#### 联合索引 abc，a=1,c=1/b=1,c=1/a=1,c=1,b=1 走不走索引？
-
-> 2024 年 03 月 19 日增补
+#### 联合索引 abc，（a=1,c=1）、（b=1,c=1）、（a=1,c=1,b=1） 走不走索引？
 
 我们通过实际的 SQL 来验证一下。
 
@@ -2591,9 +2342,7 @@ EXPLAIN SELECT * FROM tbn WHERE C=5\G
 
 ![二哥的 Java 进阶之路](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240408092646.png)
 
-#### sql 中使用 like，如果遵循最左前缀匹配，查询是不是一定会用到索引？
-
-> 2024 年 11 月 04 日增补
+#### sql 中使用 like ，如果遵循最左前缀匹配，查询是不是一定会用到索引？
 
 既然遵循最左前缀匹配，说明一定是联合索引，那么查询是一定会用到索引的。
 
@@ -2613,38 +2362,36 @@ EXPLAIN SELECT * FROM tbn WHERE C=5\G
 
 type 为 range，表示 MySQL 使用了索引范围扫描，`filtered 为 100.00%`，表示在扫描的行中，所有的行都满足 WHERE 条件。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动商业化一面的原题：(A,B,C) 联合索引 `select * from tbn where a=? and b in (?,?) and c>?` 会走索引吗？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东同学 10 后端实习一面的原题：联合索引 abc，a=1,c=1/b=1,c=1/a=1,c=1,b=1 走不走索引
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手面经同学 7 Java 后端技术一面面试原题：联合索引的一个场景题：(a,b,c)联合索引，(b,c)是否会走索引
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 1 Java 后端技术一面面试原题：建立联合索引(a,b,c)，where c = 5 是否会用到索引？为什么？
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 15 点评后端技术面试原题：sql 中使用 like，如果遵循最左前缀匹配，查询是不是一定会用到索引
-
 ## 锁
 
 ### 53.MySQL 中有哪几种锁，列举一下？
 
 ![三分恶面渣逆袭：MySQL 中的锁](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-a07e4525-ccc1-4287-aec5-ebf3f277857c.jpg)
 
-按锁粒度划分的话，MySQL 的锁有：
+按**锁粒度**划分的话，MySQL 的锁有：
 
 - 表锁：开销小，加锁快；锁定力度大，发生锁冲突概率高，并发度最低；不会出现死锁。
 - 行锁：开销大，加锁慢；会出现死锁；锁定粒度小，发生锁冲突的概率低，并发度高。
 - 页锁：开销和加锁速度介于表锁和行锁之间；会出现死锁；锁定粒度介于表锁和行锁之间，并发度一般。
 
-按兼容性划分的话，MySQL 的锁有：
+按**兼容性**划分的话，MySQL 的锁有：
 
 - 共享锁（S Lock），也叫读锁（read lock），相互不阻塞。
 - 排他锁（X Lock），也叫写锁（write lock），排它锁是阻塞的，在一定时间内，只有一个请求能执行写入，并阻止其它锁读取正在写入的数据。
 
-按加锁机制划分的话，MySQL 的锁有：
+按**加锁机制**划分的话，MySQL 的锁有：
 
 ①、乐观锁
+
+乐观锁倾向于认为系统中不会或只有很小几率发生资源竞争。
 
 乐观锁基于这样的假设：冲突在系统中出现的频率较低，因此在数据库事务执行过程中，不会频繁地去锁定资源。相反，它在提交更新的时候才检查是否有其他事务已经修改了数据。
 
 可以通过在数据表中使用版本号（Version）或时间戳（Timestamp）来实现，每次读取记录时，同时获取版本号或时间戳，更新时检查版本号或时间戳是否发生变化。
 
 如果没有变化，则执行更新并增加版本号或更新时间戳；如果检测到冲突（即版本号或时间戳与之前读取的不同），则拒绝更新。
+
+实现方式类似于 Java 中 cas 的思想。
 
 ②、悲观锁
 
@@ -2657,7 +2404,8 @@ type 为 range，表示 MySQL 使用了索引范围扫描，`filtered 为 100.00
 按照乐观锁的方式：
 
 ```sql
-UPDATE inventory SET count = count - 1, version = version + 1 WHERE product_id = 1 AND version = current_version;
+UPDATE inventory SET count = count - 1, version = version + 1
+WHERE product_id = 1 AND version = current_version;
 ```
 
 按照悲观锁的方式：
@@ -2666,15 +2414,17 @@ UPDATE inventory SET count = count - 1, version = version + 1 WHERE product_id =
 
 ```sql
 START TRANSACTION;
-SELECT * FROM inventory WHERE product_id = 1 FOR UPDATE;
-UPDATE inventory SET count = count - 1 WHERE product_id = 1;
+
+SELECT *
+FROM inventory
+WHERE product_id = 1
+FOR UPDATE;
+
+UPDATE inventory SET count = count - 1
+WHERE product_id = 1;
+
 COMMIT;
 ```
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小公司面经合集同学 1 Java 后端面试原题：乐观锁和悲观锁，库存的超卖问题的原因和解决方案？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东同学 4 云实习面试原题：mysql 一共有哪些锁
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 15 点评后端技术面试原题：问了一下 mysql 的锁和 MVCC
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的阿里系面经同学 19 饿了么面试原题：MySQL 锁
 
 ### 54.全局锁和表级锁了解吗？（补充）
 
@@ -2698,20 +2448,17 @@ UNLOCK TABLES;
 
 读锁允许多个事务同时读取被锁定的表，但不允许任何事务进行写操作。
 
+写锁允许一个事务对表进行读写操作，其他事务不能对该表进行任何操作（读或写）。
+
 ```sql
 LOCK TABLES your_table WRITE;
 -- 执行写操作
 UNLOCK TABLES;
 ```
 
-写锁允许一个事务对表进行读写操作，其他事务不能对该表进行任何操作（读或写）。
-
 在进行大规模的数据导入、导出或删除操作时，为了防止其他事务对数据进行并发操作，可以使用表锁。
 
 或者在进行表结构变更（如添加列、修改列类型）时，为了确保变更期间没有其他事务访问或修改该表，可以使用表锁。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 3 Java 后端技术一面面试原题：数据库中的全局锁 表锁 行级锁 每种锁的应用场景有哪些
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的同学 30 腾讯音乐面试原题：mysql 的表级锁有几种
 
 ### 55.说说 MySQL 的行锁？
 
@@ -2743,6 +2490,8 @@ COMMIT;
 ```
 
 在高并发环境中，行级锁能够提高系统的并发性能，因为锁定的粒度较小，只会锁住特定的行，不会影响其他行的操作。
+
+> 计算机领域，一直存在资源锁定范围与性能之间的平衡问题。aka，资源的锁定范围越小，性能越大；锁定范围越大，性能越小。
 
 #### select for update 加锁有什么需要注意的？
 
@@ -2847,12 +2596,7 @@ MySQL 默认行锁类型就是`临键锁(Next-Key Locks)`。当使用唯一性�
 
 ![三分恶面渣逆袭：插入意向锁](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-751425cb-daba-4da1-bab6-f843254cad3d.jpg)
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 3 Java 后端技术一面面试原题：数据库中的全局锁 表锁 行级锁 每种锁的应用场景有哪些
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的招银网络科技面经同学 9 Java 后端技术一面面试原题：select for update 加锁有什么需要注意的
-
 ### 85. 间隙锁了解吗？（补充）
-
-> 2024 年 12 月 15 日增补。
 
 间隙锁用于在范围查询时锁定记录之间的“间隙”，防止其他事务在该范围内插入新记录。
 
@@ -2908,8 +2652,6 @@ T2 在插入 (7, 7, '王五') 时，会被阻塞，可以在另外一个回话�
 SELECT * FROM table WHERE column > 10 and column < 20 FOR UPDATE;
 ```
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的阿里云面经同学 22 面经：mysql 的什么命令会加上间隙锁
-
 ### 56.意向锁是什么知道吗？
 
 意向锁是一个表级锁，不要和插入意向锁搞混。
@@ -2941,8 +2683,6 @@ MySQL 中的行锁、表锁都是悲观锁。
 如果 v1 不等于 v2，说明数据变动期间，数据被其他事务修改了，此时需要通知用户重新操作。
 
 悲观锁是 MySQL 自带的，而乐观锁通常需要开发者自己去实现。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 5 Java 后端技术一面面试原题：乐观锁与悲观锁
 
 ### 58.遇到过死锁问题吗，你是如何解决的？
 
@@ -2986,8 +2726,6 @@ UPDATE account SET balance = balance + 10 WHERE id = 1;
 
 第二步，调整事务的资源访问顺序，保持一致。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的虾皮面经同学 13 一面面试原题：遇到过 mysql 死锁或者数据不安全吗
-
 ## 事务
 
 ### 59.MySQL 事务的四大特性说一下？
@@ -3010,6 +2748,8 @@ UPDATE account SET balance = balance + 10 WHERE id = 1;
 
 #### 什么是隔离性？
 
+> 不同事务同时执行，事务的中间状态对其它事务不可见。如，MySQL 中有两个事务 Ta 和 Tb 同时执行，那么事务 Ta 执行的中间数据状态，对于事务 Tb 不可见。
+
 隔离性意味着并发执行的事务是彼此隔离的，一个事务的执行不会被其他事务干扰。就是事务之间是井水不犯河水的。
 
 隔离性主要是为了解决事务并发执行时可能出现的问题，如脏读、不可重复读、幻读等。
@@ -3027,27 +2767,19 @@ UPDATE account SET balance = balance + 10 WHERE id = 1;
 - **隔离性**：多个并发事务之间需要相互隔离，即一个事务的执行不能被其他事务干扰。
 - **持久性**：一旦事务提交，则其所做的修改将永久保存到数据库中。即使发生系统崩溃，修改的数据也不会丢失。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东同学 10 后端实习一面的原题：事务的四个特性，怎么理解事务一致性
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 16 暑期实习一面面试原题：MySQL 事务是什么，默认隔离级别，什么是可重复读？
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 23 QQ 后台技术一面面试原题：MySQL 事务，隔离级别
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 1 Java 后端技术一面面试原题：什么是数据库事务？事务的作用是什么？
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 OPPO 面经同学 1 面试原题：对 MySQL 事务的理解
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 vivo 面经同学 10 技术一面面试原题：事务的概念
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的同学 1 贝壳找房后端技术一面面试原题：事务 ACID
-> 8. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动同学 17 后端技术面试原题：什么是事务 事务为什么要有隔离级别 幻读是什么 什么时候要解决幻读 什么时候不用解决
-> 9. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 19 番茄小说一面面试原题：MySQL 中的事务
-
 ### 60.ACID 靠什么保证的呢？
 
-MySQL 通过事务、undo log、redo log 来确保 ACID。
+MySQL 通过事务、undolog、redolog 来确保 ACID。
 
 ![二哥的 Java 进阶之路：ACID 的保证机制](https://cdn.tobebetterjavaer.com/stutymore/mysql-20230919103025.png)
 
+事务特性的保证手段，是否只依赖其中某一个特定技术。
+
 #### 如何保证原子性？
 
-MySQL 通过 undo log 来确保原子性（Atomicity）。
+MySQL 通过 undolog 来确保原子性（Atomicity）。
 
-当事务开始时，MySQL 会在`undo log`中记录事务开始前的旧值。如果事务执行失败，MySQL 会使用`undo log`中的旧值来回滚事务开始前的状态；如果事务执行成功，MySQL 会在某个时间节点将`undo log`删除。
+当事务开始时，MySQL 会在`undolog`中记录事务开始前的旧值。如果事务执行失败， MySQL 会使用`undolog`中的旧值来回滚事务开始前的状态；如果事务执行成功，MySQL 会在某个时间节点将`undolog`删除。
 
 #### 如何保证一致性？
 
@@ -3061,18 +2793,15 @@ MySQL 定义了多种隔离级别，通过 MVCC 来确保每个事务都有专�
 
 #### 如何保证持久性？
 
-redo log 是一种物理日志，当执行写操作时，MySQL 会先将更改记录到 redo log 中。当 redo log 填满时，MySQL 再将这些更改写入数据文件中。
+redolog 是一种物理日志，当执行写操作时，MySQL 会先将更改记录到 redolog 中。当 redolog 填满时，MySQL 再将这些更改写入数据文件中。
 
-如果 MySQL 在写入数据文件时发生崩溃，可以通过 redo log 来恢复数据文件，从而确保持久性（Durability）。
+如果 MySQL 在写入数据文件时发生崩溃，可以通过 redolog 来恢复数据文件，从而确保持久性（Durability）。
 
 #### 事务会不会自动提交？
 
 在 MySQL 中，默认情况下事务是 自动提交 的。每执行一条 SQL 语句（如 INSERT、UPDATE），都会被当作一个事务自动提交。
 
 如果需要手动控制事务，可以使用 START TRANSACTION 开启事务，并通过 COMMIT 或 ROLLBACK 完成事务。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团同学 2 优选物流调度技术 2 面面试原题：MySQL ACID 哪些机制来保证
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的百度同学 4 面试原题：事务会不会自动提交?
 
 ### 61.事务的隔离级别有哪些？
 
@@ -3110,20 +2839,6 @@ redo log 是一种物理日志，当执行写操作时，MySQL 会先将更改�
 
 使用 `SET GLOBAL TRANSACTION ISOLATION LEVEL` 可以修改全局隔离级别，影响新的连接，但不会改变现有会话。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 16 暑期实习一面面试原题：MySQL 事务是什么，默认隔离级别，什么是可重复读？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 23 QQ 后台技术一面面试原题：MySQL 事务，隔离级别
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手面经同学 7 Java 后端技术一面面试原题：说一下事务的四大隔离级别，分别解决什么问题
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 1 Java 后端技术一面面试原题：MySQL 默认隔离级别？
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 2 Java 后端技术一面面试原题：说说 MySQL 事务的隔离级别，如何实现？
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小公司面经合集同学 1 Java 后端面试原题：MySQL 的四个隔离级别以及默认隔离级别？
-> 7. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 360 面经同学 3 Java 后端技术一面面试原题：数据库隔离级别有哪些？mysql 是属于哪个隔离级别
-> 8. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的联想面经同学 7 面试原题：Mysql 四个隔离级别，MVCC 实现
-> 9. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 oppo 面经同学 8 后端开发秋招一面面试原题：讲讲 Mysql 的四个隔离级别
-> 10. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的比亚迪面经同学 12 Java 技术面试原题：mysql 的隔离级别有哪些
-> 11. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 27 云后台技术一面面试原题：事务的隔离级别？这些隔离级别是怎么保证数据的一致性的？默认的事务隔离级别是啥？（MVCC）怎么更改事务的隔离级别？
-> 12. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 19 番茄小说一面面试原题：事务隔离级别，哪个是默认的，特点
-> 13. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的虾皮面经同学 13 一面面试原题：mysql 事务隔离级别
-
 ### 62.什么是脏读、不可重复读、幻读呢？
 
 脏读指的是一个事务能够读取另一个事务尚未提交的数据。如果读到的数据在之后被回滚了，那么第一个事务读取到的就是无效的数据。
@@ -3157,6 +2872,8 @@ COMMIT;
 SELECT salary FROM employees WHERE id = 1;  -- 读取到 salary = 5000 (不可重复读)
 COMMIT;
 ```
+
+幻读： 某一个事务在进行范围查找时，由于同时存在其它事务，其它事务更新了这个范围，就会使得进行范围查找的事务在前后两次的查询中，出现了不同结果的问题。比如，要对某一范围进行 count，第一次查询之后，另一个事务对这个范围进行了数据增减，那么第二次 count 时，结果就跟第一次不一样了。
 
 幻读指的是在同一事务中执行相同的查询时，返回的结果集中出现了之前没有的数据行。这是因为在事务执行过程中，另外一个事务插入了新的数据。
 
@@ -3196,9 +2913,6 @@ COMMIT;
 | Repeatable Read 可重复读   | 否   | 否         | 是   |
 | Serialzable 可串行化       | 否   | 否         | 否   |
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 7 京东到家面试原题：mysql 事务隔离级别，默认隔离级别，如何避免幻读
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的阿里云面经同学 22 面经：事务隔离级别，幻读和脏读的区别，如何防止幻读，事务的 mvcc 机制
-
 ### 63.事务的隔离级别是如何实现的？
 
 读未提交不提供任何锁机制来保护读取的数据，允许读取未提交的数据（即脏读）。
@@ -3210,25 +2924,21 @@ COMMIT;
 
 串行化级别下，事务在读操作时，必须先加表级共享锁，直到事务结束才释放；事务在写操作时，必须先加表级排他锁，直到事务结束才释放。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 2 Java 后端技术一面面试原题：说说 MySQL 事务的隔离级别，如何实现？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的得物面经同学 9 面试题目原题：Mysql 隔离机制有哪些？怎么实现的？可串行化是怎么避免的三个事务问题？
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的滴滴面经同学 3 网约车后端开发一面原题：可重复读级别是怎么实现的
-
 ### 64.MVCC 了解吗？怎么实现的？
 
 MVCC 指的是多版本并发控制，简单来说，就是给我们的 MySQL 数据拍个“快照”，定格某个时刻数据库的状态。
 
 在 MySQL 中，MVCC 是通过版本链和 ReadView 机制来实现的。
 
-![天瑕：undo log 版本链和 ReadView](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241215073837.png)
+![天瑕：undolog 版本链和 ReadView](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241215073837.png)
 
-1. 每条记录包含两个隐藏列：最近修改的事务 ID 和指向 Undo Log 的指针，用于构成版本链。
-2. 每次更新数据时，会生成一个新的数据版本，并将旧版本的数据保存到 Undo Log 中。
-3. 每次读取数据时，会生成一个 ReadView，用于判断哪个版本的数据对当前事务可见。
+1. 每条记录包含两个隐藏列：最近修改的事务 ID 和指向 undolog 的指针，用于构成**版本链**。
+2. 每次更新数据时，会生成一个新的数据版本，并将旧版本的数据保存到 undolog 中。
+3. 每次读取数据时，会生成一个 ReadView ，用于判断哪个版本的数据对当前事务可见。
 
 #### 什么是版本链？
 
-在 InnoDB 中，每一行数据都有两个隐藏的列：一个是 DB_TRX_ID，另一个是 DB_ROLL_PTR。
+在 InnoDB 中，每一行数据都有两个隐藏的列：一个是 DB_TRX_ID ，另一个是 DB_ROLL_PTR 。
 
 - `DB_TRX_ID`，保存创建这个版本的事务 ID。
 - `DB_ROLL_PTR`，指向 undo 日志记录的指针，这个记录包含了该行的前一个版本的信息。通过这个指针，可以访问到该行数据的历史版本。
@@ -3251,6 +2961,12 @@ MVCC 指的是多版本并发控制，简单来说，就是给我们的 MySQL �
 
 #### 说说什么是 ReadView？
 
+在一个变化着的系统中，从宏观角度上来讲，我们并不能准确的描述“某一时刻的系统”，我们只能通过描述这个系统在某一个时刻的状态，通过对特征值的综合表述，来描述这个时刻。
+
+所谓视图，意思就是使用能够代表系统某些特征，把这些特征在某一时刻的值结合起来，形成一个数据组，以达到“标识某一时刻系统”的目的。
+
+比如说，MySQL 中某个表，由于它是时刻变化者的，那我们该如何指明它的某一个时刻呢？我们可以直接说八点五十，但是这样并不准确，因为事务很多的时候，八点五十的状态
+
 ReadView（读视图）是 InnoDB 为了实现一致性读而创建的数据结构，它用于确定在特定事务中哪些版本的行记录是可见的。
 
 ReadView 主要用来处理隔离级别为"可重复读"和"读已提交"的情况。因为在这两个隔离级别下，事务在读取数据时，需要保证读取到的数据是一致的，即读取到的数据是在事务开始时的一个快照。
@@ -3259,10 +2975,10 @@ ReadView 主要用来处理隔离级别为"可重复读"和"读已提交"的情�
 
 当事务开始执行时，InnoDB 会为该事务创建一个 ReadView，这个 ReadView 会记录 4 个重要的信息：
 
-- creator_trx_id：创建该 ReadView 的事务 ID。
-- m_ids：所有活跃事务的 ID 列表，活跃事务是指那些已经开始但尚未提交的事务。
-- min_trx_id：所有活跃事务中最小的事务 ID。它是 m_ids 数组中最小的事务 ID。
-- max_trx_id ：事务 ID 的最大值加一。换句话说，它是下一个将要生成的事务 ID。
+- creator_trx_id ：创建该 ReadView 的事务 ID。
+- m_ids ： 所有活跃事务的 ID 列表，活跃事务是指那些已经开始但尚未提交的事务。
+- min_trx_id ： 所有活跃事务中最小的事务 ID。它是 m_ids 数组中最小的事务 ID。
+- max_trx_id ： 事务 ID 的最大值加一。换句话说，它是下一个将要生成的事务 ID。
 
 #### ReadView 是如何判断记录的某个版本是否可见的？
 
@@ -3270,9 +2986,9 @@ ReadView 主要用来处理隔离级别为"可重复读"和"读已提交"的情�
 
 当一个事务读取某条数据时，InnoDB 会根据 ReadView 中的信息来判断该数据的某个版本是否可见。
 
-①、如果某个数据版本的 DB_TRX_ID 小于 min_trx_id，则该数据版本在生成 ReadView 之前就已经提交，因此对当前事务是可见的。
+①、如果某个数据版本的 DB_TRX_ID 小于 min_trx_id ，则该数据版本在生成 ReadView 之前就已经提交，因此对当前事务是可见的。
 
-②、如果某个数据版本的 DB_TRX_ID 大于 max_trx_id，则表示创建该数据版本的事务在生成 ReadView 之后开始，因此对当前事务是不可见的。
+②、如果某个数据版本的 DB_TRX_ID 大于 max_trx_id ，则表示创建该数据版本的事务在生成 ReadView 之后开始，因此对当前事务是不可见的。
 
 ③、如果某个数据版本的 DB_TRX_ID 在 min_trx_id 和 max_trx_id 之间，需要判断 DB_TRX_ID 是否在 m_ids 列表中：
 
@@ -3305,13 +3021,6 @@ ReadView 主要用来处理隔离级别为"可重复读"和"读已提交"的情�
 - 读提交：A 只能看到 B 提交后的更改。如果 B 还没提交，A 将看到更改前的值。
 - 可重复读：在事务开始后，A 总是读取到变量的相同值，即使 B 在这期间提交了更改。这是通过 MVCC 机制实现的。
 - 可串行化：A 和 B 的操作是串行执行的，如果 A 先执行，那么 A 读到的值就是 B 提交前的值；如果 B 先执行，那么 A 读到的值就是 B 提交后的值。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 2 Java 后端技术一面面试原题：说说 MVCC，解决了什么问题？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小公司面经合集同学 1 Java 后端面试原题：了解的 MVCC 吗？
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的联想面经同学 7 面试原题：Mysql 四个隔离级别，MVCC 实现，如果两个 AB 事务并发修改一个变量，那么 A 读到的值是什么，怎么分析，快照读的原理，读已提交和可重复读区别，具体原理是什么。
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 oppo 面经同学 8 后端开发秋招一面面试原题：讲讲 Mysql 的 MVCC 机制
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手同学 2 一面面试原题：事务隔离级别？MVCC 机制介绍下？（版本链）版本链通过什么控制
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团面经同学 15 点评后端技术面试原题：问了一下 mysql 的锁和 MVCC
 
 ## 高可用/性能
 
@@ -3365,9 +3074,9 @@ MySQL 的主从复制（Master-Slave Replication）是一种数据同步机制�
 - 从服务器接收到二进制日志数据后，会将这些数据写入自己的中继日志（Relay Log）。中继日志是从服务器上的一个本地存储。
 - 从服务器上有一个 SQL 线程会读取中继日志，并在本地数据库上执行，从而将更改应用到从数据库中，完成同步。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯云智面经同学 16 一面面试原题：MySQL 的主从复制过程
-
 ### 68.主从同步延迟怎么处理？
+
+// ??????
 
 **主从同步延迟的原因**
 
@@ -3395,16 +3104,13 @@ MySQL 的主从复制（Master-Slave Replication）是一种数据同步机制�
 
 分库的策略有两种：
 
-①、垂直分库：按照业务模块将不同的表拆分到不同的库中，例如，用户表、订单表、商品表等分到不同的库中。
+①、垂直分库 ： 按照业务模块将不同的表拆分到不同的库中，例如，用户表、订单表、商品表等分到不同的库中。
 
 ![三分恶面渣逆袭：垂直分库](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-2a43af18-617b-4502-b66a-894c2ff4c6c3.jpg)
 
-②、水平分库：按照一定的策略将一个表中的数据拆分到多个库中，例如，按照用户 id 的 hash 值将用户表拆分到不同的库中。
+②、水平分库 ： 按照一定的策略将一个表中的数据拆分到多个库中，例如，按照用户 id 的 hash 值将用户表拆分到不同的库中。
 
 ![三分恶面渣逆袭：水平分库](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-debe0fb1-d7f7-4ef2-8c99-13c9377138b6.jpg)
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手面经同学 7 Java 后端技术一面面试原题：分库分表了解吗
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为面经同学 8 技术二面面试原题：说说分库分表的准则
 
 ### 70.那你们是怎么分表的？
 
@@ -3416,13 +3122,9 @@ MySQL 的主从复制（Master-Slave Replication）是一种数据同步机制�
 
 ![三分恶面渣逆袭：表拆分](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-7cba6ce0-c8bb-4f51-9c3b-e5a44e724c79.jpg)
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手面经同学 7 Java 后端技术一面面试原题：分库分表了解吗
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为面经同学 8 技术二面面试原题：说说分库分表的准则
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 29 Java 后端一面原题：表存满了之后怎么扩表？
-
 ### 71.分片策略有哪几种？
 
-常见的分片策略有三种，分别是范围分片、Hash 分片和配置路由分片。
+常见的分片策略有三种，分别是**范围分片**、**Hash 分片**和配置**路由分片**。
 
 范围分片是根据某个字段的值范围进行分库分表。这种方式适用于分片键具有顺序性或连续性的场景。
 
@@ -3458,9 +3160,6 @@ public String getTableNameByHash(long userId) {
 | yyyy     | table_2  |
 | zzzz     | table_3  |
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 24 面试原题：项目中的水平分表是怎么做的？分片键具体是怎么设置的？
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 29 Java 后端一面原题：分库分表具体的分片策略是怎么做的？
-
 ### 72.不停机扩容怎么实现？
 
 实际上，不停机扩容，实操起来是个非常麻烦而且很有风险的操作，当然，面试回答起来就简单很多。
@@ -3489,6 +3188,13 @@ public String getTableNameByHash(long userId) {
 
 ### 73.怎么分库分表？
 
+1. 在系统架构早期，要预估业务数据规模，例如，某一个业务拆分之后，评估可能在两三年内数据规模不会打到两三千万，那么就没有分库分表的必要；再比如，业务拆分之后，在不同的地理区域内建立了相同的微服务，那就可以让微服务使用不同的连接（不同的连接代表着不同数据库），这样以来也没有必要分库分表；
+2. 从详细设计阶段来看，要根据业务需求，仔细分析数据库表结构的设计。比如，要兼顾三范式把多字段拆分到不同表、要注重业务隔离，把系统不同业务模块，每一个业务模块都划分一个数据库；
+3. 如果确实要进行分库分表，需要考虑以下问题：
+   1. 技术选型。是选择 shardingsphere 还是 mycat ？
+   2. 采取怎样的分库分表策略？是按范围、还是按路由、或是按 hash？是分库还是分表？是垂直分还是水平分？
+   3. 要考虑分库分表所带来的问题：如唯一性 ID 问题、跨界点查询问题、（数据迁移、扩容、校验）问题？
+
 如果表的字段过多，我会按字段的访问频率或功能相关性拆分成多个表，减少单表宽度。
 
 如果单表数据量过大，我会按 ID 或时间将数据分到多张表中。比如订单表可以按 `user_id % N` 进行水平分表。
@@ -3510,8 +3216,6 @@ public String getTableNameByHash(long userId) {
 ![piwenfei：mycat](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241207121845.png)
 
 推荐阅读：[mycat 介绍](https://yanxizhu.com/index.php/archives/113/)
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的得物面经同学 9 面试题目原题：Mysql 有很大的数据量怎么办？怎么分表分库？
 
 ### 74.你觉得分库分表会带来什么问题呢？
 
@@ -3545,7 +3249,7 @@ public String getTableNameByHash(long userId) {
 
 数据的迁移，容量如何规划，未来是否可能再次需要扩容，等等，都是需要考虑的问题。
 
-- **ID 问题**
+- **全局 ID 问题**
 
 数据库表被切分后，不能再依赖数据库自身的主键生成机制，所以需要一些手段来保证全局主键唯一。
 
@@ -3602,19 +3306,17 @@ public class SnowflakeIdGenerator {
 
 除了雪花算法，还有百度 UidGenerator、美团 Leaf 等开源的分布式 ID 生成方案。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 29 Java 后端一面原题：id 是怎么生成的？（分布式自增主键）
-
 ## 运维
 
 ### 75.百万级别以上的数据如何删除？
 
 关于索引：由于索引需要额外的维护成本，因为索引文件是单独存在的文件,所以当我们对数据的增加,修改,删除,都会产生额外的对索引文件的操作,这些操作需要消耗额外的 IO,会降低增/改/删的执行效率。
 
-所以，在我们删除数据库百万级别数据的时候，查询 MySQL 官方手册得知删除数据的速度和创建的索引数量是成正比的。
+所以，在我们删除数据库百万级别数据的时候，根据 MySQL 官方手册得知删除数据的速度和创建的索引数量是成正比的。
 
-1.  所以我们想要删除百万数据的时候可以先删除索引
-2.  然后删除其中无用数据
-3.  删除完成后重新创建索引创建索引也非常快
+1. 所以我们想要删除百万数据的时候可以先删除索引
+2. 然后删除其中无用数据
+3. 删除完成后重新创建索引也非常快
 
 ### 76.百万千万级大表如何添加字段？
 
@@ -3640,7 +3342,7 @@ public class SnowflakeIdGenerator {
 
 （1）使用 top 命令观察，确定是 mysqld 导致还是其他原因。
 
-（2）如果是 mysqld 导致的，show processlist，查看 session 情况，确定是不是有消耗资源的 sql 在运行。
+（2）如果是 mysqld 导致的，show processlist ，查看 session 情况，确定是不是有消耗资源的 sql 在运行。
 
 （3）找出消耗高的 sql，看看执行计划是否准确， 索引是否缺失，数据量是否太大。
 
@@ -3659,8 +3361,6 @@ public class SnowflakeIdGenerator {
 ## SQL 题
 
 ### 78.一张表：id，name，age，sex，class，sql 语句：所有年龄为 18 的人的名字？找到每个班年龄大于 18 有多少人？找到每个班年龄排前两名的人？（补充）
-
-> 这是一道 SQL 题，主要考察 SQL 的基本语法。建议大家直接在本地建表，然后实操一下。 2024 年 04 月 11 日增补。
 
 第一步，建表：
 
@@ -3729,8 +3429,6 @@ ORDER BY a.class, a.age DESC;
 
 ![二哥的 Java 进阶之路](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240410105951.png)
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的奇安信面经同学 1 Java 技术一面面试原题：一张表：id，name，age，sex，class，sql 语句：所有年龄为 18 的人的名字？找到每个班年龄大于 18 有多少人？找到每个班年龄排前两名的人？
-
 ### 79.有一个查询需求，MySQL 中有两个表，一个表 1000W 数据，另一个表只有几千数据，要做一个关联查询，如何优化
 
 如果 orders 表是大表（比如 1000 万条记录），而 users 表是相对较小的表（比如几千条记录）。
@@ -3755,9 +3453,7 @@ JOIN orders o ON filtered_users.user_id = o.user_id
 WHERE o.some_order_condition;  -- 如果需要，可以进一步过滤大表
 ```
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东面经同学 1 Java 技术一面面试原题：有一个查询需求，MySQL 中有两个表，一个表 1000W 数据，另一个表只有几千数据，要做一个关联查询，如何优化
-
-### 80.新建一个表结构，创建索引，将百万或千万级的数据使用 insert 导入该表，新建一个表结构，将百万或千万级的数据使用 isnert 导入该表，再创建索引，这两种效率哪个高呢？或者说用时短呢？
+### 80.新建一个表结构，创建索引，将百万或千万级的数据使用 insert 导入该表，新建一个表结构，将百万或千万级的数据使用 insert 导入该表，再创建索引，这两种效率哪个高呢？或者说用时短呢？
 
 talk is cheap，show me the code。
 
@@ -3771,7 +3467,7 @@ CREATE TABLE test_table (
     created_at DATETIME NOT NULL
 );
 CREATE INDEX idx_name ON test_table(name);
-DELIMITER //
+DELIMITER // 存储过程
 
 CREATE PROCEDURE insert_data()
 BEGIN
@@ -3842,18 +3538,16 @@ CREATE INDEX idx_name_no_index ON test_table_no_index(name);
 
 所以在 InnoDB 中，数据插入和索引创建（更新）是密不可分的。从数据库的视角看，插入操作包括向聚簇索引添加记录和更新所有相关的次级索引。这些步骤在一个事务中原子地执行，以确保数据的一致性和完整性。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的农业银行面经同学 7 Java 后端面试原题：数据库是先建立索引还是先插入数据
+总结： 在 InnoDB 中，是先创建聚簇索引，然后再在聚簇索引的叶子节点插入数据；如果表还有其他索引，例如，在表的非主键字段上添加了索引，那么在插入数据时，除了要在聚簇索引叶子节点上插入数据之外，还要修改其它索引。
 
-### 81.什么是深分页，select \* from tbn limit 1000000000 这个有什么问题，如果表大或者表小分别什么问题
+### 81.什么是深分页，select \* from tbn limit 1000000000, 10 这个有什么问题，如果表大或者表小分别什么问题
 
 深分页指的是在分页查询中，请求的页数非常大，例如请求第 100 万页的数据。在这种情况下，数据库需要跳过前 999999 页的数据，会消耗大量的 CPU 和 I/O 资源，导致查询性能下降。
 
-`select * from tbn limit 1000000000` 正是一个深分页查询。
+`select * from tbn limit 1000000000, 10 ` 正是一个深分页查询。
 
 - 如果表的数据量非常大，那么这个查询可能会消耗大量的内存和 CPU 资源，甚至可能导致数据库崩溃。
 - 如果表的数据量非常小，比如说只有 100 条，那就会返回这前 100 条，虽然没什么性能影响，但这个查询本身没什么意义。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 13 Java 后端二面面试原题：什么是深分页，select \* from tbn limit 1000000000 这个有什么问题，如果表大或者表小分别什么问题
 
 ### 82.一个表（name, sex,age,id），select age,id,name from tblname where name='paicoding';怎么建索引
 
@@ -3874,8 +3568,6 @@ CREATE INDEX idx_name_age_id ON tblname (name, age, id);
 #### 表字段 id（主键）age name select name,age from 表 where name like(A%) and age =30 会不会走索引？
 
 可以创建组合索引 (name, age)，这可以利用 name 和 age 的双重条件来高效地进行查询。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动面经同学 13 Java 后端二面面试原题：一个表（name, sex,age,id），select age,id,name from tblname where name='paicoding';怎么建索引
 
 ### 83.SQL 题：一个学生成绩表，字段有学生姓名、班级、成绩，求各班前十名
 
@@ -3943,30 +3635,3 @@ WHERE ranked.rank <= 10;
 然后通过 ORDER BY 子句确保在计算排名前按班级和分数排序。
 
 ![二哥的 Java 进阶之路](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240423113508.png)
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯云智面经同学 16 一面面试原题：SQL 题：一个学生成绩表，字段有学生姓名、班级、成绩，求各班前十名
-
----
-
-图文详解 84 道 MySQL 面试高频题，这次吊打面试官，我觉得稳了（手动 dog）。整理：沉默王二，戳[转载链接](https://mp.weixin.qq.com/s/JFjFs_7xduCmHOegbJ-Gbg)，作者：三分恶，戳[原文链接](https://mp.weixin.qq.com/s/zSTyZ-8CFalwAYSB0PN6wA)。
-
-_没有什么使我停留——除了目的，纵然岸旁有玫瑰、有绿荫、有宁静的港湾，我是不系之舟_。
-
-**系列内容**：
-
-- [面渣逆袭 Java SE 篇 👍](https://javabetter.cn/sidebar/sanfene/javase.html)
-- [面渣逆袭 Java 集合框架篇 👍](https://javabetter.cn/sidebar/sanfene/javathread.html)
-- [面渣逆袭 Java 并发编程篇 👍](https://javabetter.cn/sidebar/sanfene/collection.html)
-- [面渣逆袭 JVM 篇 👍](https://javabetter.cn/sidebar/sanfene/jvm.html)
-- [面渣逆袭 Spring 篇 👍](https://javabetter.cn/sidebar/sanfene/spring.html)
-- [面渣逆袭 Redis 篇 👍](https://javabetter.cn/sidebar/sanfene/redis.html)
-- [面渣逆袭 MyBatis 篇 👍](https://javabetter.cn/sidebar/sanfene/mybatis.html)
-- [面渣逆袭 MySQL 篇 👍](https://javabetter.cn/sidebar/sanfene/mysql.html)
-- [面渣逆袭操作系统篇 👍](https://javabetter.cn/sidebar/sanfene/os.html)
-- [面渣逆袭计算机网络篇 👍](https://javabetter.cn/sidebar/sanfene/network.html)
-- [面渣逆袭 RocketMQ 篇 👍](https://javabetter.cn/sidebar/sanfene/rocketmq.html)
-- [面渣逆袭分布式篇 👍](https://javabetter.cn/sidebar/sanfene/fenbushi.html)
-- [面渣逆袭微服务篇 👍](https://javabetter.cn/sidebar/sanfene/weifuwu.html)
-- [面渣逆袭设计模式篇 👍](https://javabetter.cn/sidebar/sanfene/shejimoshi.html)
-
----
