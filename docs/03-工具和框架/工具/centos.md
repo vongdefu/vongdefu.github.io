@@ -172,6 +172,19 @@ history -c
 
 :::
 
+## yum 源管理
+
+### centos7 yum 源失效
+
+停止维护之后，自带的 yum 源就失效了。解决过程：
+
+1. 备份：
+   1. mkdir -p /etc/yum.repos.d/bak
+   2. mv /etc/yum.repos.d/\*.repo /etc/yum.repos.d/bak/
+2. 修改：
+
+参考[这里](https://www.cnblogs.com/lvzhenjiang/articles/18350828)。
+
 ## 服务管理
 
 ```bash
@@ -203,7 +216,7 @@ systemctl [start | enable | disable | status | restart | stop] nginx.service
 
 - 样例
 
-```
+```bash
 添加
 firewall-cmd --zone=public --add-port=80/tcp --permanent    （--permanent永久生效，没有此参数重启后失效）
 
@@ -219,7 +232,7 @@ firewall-cmd --zone= public --remove-port=80/tcp --permanent
 
 - firewalld 的基本使用
 
-```
+```bash
 启动：  systemctl start firewalld
 查状态：systemctl status firewalld
 停止：  systemctl disable firewalld
@@ -233,7 +246,7 @@ firewall-cmd --zone= public --remove-port=80/tcp --permanent
 
 - 配置 firewalld-cmd
 
-```
+```bash
 查看版本： firewall-cmd --version
 查看帮助： firewall-cmd --help
 显示状态： firewall-cmd --state
@@ -248,7 +261,7 @@ firewall-cmd --zone= public --remove-port=80/tcp --permanent
 
 - 那怎么开启一个端口呢
 
-```
+```bash
 添加
 firewall-cmd --zone=public(作用域) --add-port=80/tcp(端口和访问类型) --permanent(永久生效)
 firewall-cmd --zone=public --add-service=http --permanent
@@ -277,7 +290,7 @@ firewall-cmd --zone=public --query-port=8080/tcp
 
 - 参数解释
 
-```
+```bash
 –add-service ##添加的服务
 –zone ##作用域
 –add-port=80/tcp ##添加端口，格式为：端口/通讯协议
@@ -286,7 +299,7 @@ firewall-cmd --zone=public --query-port=8080/tcp
 
 - 详细使用
 
-```
+```bash
 firewall-cmd --permanent --zone=public --add-rich-rule='rule family="ipv4" source address="192.168.0.4/24" service name="http" accept'    //设置某个ip访问某个服务
 firewall-cmd --permanent --zone=public --remove-rich-rule='rule family="ipv4" source address="192.168.0.4/24" service name="http" accept' //删除配置
 firewall-cmd --permanent --add-rich-rule 'rule family=ipv4 source address=192.168.0.1/2 port port=80 protocol=tcp accept'     //设置某个ip访问某个端口
@@ -305,32 +318,32 @@ firewall-cmd --add-forward-port=proto=80:proto=tcp:toaddr=192.168.0.1:toport=808
 
 - 查看
 
-```
+```bash
 getenforce 或 /usr/sbin/sestatus -v
 ```
 
 - 临时关闭
 
-```
+```bash
 setenforce 0
 ```
 
 - 永久关闭
 
-```
+```bash
 vi /etc/selinux/config
 SELINUX=disabled
 ```
 
 - 查看 Linux 状态
 
-```
+```bash
 sestatus
 ```
 
 - selinux 的知识点
 
-```
+```bash
 https://blog.csdn.net/yanjun821126/article/details/80828908
 ```
 
@@ -490,13 +503,13 @@ crontab [-u user] file
 
 ```shell
 // 1. 查看当前用户的定时任务
-	$ crontab -l
+$ crontab -l
 
 // 2. 为当前用户编辑一个定时任务
-	$ crontab -e
+$ crontab -e
 
 // 3. 清空当前用户的定时任务
-	$ crontab -r
+$ crontab -r
 
 // 4. 每分钟打印一次自己的英文名字到 /home/test/name.txt 的文件中
 方式一：
@@ -587,13 +600,13 @@ $ crontab -e
 
 ### 1.1. 安装依赖包
 
-```
+```bash
 yum install -y fuse ntfs-3g
 ```
 
 ### 1.2. 挂载硬盘
 
-```
+```bash
 [root@home data]# mkdir -p /mnt/data/d /mnt/data/e
 
 [root@home data]# lsblk -f
@@ -620,7 +633,7 @@ sdc
 
 如果需要永久挂载，先查到该盘的 type 值：
 
-```
+```bash
 
 [root@home ~]# blkid
 /dev/mapper/centos_home-root: UUID="a1c1e8bc-3a27-47b6-a2aa-f329e4b77e86" TYPE="xfs"
@@ -636,7 +649,7 @@ sdc
 
 在最下面添加两行
 
-```
+```bash
 
 #
 # /etc/fstab
@@ -661,7 +674,7 @@ UUID=B476-53D1          /boot/efi               vfat    umask=0077,shortname=win
 
 ### 1.4. 其它命令
 
-```
+```bash
 # 查看所有磁盘的分区情况
 fdisk -l
 
@@ -674,7 +687,7 @@ df -h
 
 ### 1.5. 挂载 exFat 磁盘驱动器
 
-```
+```bash
 yum install epel-release
 rpm -v --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
 rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
@@ -698,7 +711,7 @@ yum install exfat-utils fuse-exfat
 
 ### 查看磁盘使用情况
 
-```
+```bash
 [root@dev ~]# df -h
 文件系统                     容量  已用  可用 已用% 挂载点
 /dev/mapper/centos_dev-root  118G  118G   20K  100% /
@@ -713,26 +726,26 @@ tmpfs                        6.3G     0  6.3G    0% /run/user/0
 
 ### 备份 home
 
-```
+```bash
 [root@dev ~]# cp -r /home/ /dev/homebak
 ```
 
 ### 卸载 home
 
-```
+```bash
 [root@dev ~]# umount /home
 ```
 
 ### 删除 home 所在的 lv
 
-```
+```bash
 [root@dev ~]# lvremove -y /dev/mapper/centos_dev-home
   Logical volume "home" successfully removed
 ```
 
 ### 显示 lvm 卷组信息
 
-```
+```bash
 [root@dev ~]# vgdisplay
   --- Volume group ---
   VG Name               centos_dev
@@ -758,7 +771,7 @@ tmpfs                        6.3G     0  6.3G    0% /run/user/0
 
 ### 扩展 root 所在的 lv
 
-```
+```bash
 [root@dev ~]# lvextend -L +3T /dev/mapper/centos_dev-root
   Size of logical volume centos_dev/root changed from 118.00 GiB (30208 extents) to <3.12 TiB (816640 extents).
   Logical volume centos_dev/root successfully resized.
@@ -766,7 +779,7 @@ tmpfs                        6.3G     0  6.3G    0% /run/user/0
 
 ### 扩展 root 文件系统
 
-```
+```bash
 [root@dev ~]# xfs_growfs /dev/mapper/centos_dev-root
 meta-data=/dev/mapper/centos_dev-root isize=512    agcount=4, agsize=7733248 blks
          =                       sectsz=512   attr=2, projid32bit=1
@@ -782,7 +795,7 @@ data blocks changed from 30932992 to 836239360
 
 ### 重新创建 home 的 lv
 
-```
+```bash
 [root@dev ~]# lvcreate -L 4T -n home centos_dev
   Logical volume "home" created.
 ```
@@ -804,7 +817,7 @@ realtime =none                   extsz=4096   blocks=0, rtextents=0
 
 ### 挂载 home 并恢复备份
 
-```
+```bash
 [root@dev centos_dev]# mount /dev/centos_dev/home /home
 [root@dev centos_dev]# cp -r /dev/homebak/ /home/
 [root@dev ~]# df -h
