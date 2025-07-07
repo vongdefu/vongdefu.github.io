@@ -2,6 +2,7 @@ import { defineConfig } from "vitepress";
 import { nav } from "./nav.ts";
 import { sidebar } from "./sidebar.ts";
 import { fileURLToPath, URL } from "node:url";
+import markdownItTextualUml from "markdown-it-textual-uml";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -13,6 +14,10 @@ export default defineConfig({
     lineNumbers: true,
     codeCopyButtonTitle: "复制",
     math: true,
+    config: (md) => {
+      // 使用更多的 Markdown-it 插件！
+      md.use(markdownItTextualUml);
+    },
   },
   // 重写内部组件： https://vitepress.dev/zh/guide/extending-default-theme#overriding-internal-components
   // vite: {
