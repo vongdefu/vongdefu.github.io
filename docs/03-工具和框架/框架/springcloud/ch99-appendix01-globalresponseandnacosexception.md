@@ -58,7 +58,7 @@
 
 #### 3.1. 重写语言解析器
 
-```
+```java
 public class LanguageResolver implements LocaleResolver {
     /**
      * 请求header字段
@@ -97,7 +97,7 @@ public class LanguageResolver implements LocaleResolver {
 
 ```
 
-```
+```java
 @Configuration
 public class MessageConfig {
 
@@ -114,7 +114,7 @@ public class MessageConfig {
 
 这里我们选用 Alibaba-Nacos 组件。
 
-```
+```xml
 <dependency>
     <groupId>com.alibaba.cloud</groupId>
     <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
@@ -122,7 +122,7 @@ public class MessageConfig {
 
 ```
 
-```
+```yml
 server:
   port: 10300
 spring:
@@ -137,12 +137,11 @@ spring:
         namespace: 8d269024-f215-4195-be82-f6343cafde9c
         # 命名分组
         group: DEV
-
 ```
 
 配置一个枚举类，枚举出所有的国际化的异常码表。
 
-```
+```java
 public enum NacosJson2ObjEnum {
 
     MESSAGE_ZH_CN("message_zh_cn", "业务异常码表（简中）", Map.class),
@@ -176,7 +175,7 @@ public enum NacosJson2ObjEnum {
 
 利用 Spring 初始化 Bean 机制，把国际化异常码表信息加载本地内存中，并设置监听器监听 Nacos 上面的配置变化。
 
-```
+```java
 @Slf4j
 @Component
 public class NacosConfig implements InitializingBean {
@@ -269,7 +268,7 @@ public class NacosConfig implements InitializingBean {
 
 对外提供一个工具类，获取国际化的异常信息。
 
-```
+```java
 @Component
 public class MessageNacosUtil {
 
@@ -430,7 +429,7 @@ public class BizException extends BaseException{
 
 关键一步，重写自定义的异常信息。
 
-```
+```java
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -449,7 +448,7 @@ public class GlobalExceptionHandler {
 
 #### 4.1. 集成 Validation
 
-```
+```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-validation</artifactId>
@@ -457,7 +456,7 @@ public class GlobalExceptionHandler {
 
 ```
 
-```
+```java
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -492,13 +491,45 @@ public class GlobalExceptionHandler {
 
 ![](./ch99-appendix01-globalresponseandnacosexception/image/1699933284668.png)
 
+```json
+// message_zh_cn
+{
+  "EE1001": "不相等",
+  "EE2001": "用户名不能为空",
+  "EE2002": "地址不能为空",
+  "EE2003": "",
+  "EE3001": "{}的性别不能为女性",
+  "EE3002": "{}的性别不能为女性且电话号码{}不正确",
+  "EE4001": "用户名{}不能为空，姓名{}不能为空",
+  "EE5001": "{}性别不能为女性",
+  "000000": "成功",
+  "999999": "失败"
+}
+```
+
 ![](./ch99-appendix01-globalresponseandnacosexception/image/1699933284751.png)
+
+```json
+// message_en_us
+{
+  "EE1001": "not equal",
+  "EE2001": "name can not be blank",
+  "EE2002": "address can not be blank",
+  "EE2003": "",
+  "EE3001": "{}'s gender can not be female",
+  "EE3002": "{}'s gender can not be female and phone num {} is not correct",
+  "EE4001": "{}'s name can not be blank, username {} can't be blank",
+  "EE5001": "{}'s gender can not be female",
+  "000000": "success",
+  "999999": "failed"
+}
+```
 
 我们编写一个 controller 进行测试：
 
 1. 直接抛出业务异常
 
-```
+```java
 @GetMapping("/throw2_01")
 public OperationResponse test02_01() {
 
@@ -516,7 +547,7 @@ public OperationResponse test02_01() {
 
 2. 抛出校验异常
 
-```
+```java
 
 @Data
 public class UserDTO {
@@ -536,7 +567,7 @@ public class UserDTO {
 
 ```
 
-```
+```java
 @PostMapping("/throw2_02")
 public DataResponse<UserDTO> test02_02(
         @RequestBody @Validated UserDTO userDTO
@@ -558,7 +589,7 @@ public DataResponse<UserDTO> test02_02(
 
 3. 抛出组合后的异常信息
 
-```
+```java
 @PostMapping("/throw2_03")
 public DataResponse<UserDTO> test02_03(
         @RequestBody @Validated UserDTO userDTO
@@ -575,7 +606,7 @@ public DataResponse<UserDTO> test02_03(
 
 4. 抛出多个参数组成的异常信息
 
-```
+```java
 @PostMapping("/throw2_04")
 public DataResponse<UserDTO> test02_04(
         @RequestBody @Validated UserDTO userDTO
@@ -594,7 +625,7 @@ public DataResponse<UserDTO> test02_04(
 
 5. 返回默认的响应失败消息体
 
-```
+```java
 @PostMapping("/throw2_05")
 public DataResponse<UserDTO> test02_05(
         @RequestBody @Validated UserDTO userDTO

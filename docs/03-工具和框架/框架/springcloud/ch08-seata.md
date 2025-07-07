@@ -112,7 +112,9 @@ CREATE TABLE IF NOT EXISTS `lock_table`
 
 但是由于我们使用的配置方式是基于 mysql 和 nacos 的，因此，我们还需要先修改一下配置信息。我们打开 /script/config-center/ 下面的 config.txt 文件，之后修改下面的几项内容：
 
-```
+> [[TIP]] 针对不同版本的 MySQL，所使用的驱动以及配置的 url 有所不同。
+
+```yml
 
 store.mode=db ## 采用db的存储形式
 store.db.datasource=druid ## druid数据源
@@ -122,13 +124,23 @@ store.db.url=jdbc:mysql://192.168.1.150:3306/seata_server?useUnicode=true ## TC�
 store.db.user=root ## 用户名
 store.db.password=root ## 密码
 
+store.mode=db ## 采用db的存储形式
+store.db.datasource=druid ## druid数据源
+store.db.dbType=mysql ## mysql数据库
+store.db.driverClassName=com.mysql.cj.jdbc.Driver ## mysql驱动
+store.db.url=jdbc:mysql://192.168.10.105:3306/seata_server?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Hongkong ## TC的数据库url
+store.db.user=root ## 用户名
+store.db.password=root ## 密码
+
 ```
 
 最后只需要在 /script/config-center/nacos/ 目录下执行下面命令即可。Windows 平台下面，可以使用 gitbash 执行。
 
-```
+```sh
 sh nacos-config.sh -h 192.168.1.150 -p 8848 -g SEATA_GROUP -t bb4ba084-9183-4406-bdf4-9254d372849e -u nacos -w nacos
 
+
+sh nacos-config.sh -h 192.168.10.105 -p 8848 -g SEATA_GROUP -t 10fe07b3-354c-4540-aaea-85d14a1418c3 -u nacos -w nacos
 ```
 
 执行后的效果如下：
@@ -272,7 +284,7 @@ config {
 
 1. 先创建数据库
 
-```
+```sql
 -- 仓储
 CREATE TABLE `storage` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
@@ -299,7 +311,7 @@ CREATE TABLE `undo_log` (
 2.  使用 idea 工具中的 initializer 工具，生成模块的骨架，这里不再赘述。
 3.  修改 pom 文件，添加上 nacos 注册中心、Mybatis、MySQL、Seata 的相关依赖。
 
-```
+```xml
 <dependency>
     <groupId>com.alibaba.cloud</groupId>
     <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
@@ -347,7 +359,7 @@ CREATE TABLE `undo_log` (
 
 4. 修改项目的配置： application.yml
 
-```
+```yml
 server:
   port: 10902
 
@@ -374,7 +386,6 @@ spring:
         server-addr: 192.168.1.150:8848
         namespace: 2cbceeeb-22f5-40d6-b65c-47f673e79f29
 
-
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
 
@@ -382,12 +393,11 @@ mybatis:
 logging:
   level:
     root: debug
-
 ```
 
 5. 之后再使用 idea 中的 easycode 插件生成业务代码，关键方法是： `me.zeanzai.seataatstorage.service.impl.StorageServiceImpl#deduct`
 
-```
+```java
 @Transactional
 @Override
 public boolean deduct(Long id, Long num) {

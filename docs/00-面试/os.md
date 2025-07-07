@@ -1,21 +1,3 @@
----
-title: 操作系统面试题，34道操作系统八股文（1万字51张手绘图），面渣逆袭必看👍
-shortTitle: 面渣逆袭-操作系统
-description: 下载次数超 1 万次，1 万字 51 张手绘图，详解 34 道操作系统面试高频题（让天下没有难背的八股），面渣背会这些 OS 八股文，这次吊打面试官，我觉得稳了（手动 dog）。
-author: 三分恶
-date: 2024-10-17
-category:
-  - 面渣逆袭
-tag:
-  - 面渣逆袭
-head:
-  - - meta
-    - name: keywords
-      content: OS面试题,操作系统,OS,操作系统面试题,面试题,八股文
----
-
-1 万字 51 张手绘图，详解 34 道操作系统面试高频题（让天下没有难背的八股），面渣背会这些 OS 八股文，这次吊打面试官，我觉得稳了（手动 dog）。整理：沉默王二，戳[转载链接](https://mp.weixin.qq.com/s/CYsn0M5ddDuG--mALmhsuw)，作者：三分恶，戳[原文链接](https://mp.weixin.qq.com/s/KMGyn-FLkvzsMH06LV4OfQ)。
-
 ## 引论
 
 ### 01、什么是操作系统？
@@ -36,8 +18,6 @@ head:
 
 ④、通过设备驱动程序控制和管理计算机的硬件设备，如键盘、鼠标、打印机等。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的比亚迪面经同学 1 面试原题：操作系统的主要功能，以及上下文切换
-
 ## 操作系统结构
 
 ### 03、什么是内核？
@@ -55,8 +35,6 @@ head:
 
 当程序使⽤⽤户空间时，我们常说该程序在 **⽤户态** 执⾏，⽽当程序使内核空间时，程序则在 **内核态** 执⾏。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的得物面经同学 8 一面面试原题：内核空间和用户空间是什么，什么时候会进入内核空间
-
 ### 05、用户态和内核态是如何切换的？
 
 当应用程序执行系统调用时，CPU 将从用户态切换到内核态，进入内核空间执行相应的内核代码，然后再切换回用户态。
@@ -64,8 +42,6 @@ head:
 ![三分恶面渣逆袭：用户态&内核态切换](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-b358cdae-18b6-45d4-8a5b-4ea3a7cfc273.png)
 
 系统调用是应用程序请求操作系统内核提供服务的接口，如文件操作（如 open、read、write）、进程控制（如 fork、exec）、内存管理（如 mmap）等。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的得物面经同学 8 一面面试原题：内核空间和用户空间是什么，什么时候会进入内核空间
 
 ## 进程和线程
 
@@ -164,8 +140,6 @@ head:
 可以将这种调度算法看成是时间片轮转调度算法与优先级调度算法的结合。
 
 ![DIDA-lJ-多级反馈队列](https://cdn.tobebetterjavaer.com/stutymore/os-20240426094524.png)
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为面经同学 9 Java 通用软件开发一面面试原题：进程的调度方式
 
 ### 12、进程间通信有哪些方式？
 
@@ -294,13 +268,6 @@ int main() {
 
 ![](https://cdn.tobebetterjavaer.com/stutymore/os-20240314082438.png)
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为一面原题：说一下进程的通信机制
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动商业化一面的原题：进程和线程区别，线程共享内存和进程共享内存的区别
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的字节跳动商业化一面的原题：进程间如何通信
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为面经同学 6 Java 通用软件开发一面面试原题：说说你对 JVM 调优的了解
-> 5. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的美团同学 2 优选物流调度技术 2 面面试原题：进程间的通信方式，代码使用匿名管道使两个进程通信
-> 6. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的同学 30 腾讯音乐面试原题：linux 下进程的通信方式有哪几种？
-
 ### 13、进程和线程的联系和区别？
 
 进程是一个正在执行的程序实例。每个进程都有自己独立的地址空间、全局变量、堆栈、和文件描述符等资源。
@@ -324,9 +291,6 @@ int main() {
 | 创建销毁   | 开销大，较慢                 | 开销小，较快                     |
 | 并发性     | 低                           | 高                               |
 | 崩溃影响   | 一个进程崩溃不会影响其他进程 | 一个线程崩溃可能导致整个进程崩溃 |
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的得物面经同学 8 一面面试原题：Linux 中进程和线程的区别
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的同学 30 腾讯音乐面试原题：进程和线程的主要区别是什么样子？
 
 ### 14、线程上下文切换了解吗？
 

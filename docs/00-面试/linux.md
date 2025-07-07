@@ -1,19 +1,3 @@
----
-title: Linux面试题，1道Linux八股文（1万字2张手绘图），面渣逆袭必看👍
-shortTitle: 面渣逆袭-Linux
-description: 下载次数超 1 万次，1 万字 2 张手绘图，详解 2 道 Linux 面试高频题（让天下没有难背的八股），面渣背会这些 Linux 八股文，这次吊打面试官，我觉得稳了（手动 dog）。
-author: 沉默王二
-date: 2024-12-01
-category:
-  - 面渣逆袭
-tag:
-  - 面渣逆袭
-head:
-  - - meta
-    - name: keywords
-      content: Linux面试题,Linux,linux,面试题,八股文
----
-
 ## 1. Linux 常用命令
 
 推荐阅读：[常用高频 Linux 速查备忘手册](https://javabetter.cn/pdf/linux.html)
@@ -31,10 +15,6 @@ head:
 - mkdir 创建目录、rm 删除文件、cp 复制文件、mv 移动文件
 - zip 压缩文件、unzip 解压文件等等这些。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的作业帮面经同学 1 Java 后端一面面试原题：常用 linux 命令
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的虾皮面经同学 13 一面面试原题：常见的 linux 命令
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的阿里云面经同学 22 面经：linux 常用命令
-
 ### 文件操作的命令有哪些？
 
 - `ls`：列出目录内容。`ls -l`显示详细信息，`ls -a`显示隐藏文件。
@@ -50,8 +30,6 @@ head:
 
 Windows 下我还是比较习惯使用右键菜单新建一个文件，然后重命名。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的同学 30 腾讯音乐面试原题：如果是 Windows，如何去创建一个空文件的？
-
 #### 如何查看系统的日志文件？
 
 在 Linux 中，可以通过 cat、more、less、tail、head 等命令查看系统日志文件。
@@ -62,8 +40,6 @@ Windows 下我还是比较习惯使用右键菜单新建一个文件，然后重
 
 - `/var/log/syslog`：包含系统范围内的消息和错误日志，包括启动日志、内核日志等，是排查系统问题的首选日志文件之一。
 - `/var/log/messages`：类似于 syslog，但通常更多关注系统级别的消息和错误。
-
-> 1. [二哥编程星球](https://javabetter.cn/zhishixingqiu/)球友[枕云眠美团 AI 面试原题](https://t.zsxq.com/BaHOh)：如何查看系统日志文件，常见的系统日志文件有哪些
 
 ### 系统管理的命令有哪些？
 
@@ -86,23 +62,17 @@ top 命令可以实时查看所有进程的 CPU 和内存使用情况。
 
 ![二哥的 Java 进阶之路：ps 命令](https://cdn.tobebetterjavaer.com/stutymore/linux-20241223162812.png)
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的同学 30 腾讯音乐面试原题：怎么查看一个进程的 Cpu 使用率呢？
-
 #### 如何查看 Linux 内存使用情况？
 
 可以使用 watch 配合 free 命令实时监控内存使用情况。如 `watch -n 1 free -m`每秒刷新一次内存使用情况。
 
 ![二哥的 Java 进阶之路：free](https://cdn.tobebetterjavaer.com/stutymore/linux-20241223163021.png)
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 29 Java 后端一面原题：如何看 Linux 进程或 CPU 使用情况？Linux 查看内存情况？
-
 #### 如何查看系统负载？
 
 top 命令是实时查看系统性能的常用工具，系统负载信息通常显示在 top 命令输出的顶部。它还显示了系统运行的进程、内存使用情况等。
 
 ![二哥的 Java 进阶之路：TOP 命令](https://cdn.tobebetterjavaer.com/stutymore/linux-20240813114745.png)
-
-> 1. [二哥编程星球](https://javabetter.cn/zhishixingqiu/)球友[枕云眠美团 AI 面试原题](https://t.zsxq.com/BaHOh)：如何查看系统负载，系统中的 load average 含义是什么
 
 #### Load Average 是什么？
 
@@ -125,8 +95,6 @@ load average 的数值可以看作是系统的工作队列长度（等待处理�
 macOS 上可以通过 `sysctl -a | grep machdep.cpu.core_count` 查看 CPU 核心数，我本机目前是 16 核。
 
 ![二哥的 Java 进阶之路：macOS 的 CPU 核心数](https://cdn.tobebetterjavaer.com/stutymore/linux-20240813115642.png)
-
-> 1. [二哥编程星球](https://javabetter.cn/zhishixingqiu/)球友[枕云眠美团 AI 面试原题](https://t.zsxq.com/BaHOh)：如何查看系统负载，系统中的 load average 含义是什么
 
 #### chmod 的参数讲一下？
 
@@ -162,6 +130,15 @@ Linux 中的权限可以应用于三种类别的用户：
 
 数字模式使用三位八进制数来表示权限，每位数字代表不同的用户类别（所有者、组、其他用户），数字是其各自权限值的总和：
 
+000 = 0
+001 = 1
+010 = 2
+011 = 3
+100 = 4
+101 = 5
+110 = 6
+111 = 7
+
 - 读（r）= 4
 - 写（w）= 2
 - 执行（x）= 1
@@ -176,8 +153,6 @@ Linux 中的权限可以应用于三种类别的用户：
 #### `kill -9` 中的 9 是什么意思？
 
 `kill -9 PID` 是一种强制终止进程的方式，其中的 9 表示信号编号，代表 SIGKILL 信号。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的阿里云面经同学 22 面经：kill -9 9 的意义是什么
 
 ### 网络管理的命令有哪些？
 
@@ -199,8 +174,6 @@ Linux 中的权限可以应用于三种类别的用户：
 - `wc -l`：统计匹配到的行数，即连接数。
 
 也可以使用 `ss` 命令，它是 netstat 的替代工具；还可以使用 `lsof` 命令，它可以列出当前系统打开的文件和套接字。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 29 Java 后端一面原题：Linux 系统的 8080 端口有多少个 TCP 连接，怎么看？
 
 ### 压缩和解压的命令有哪些？
 
@@ -234,11 +207,6 @@ find /home -name "*.txt"
 find /var/log -name "*.log" -mtime +7
 ```
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的用友金融一面原题：Linux 的常用命令
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为 OD 面经同学 1 一面面试原题：Linux 使用过哪些命令
-> 3. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的小公司面经同学 5 Java 后端面试原题：Liunx 下查找一个文件怎么做
-> 4. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为 OD 面经同学 1 一面面试原题：chmod 的参数讲一下?
-
 ## 2. Linux 系统管理
 
 ### 用户和用户组有什么区别？
@@ -268,8 +236,6 @@ sudo useradd -m -g developers johndoe
 - `-m`：表示创建用户的同时创建用户的主目录（通常在`/home/username`）。
 - `-g`：指定用户的初始用户组。
 
-> 1. [二哥编程星球](https://javabetter.cn/zhishixingqiu/)球友[枕云眠美团 AI 面试原题](https://t.zsxq.com/BaHOh)：解释 linux 中的用户和用户组概念，如何创建新用户和用户组
-
 ### 如何用 linux 命令去查找某个 qps?
 
 如果服务通过网络提供访问，可以使用 netstat 或 ss 命令统计特定端口的连接数，并结合 watch 命令来监控实时的连接速率。
@@ -292,8 +258,6 @@ watch -n 1 "netstat -an | grep ':443 ' | grep ESTABLISHED | wc -l"
 
 ![二哥的 Java 进阶之路：技术派的 443 请求数](https://cdn.tobebetterjavaer.com/stutymore/linux-20240902112732.png)
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的作业帮面经同学 1 Java 后端一面面试原题：用 linux 命令去查找某个 qps
-
 ## 3. Git 常用命令
 
 ### Git 常用命令有哪些？
@@ -306,11 +270,3 @@ watch -n 1 "netstat -an | grep ':443 ' | grep ESTABLISHED | wc -l"
 - `git merge <branch-name>`：合并指定分支到当前分支。
 - `git checkout <branch-name>`：切换分支。
 - `git pull`：拉取远程仓库的更新。
-
----
-
-图文详解 2 道 Linux 面试高频题，这次吊打面试官，我觉得稳了（手动 dog）。整理：沉默王二。
-
-_没有什么使我停留——除了目的，纵然岸旁有玫瑰、有绿荫、有宁静的港湾，我是不系之舟_。
-
----

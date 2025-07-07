@@ -1,23 +1,3 @@
----
-title: MyBatis面试题，23道MyBatis八股文（6千字30张手绘图），面渣逆袭必看👍
-shortTitle: 面渣逆袭-MyBatis
-author: 三分恶
-date: 2024-11-08
-category:
-  - 面渣逆袭
-tag:
-  - 面渣逆袭
-description: 下载次数超 1 万次，6400 字 30 张手绘图，详解 23 道 MyBatis 面试高频题（让天下没有难背的八股），面渣背会这些 MyBatis 八股文，这次吊打面试官，我觉得稳了（手动 dog）。
-head:
-  - - meta
-    - name: keywords
-      content: MyBatis面试题,MyBatis,面试题,八股文
----
-
-6400 字 30 张手绘图，详解 23 道 MyBatis 面试高频题（让天下没有难背的八股），面渣背会这些 MyBatis 八股文，这次吊打面试官，我觉得稳了（手动 dog）。整理：沉默王二，戳[转载链接](https://mp.weixin.qq.com/s/en2RgcVx52Ql3tYGLfv3Kw)，作者：三分恶，戳[原文链接](https://mp.weixin.qq.com/s/O_5Id2o9IP4loPazJuiHng)。
-
-大家好，我是二哥呀，面渣逆袭系列继续，这节我们的主角是 MyBatis，作为当前国内最流行的 ORM 框架，是我们这些 crud 选手最趁手的工具，赶紧来看看面试都会问哪些问题吧。
-
 ## 基础
 
 ### 1. 说说什么是 MyBatis?
@@ -26,7 +6,7 @@ head:
 
 **先吹一下**：
 
-- Mybatis 是一个半 ORM（对象关系映射）框架，它内部封装了 JDBC，开发时只需要关注 SQL 语句本身，不需要花费精力去处理加载驱动、创建连接、创建 statement 等繁杂的过程。程序员直接编写原生态 sql，可以严格控制 sql 执行性能，灵活度高。
+- Mybatis 是一个半 ORM（对象关系映射）框架，它内部封装了 JDBC，开发时只需要关注 SQL 语句本身，不需要花费精力去处理**加载驱动、创建连接、创建 statement **等繁杂的过程。程序员直接编写原生态 sql，可以严格控制 sql 执行性能，灵活度高。
 - MyBatis 可以使用 XML 或注解来配置和映射原生信息，将 POJO 映射成数据库中的记录，避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集。
 
 **再说一下缺点**

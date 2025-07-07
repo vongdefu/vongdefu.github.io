@@ -481,7 +481,3 @@ ffmpeg -hwaccel cuvid -i tt.mp4 \
 
 - 调整屏幕比并放到幕布上
   ./ffmpeg -i ./temp/out/S12E16_0004_0004_0001.mp4 -vf "split[fg0][bg0];[bg0]scale=h=1280:w=720,boxblur=10:10[bg1];[fg0]scale=720:(720\*ih/iw)[fg1];[bg1][fg1]overlay=0:(H-h)/2,setdar=9/16" ./temp/out/S12E16_0004_0004_0002.mp4
-
----
-
-<img style="border:1px red solid; display:block; margin:0 auto;" :src="$withBase('/qrcode.jpg')" alt="微信公众号" />

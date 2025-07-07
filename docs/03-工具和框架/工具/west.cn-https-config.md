@@ -6,7 +6,7 @@ tag:
   - "software"
 ---
 
-## 1. https配置
+## 1. https 配置
 
 ### 1.1. 环境
 
@@ -16,19 +16,19 @@ tag:
 
 ### 1.2. 场景
 
-部署小程序后端，并配置小程序的HTTPS域名。
+部署小程序后端，并配置小程序的 HTTPS 域名。
 
 ### 1.3. 步骤
 
-#### 1.3.1. 申请ssl证书
+#### 1.3.1. 申请 ssl 证书
 
-创建ssl的证书，创建完成之后付款、补全认证资料，在域名验证类型处选择“文件验证”；
+创建 ssl 的证书，创建完成之后付款、补全认证资料，在域名验证类型处选择“文件验证”；
 
 #### 1.3.2. 验证主机
 
 根据 西部数码 证书列表界面上要求的方式进行配置，验证主机属于域名所有者。
 
-##### 1.3.2.1. 配置nginx的配置文件
+##### 1.3.2.1. 配置 nginx 的配置文件
 
 ```
 $ vi /usr/setup/nginx-1.14.1/conf/vhost/test.domainname.com.conf
@@ -58,7 +58,7 @@ $ mkdir -p /usr/setup/nginx-1.14.1/html/test/.well-known/pki-validation
 $ vi /usr/setup/nginx-1.14.1/html/test/.well-known/pki-validation/fileauth.txt
 ```
 
-##### 1.3.2.4. 重启nginx
+##### 1.3.2.4. 重启 nginx
 
 ```
 $ systemctl reload nginx
@@ -72,8 +72,7 @@ $ systemctl reload nginx
 
 ##### 1.3.2.6. 配置域名解析
 
-配置一个A记录类型的域名解析。
-
+配置一个 A 记录类型的域名解析。
 
 ##### 1.3.2.7. 访问测试
 
@@ -81,7 +80,7 @@ $ systemctl reload nginx
 
 在浏览器中输入 `test.domainname.com` 测试是否解析成功。
 
-#### 1.3.3. 配置https
+#### 1.3.3. 配置 https
 
 ##### 1.3.3.1. 创建证书文件夹
 
@@ -151,8 +150,4 @@ $ rm -rf test/
 
 ##### 1.3.3.5. 测试
 
-浏览器中输入 `test.domainname.com` 查看是否自动跳转到https。成功。
----
-
-<img style="border:1px red solid; display:block; margin:0 auto;" :src="$withBase('/qrcode.jpg')" alt="微信公众号" />
-
+## 浏览器中输入 `test.domainname.com` 查看是否自动跳转到 https。成功。

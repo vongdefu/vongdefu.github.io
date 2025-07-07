@@ -1,3 +1,5 @@
+# MySQL 知识点汇总
+
 ## MySQL 基础
 
 ### 🌟0.什么是 MySQL？
@@ -5,6 +7,11 @@
 MySQL 是一个开源的关系型数据库，现在隶属于 Oracle 公司。是我们国内使用频率最高的一种数据库，我在本地安装的是最新的 8.3 版本。
 
 ![二哥的 Java 进阶之路：MySQL 8.3 最新版本](https://cdn.tobebetterjavaer.com/stutymore/mysql-20250227062838.png)
+
+```sql
+[root@dev mysql]# mysql --version
+mysql  Ver 8.4.5 for Linux on x86_64 (MySQL Community Server - GPL)
+```
 
 #### 怎么删除/创建一张表？
 
@@ -113,8 +120,6 @@ CROSS JOIN B;
 ```
 
 笛卡尔积是数学中的一个概念，例如集合 `A={a,b}`，集合 `B={0,1,2}`，那么 A✖️B=`{<a,0>,<a,1>,<a,2>,<b,0>,<b,1>,<b,2>,}`。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的用友面试原题：两张表怎么进行连接
 
 ### 2.内连接、左连接、右连接有什么区别？
 
@@ -473,18 +478,9 @@ SELECT * FROM table_name LIMIT 2, 8;
 
 MySQL 支持很多内置函数，包括执行计算、格式转换、日期处理等。
 
-#### 用过哪些字符串函数来处理文本？
-
 <details class="details custom-block">
 
-<summary>实验示例</summary>
-
-- `CONCAT()` : 连接两个或多个字符串。
-- `LENGTH()` : 返回字符串的长度。
-- `SUBSTRING()` : 从字符串中提取子字符串。
-- `REPLACE()` : 替换字符串中的某部分。
-- `LOWER()` 和 `UPPER()` : 分别将字符串转换为小写或大写。
-- `TRIM()` : 去除字符串两侧的空格或其他指定字符。
+<summary>文本处理函数</summary>
 
 ```sql
 -- 连接字符串
@@ -511,17 +507,9 @@ SELECT TRIM('  沉默 王二  ') AS trimmed_string;
 
 </details>
 
-#### 用过哪些数值函数？
-
-- `ABS()` : 返回一个数的绝对值。
-- `CEILING()` : 返回大于或等于给定数值的最小整数。
-- `FLOOR()` : 返回小于或等于给定数值的最大整数。
-- `ROUND()` : 四舍五入到指定的小数位数。
-- `MOD()` : 返回除法操作的余数。
-
 <details class="details custom-block">
 
-<summary>示例</summary>
+<summary>数值计算</summary>
 
 ```sql
 -- 返回绝对值
@@ -542,18 +530,9 @@ SELECT MOD(10, 3) AS modulus;
 
 </details>
 
-#### 用过哪些日期和时间函数？
-
 <details class="details custom-block">
 
-- `NOW()`: 返回当前的日期和时间。
-- `CURDATE()`: 返回当前的日期。
-- `CURTIME()`: 返回当前的时间。
-- `DATE_ADD()` 和 `DATE_SUB()`: 在日期上加上或减去指定的时间间隔。
-- `DATEDIFF()`: 返回两个日期之间的天数。
-- `DAY()`, `MONTH()`, `YEAR()`: 分别返回日期的日、月、年部分。
-
-<summary>示例</summary>
+<summary>日期和时间函数</summary>
 
 ```sql
 -- 返回当前日期和时间
@@ -565,29 +544,23 @@ SELECT CURDATE() AS current_date;
 -- 返回当前时间
 SELECT CURTIME() AS current_time;
 
+-- `DATE_ADD()` 和 `DATE_SUB()`: 在日期上加上或减去指定的时间间隔。
 -- 在日期上添加天数
 SELECT DATE_ADD(CURDATE(), INTERVAL 10 DAY) AS date_in_future;
 
 -- 计算两个日期之间的天数
 SELECT DATEDIFF('2024-12-31', '2024-01-01') AS days_difference;
 
+-- `DAY()`, `MONTH()`, `YEAR()`: 分别返回日期的日、月、年部分。
 -- 返回日期的年份
 SELECT YEAR(CURDATE()) AS current_year;
 ```
 
 </details>
 
-#### 用过哪些汇总函数？
-
-- `SUM()` : 计算数值列的总和。
-- `AVG()` : 计算数值列的平均值。
-- `COUNT()` : 计算某列的行数。
-- `MAX()` 和 `MIN()` : 分别返回列中的最大值和最小值。
-- `GROUP_CONCAT()` : 将多个行值连接为一个字符串。
-
 <details class="details custom-block">
 
-<summary>示例</summary>
+<summary>汇总函数</summary>
 
 ```sql
 -- 创建一个表并插入数据进行聚合查询
@@ -611,51 +584,42 @@ SELECT COUNT(*) AS total_entries FROM sales;
 
 -- 最大值和最小值
 SELECT MAX(sales_amount) AS max_sale, MIN(sales_amount) AS min_sale FROM sales;
+
+-- `GROUP_CONCAT()` : 将多个行值连接为一个字符串。
+
 ```
 
 </details>
 
-#### 用过哪些逻辑函数？
-
-- `IF()` : 如果条件为真，则返回一个值；否则返回另一个值。
-- `CASE` : 根据一系列条件返回值。
-- `COALESCE()` : 返回参数列表中的第一个非 NULL 值。
-
 <details class="details custom-block">
 
-<summary>示例</summary>
+<summary>逻辑函数</summary>
 
 ```sql
--- IF函数
+-- IF函数: 如果条件为真，则返回一个值；否则返回另一个值。
 SELECT IF(1 > 0, 'True', 'False') AS simple_if;
 
--- CASE表达式
+-- CASE表达式: 根据一系列条件返回值。
 SELECT CASE WHEN 1 > 0 THEN 'True' ELSE 'False' END AS case_expression;
 
--- COALESCE函数
+-- COALESCE函数： 返回参数列表中的第一个非 NULL 值。
 SELECT COALESCE(NULL, NULL, 'First Non-Null Value', 'Second Non-Null Value') AS first_non_null;
 ```
 
 </details>
 
-#### 其它
-
-- `FORMAT()` : 格式化数字为格式化的字符串，通常用于货币显示。
-- `CAST()` : 将一个值转换为指定的数据类型。
-- `CONVERT()` : 类似于`CAST()`，用于类型转换。
-
 <details class="details custom-block">
 
-<summary>示例</summary>
+<summary>其他函数</summary>
 
 ```sql
--- 格式化数字
+-- 格式化数字: 格式化数字为格式化的字符串，通常用于货币显示。
 SELECT FORMAT(1234567.8945, 2) AS formatted_number;
 
--- CAST函数
+-- CAST函数: 将一个值转换为指定的数据类型。
 SELECT CAST('2024-01-01' AS DATE) AS casted_date;
 
--- CONVERT函数
+-- CONVERT函数: 类似于`CAST()`，用于类型转换。
 SELECT CONVERT('123', SIGNED INTEGER) AS converted_number;
 ```
 
@@ -986,24 +950,36 @@ sync_binlog=0
 
 ![二哥的 Java 进阶之路](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240326102701.png)
 
+Binlog 日志格式，支持三种格式类型
+
+STATEMENT：基于 SQL 语句的复制（statement-based replication, SBR），语句级别，记录写操作的 SQL 语句
+优点：不需要记录每一行的变化，减少了 binlog 日志量，节约了 IO, 提高了性能。
+缺点：可能会造成数据不一致，比如 now()函数，random()函数。比如 update user set name = ‘张三’ where time < now() 。
+ROW：基于行的复制（row-based replication, RBR），行级别，记录每次操作后行的变化。
+优点： 记录的是行变化，不会出现数据不一致
+缺点:以行的记录保存，会占用空间。
+MIXED：混合模式复制（mixed-based replication, MBR）
+从 5.1.8 版本开始，MySQL 提供了 Mixed 格式，实际上就是 Statement 与 Row 的结合。
+在 Mixed 模式下，一般的语句修改使用 statment 格式保存 binlog，如一些函数，statement 无法完成主从复制的操作，则采用 row 格式保存 binlog，MySQL 会根据执行的每一条具体的 sql 语句来区分对待记录的日志形式，也就是在 Statement 和 Row 之间选择一种
+
 #### 有了 binlog 为什么还要 undolog redolog？
 
-binlog 主要用于数据恢复和主从复制。它记录了所有对数据库执行的修改操作（如 INSERT 、UPDATE 、DELETE ），以逻辑日志的形式保存。binlog 是 MySQL Server 层提供的日志，独立于存储引擎。
+binlog 主要用于**数据恢复和主从复制**。它记录了所有对数据库执行的修改操作（如 INSERT 、UPDATE 、DELETE ），以逻辑日志的形式保存。**binlog 是 MySQL Server 层提供的日志**，独立于存储引擎。
 
-redolog 主要用于数据持久化和崩溃恢复。**redolog 是 InnoDB 存储引擎特有的日志**，用于记录数据的物理修改，确保数据库在崩溃或异常宕机后能够恢复到一致状态。
+redolog 主要用于**数据持久化和崩溃恢复**。**redolog 是 InnoDB 存储引擎特有的日志**，用于记录数据的物理修改，确保数据库在崩溃或异常宕机后能够恢复到一致状态。
 
-undolog 主要用于支持事务回滚和多版本并发控制（MVCC）。**undolog 是 InnoDB 存储引擎提供的逻辑日志**，用于记录数据的逻辑操作，如删除、更新前的数据快照。
+undolog 主要用于支持**事务回滚和多版本并发控制（MVCC）**。**undolog 是 InnoDB 存储引擎提供的逻辑日志**，用于记录数据的逻辑操作，如删除、更新前的数据快照。
 
 当一个事务在 MySQL 中执行时，redolog、undolog 和 binlog 共同协作以确保数据的可靠性和一致性：
 
 1. 事务启动时，undolog 开始记录修改前的数据快照，以便在发生错误或显式回滚时恢复数据。
 2. 数据被修改时，InnoDB 会将修改记录到 redolog 中，同时也会生成相应的 undolog 。
 3. 事务提交时，InnoDB 首先将 redolog 刷入磁盘，然后再将整个事务的操作记录到 binlog 中。这一过程称为“两阶段提交”，确保 binlog 和 redolog 的一致性。
-4. 如果数据库发生崩溃，InnoDB 会使用 redolog 进行恢复，确保数据不会丢失。binlog 则可以用来做主从复制或数据恢复到特定时间点。
+4. 如果数据库发生崩溃，InnoDB 会使用 redolog 进行恢复，确保数据不会丢失。 binlog 则可以用来做主从复制或数据恢复到特定时间点。
 
 #### 说说 redolog 的工作机制？
 
-redolog 由两部分组成 ： ib_logfile0 和 ib_logfile1 。这两个文件的总大小是固定的，默认情况下每个文件为 48MB ，总共 96MB。它们以循环的方式写入，即当写满后，从头开始覆盖旧的日志。
+redolog 由两部分组成 ： ib_logfile0 和 ib_logfile1 。这两个文件的总大小是固定的，默认情况下每个文件为 48MB ，总共 96MB 。它们以循环的方式写入，即当写满后，从头开始覆盖旧的日志。
 
 每次修改数据时，都会生成一个新的日志序列号（Log Sequence Number），用于标记 redolog 中的日志位置，以确保数据恢复的一致性。
 
@@ -1012,7 +988,7 @@ redolog 由两部分组成 ： ib_logfile0 和 ib_logfile1 。这两个文件的
 1. 在缓冲池（Buffer Pool）中修改数据页。
 2. 将修改操作记录到 redolog buffer 中（这是内存中的一个日志缓冲区）。
 3. 当事务提交时，InnoDB 会将 redolog buffer 中的数据刷新到磁盘上的 redolog 文件中（ib_logfile0、ib_logfile1 等），保证事务的持久性。
-4. 当 MySQL 发生崩溃后，InnoDB 会在重启时读取 redolog，找到最近一次的检查点（checkpoint），然后从该检查点开始，重放（replay） redolog 中的日志记录，将所有已提交事务的修改重做一遍，恢复数据库到崩溃前的一致性状态。
+4. 当 MySQL 发生崩溃后，InnoDB 会在重启时读取 redolog ，找到最近一次的检查点（checkpoint），然后从该检查点开始，重放（replay） redolog 中的日志记录，将所有已提交事务的修改重做一遍，恢复数据库到崩溃前的一致性状态。
 
 #### 说说 WAL？
 
@@ -1047,6 +1023,13 @@ redolog 是固定大小的，通常配置为一组文件，使用环形方式写
 ![先写 bin log，后写 redolog 的问题](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-869c309b-9b93-46e1-8414-b35128e287a5.jpg)
 
 简单说，redolog 和 binlog 都可以用于表示事务的提交状态，而两阶段提交就是让这两个状态保持逻辑上的一致。
+
+补充：
+
+1. **二者缺一不可**。binlog 属于 server 层的日志，不具备记录事务操作的能力；redolog 属于存储引擎层的日志，主要功能就是记录事务的操作日志，二者配合才可以完成事务提交和事务回滚的能力。
+   1. binlog 记录有两种数据格式，一种是 statement（只记录操作日志，日志文件小；但是恢复时，不同函数可能恢复出来的结果不一致），另一种是 row（记录了数据页上的数据行的变化，如数据行 a 从 1 变成 2 等，日志文件较大，但是恢复时的一致性强），配置的时候可以配置为 statement、row 或者 mixed（就是两个都用），可以理解为 binlog 只记录了数据的变更，但是它并不能记录事务是如何操作的，也没有记录事务应该如何回滚，所以需要存储引擎层的 redolog 日志的支持；
+   2. InnoDB 中的 redolog 记录了事务操作，同时出现故障时，InnoDB 会根据 redolog 日志来事务回滚；redolog 弥补了 server 层 binlog 没有记录事务日志的缺憾；
+2. **只能采用先 redolog 再 binlog 的顺序**。在两阶段提交时，MySQL 采用先记录 redolog 再记录 binlog 的方式，如果先记录 binlog 再记录 redolog，那么在记录 binlog 后，如果出现了故障或者事务回滚了，就会导致 redolog 记录不完全，这就会导致 binlog 中记录的数据变更无法回滚，所以只能采用先记录 redolog 再记录 binlog 的方式，这种方式也有效保证了事务的持久性与一致性。
 
 ### 31.redolog 怎么刷入磁盘？
 
@@ -1104,6 +1087,8 @@ log buffer 的大小是有限的，如果不停的往这个有限大小的 log b
 ![沉默王二：long_query_time](https://cdn.tobebetterjavaer.com/stutymore/mysql-20240327083506.png)
 
 不过，生产环境中，10 秒太久了，超过 1 秒的都可以认为是慢 SQL 了。
+
+> 生产环境下，可能不会配置慢查询日志，可能会使用一些专用的服务器运维软件，如普罗米修斯、granfana 等；
 
 #### SQL 的执行过程了解吗？
 
@@ -1526,6 +1511,8 @@ MySQL 的索引可以显著提高查询的性能，可以从三个不同的维�
 
 ①、**主键索引**: 表中每行数据唯一标识的索引，强调列值的唯一性和非空性。
 
+在使用 InnoDB 作为存储引擎时，MySQL 会自动为表中数据创建一个主键索引，如果用户声明了主键，那么就是用用户声明的字段作为主键，否则 MySQL 会自动分配一个具有排序性质的主键。
+
 当创建表的时候，可以直接指定主键索引：
 
 ```sql
@@ -1536,7 +1523,7 @@ CREATE TABLE users (
 );
 ```
 
-id 列被指定为主键索引，同时，MySQL 会自动为这个列创建一个聚簇索引（主键索引一定是聚簇索引）。
+id 列被指定为主键索引，同时，MySQL 会**自动为这个列创建一个聚簇索引（主键索引一定是聚簇索引）**。
 
 可以通过 `show index from table_name` 查看索引信息，比如前面创建的 users 表：
 
@@ -1547,7 +1534,7 @@ id 列被指定为主键索引，同时，MySQL 会自动为这个列创建一�
 - `Column_name` 索引所包含的字段名。
 - `Index_type` 索引的类型，比如 BTREE、HASH 等。
 
-②、**唯一索引**: 保证数据列中每行数据的唯一性，但允许有空值。
+②、**唯一索引（aka， “UNIQUE 索引”）**: 保证数据列中每行数据的唯一性，但允许有空值。
 
 可以通过下面的语句创建唯一索引：
 
@@ -1561,7 +1548,7 @@ CREATE UNIQUE INDEX idx_username ON users(username);
 
 `Non_unique` 为 0，表示这是一个唯一索引。
 
-③、**普通索引**: 基本的索引类型，用于加速查询。
+③、**普通索引（aka，二级索引）**: 基本的索引类型，用于加速查询。一般由用户来维护。
 
 可以通过下面的语句创建普通索引：
 
@@ -1607,6 +1594,8 @@ CREATE TABLE example_btree (
     name VARCHAR(255),
     INDEX name_index (name)
 ) ENGINE=InnoDB;
+
+CREATE INDEX id_index ON lookup (id) USING BTREE;
 ```
 
 ②、Hash 索引：基于哈希表的索引，查询效率可以达到 O(1)。
@@ -1623,6 +1612,8 @@ CREATE TABLE example_hash (
     name VARCHAR(255),
     UNIQUE HASH (name)
 ) ENGINE=MEMORY;
+
+CREATE INDEX id_index ON lookup (id) USING BTREE;
 ```
 
 注意，我们这里创建的是 MEMORY 存储引擎，InnoDB 并不提供直接创建哈希索引的选项，因为 B+ 树索引能够很好地支持范围查询和等值查询，满足了大多数数据库操作的需要。
@@ -1657,9 +1648,12 @@ SHOW VARIABLES LIKE 'innodb_adaptive_hash_index';
 
 ①、选择合适的列作为索引
 
-- 经常作为查询条件（WHERE 子句）、排序条件（ORDER BY 子句）、分组条件（GROUP BY 子句）的列是建立索引的好选项。
-- 区分度低的字段，例如性别，不要建索引
-- 频繁更新的字段，不要建索引
+- 经常作为查询条件（WHERE 子句）、排序条件（ORDER BY 子句）、分组条件（GROUP BY 子句）、（JOIN...on... 语句中 on 上）的列是建立索引的好选项。
+- 高区分度的字段；
+- 数据量小的表，也不适合创建索引，因为数据量很小时，执行计划会选择全表扫描而不是使用索引，这种情况下，维护索引的开销要大于其带来的性能提升，得不偿失；
+- 区分度低的字段，不适合建索引，例如性别，省市县等地址信息；
+- 频繁更新的字段，不要建索引；
+- 需要使用函数、运算符进行计算的字段；
 
 ②、避免过多的索引
 
@@ -1675,74 +1669,14 @@ SHOW VARIABLES LIKE 'innodb_adaptive_hash_index';
 
 - **在索引列上使用函数或表达式**：索引可能无法使用，因为 MySQL 无法预先计算出函数或表达式的结果。例如：`SELECT * FROM table WHERE YEAR(date_column) = 2021`。
 - 使用不等于（`<>`）或者 NOT 操作符：因为它们会扫描全表。
-- **使用 LIKE 语句，但通配符在前面**：以“%”或者“\_”开头，索引也无法使用。例如：`SELECT * FROM table WHERE column LIKE '%abc'`。
+- **使用 LIKE 语句进行左模糊查询时**：索引也无法使用。例如：`SELECT * FROM table WHERE column LIKE '%abc'`。
 - 联合索引，但 WHERE 不满足最左前缀原则，索引无法起效。例如：`SELECT * FROM table WHERE column2 = 2`，联合索引为 `(column1, column2)`。
-
-### 39.索引不适合哪些场景呢？
-
-- **数据表较小**：当表中的数据量很小，或者查询需要扫描表中大部分数据时，数据库优化器可能会选择全表扫描而不是使用索引。在这种情况下，维护索引的开销可能大于其带来的性能提升。
-- **频繁更新的列**：对于经常进行更新、删除或插入操作的列，使用索引可能会导致性能下降。因为每次数据变更时，索引也需要更新，这会增加额外的写操作负担。
-- **区分度低的列**：对于区分度低的列添加索引，得不偿失。
-
-#### 性别字段要建立索引吗？
-
-性别字段通常不适合建立索引。因为性别字段的选择性（区分度）较低，独立索引效果有限。
-
-如果性别字段又很少用于查询，表的数据规模较小，那么建立索引反而会增加额外的存储空间和维护成本。
-
-如果性别字段确实经常用于查询条件，数据规模也比较大，可以将性别字段作为复合索引的一部分，与选择性较高的字段一起加索引，会更好一些。
-
-#### 什么是区分度？
-
-> 区分度= 对字段所有的值去重的总数/总的记录数，区分度越接近 1，说明字段区分度越高；值越低，说明区分度越低。
-
-区分度（Selectivity）是衡量一个字段在数据库表中唯一值的比例，用来表示该字段在索引优化中的有效性。
-
-区分度 = 字段的唯一值数量 / 字段的总记录数；接近 1，字段值大部分是唯一的。例如，用户的唯一 ID，一般都是主键索引。接近 0，则说明字段值重复度高。
-
-例如，一个表中有 1000 条记录，其中性别字段只有两个值（男、女），那么性别字段的区分度只有 0.002。
-
-高区分度的字段更适合拿来作为索引，因为索引可以更有效地缩小查询范围。
-
-#### MySQL 查看字段区分度的命令？
-
-在 MySQL 中，可以通过 `COUNT(DISTINCT column_name)` 和 `COUNT(*)` 的比值来计算字段的区分度。例如：
-
-```sql
-SELECT
-    COUNT(DISTINCT gender) / COUNT(*) AS gender_selectivity
-FROM
-    users;
-```
-
-#### 什么样的字段适合加索引？什么不适合？
-
-适合加索引的字段包括：
-
-- 经常出现在 WHERE 子句中的字段，如 `SELECT * FROM users WHERE age = 30` 中的 age 字段，加上索引后可以快速定位到满足条件的记录。
-- 经常用于 JOIN ... on ... 语句中的 on 字段上的字段，如 `SELECT * FROM users u JOIN orders o ON u.id = o.user_id` 中的 user_id 字段，加上索引后可以避免多表扫描。
-- 经常出现在 ORDER BY 或 GROUP BY 子句中的字段，如 `SELECT * FROM users ORDER BY age` 中的 age 字段。加上索引后可以避免额外的排序操作。
-- 高区分度的字段，查询时可以有效减少返回的数据行，比如用户 ID、邮箱等。
-
-对应的，不适合加索引的字段包括：
-
-- 低区分度字段，如性别、状态、城市等。
-- 经常更新的字段，如用户的登录时间、登录次数等。
-- 不经常出现在查询条件中的字段，如用户的生日、地址等。
-- 使用函数、运算符的字段。
-
-### 40.索引是不是建的越多越好？
-
-当然不是。
-
-- **索引会占据磁盘空间**
-- **索引虽然会提高查询效率，但是会降低更新表的效率**。每次对表进行增删改操作，MySQL 不仅要更新数据，还要更新对应的索引文件。
 
 #### 说说索引优化的思路？
 
 ①、选择合适的索引类型
 
-- 如果需要等值查询和范围查询，请选择 B+树索引。
+- 如果需要等值查询和范围查询，请选择 B+ 树索引。
 - 如果是用于处理文本数据的全文搜索，请选择全文索引。
 
 ②、创建适当的索引
@@ -1787,7 +1721,7 @@ B 树的一个节点通常包括三个部分：
 - 指针：存储子节点的信息
 - 数据：表记录中除主键外的数据
 
-不过，正所谓“祸兮福所倚，福兮祸所伏”，正是因为 B 树的每个节点上都存了数据，就导致每个节点能存储的键值和指针变少了，因为每一页的大小是固定的，对吧？
+不过，正所谓“祸兮福所倚，福兮祸所伏”，正是**因为 B 树的每个节点上都存了数据，就导致每个节点能存储的键值和指针变少了**，因为每一页的大小是固定的，对吧？
 
 于是 B+ 树就来了，B+ 树的非叶子节点只存储键值，不存储数据，而叶子节点存储了所有的数据，并且构成了一个有序链表。
 
@@ -1987,9 +1921,9 @@ SELECT * FROM table WHERE column LIKE '%xxx%';
 
 MySQL 默认的存储引擎是 InnoDB，InnoDB 的索引是按照 B+ 树结构存储的，不同类型的索引有不同的存储方式。
 
-主键索引是按照聚簇索引的方式存储的，也就是说，主键索引的叶子节点存储的是整行数据，数据和索引在同一个 B+ 树中。
+主键索引是按照聚簇索引的方式存储的，也就是说，主键索引的叶子节点存储的是整行数据，非叶子节点存放的时主键，数据和索引在同一个 B+ 树中。
 
-普通索引、唯一索引是按照非聚簇索引的方式存储的，每个辅助索引都是独立的 B+ 树，叶子节点存储的是主键值，通过主键值回到主键索引中查找完整的数据，俗称回表。
+普通索引、唯一索引是按照非聚簇索引的方式存储的，每个辅助索引都是独立的 B+ 树，叶子节点存储的是**主键值**，通过主键值回到主键索引中查找完整的数据，俗称回表。
 
 ![三分恶面渣逆袭：聚簇索引和非聚簇索引](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-692cced2-615a-4b70-a933-69771d53e809.jpg)
 
@@ -2162,7 +2096,7 @@ INSERT INTO ab (a, b) VALUES (1, 2), (1, 3), (2, 1), (3, 3), (2, 2);
 
 #### （联合索引）下面怎么走的索引？
 
-```
+```sql
 select * from t where a = 2 and b = 2;
 select * from t where b = 2 and c = 2;
 select * from t where a > 2 and b = 2;
@@ -2178,7 +2112,7 @@ select * from t where a > 2 and b = 2;
 
 ![rows 为 10 行，说明全表扫描了](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241115153552.png)
 
-第三条 SQL 语句在范围条件 a > 2 之后，索引后会停止匹配，b = 2 的条件需要额外过滤。
+第三条 SQL 语句在范围条件 a > 2 之后，索引后会停止匹配，b = 2 的条件需要额外过滤。不会用到索引。
 
 ![rows 为 9 行说明的确走索引了，但还需要额外过滤](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241115153636.png)
 
@@ -2192,11 +2126,15 @@ select * from t where a > 2 and b = 2;
 
 索引下推`（Index Condition Pushdown (ICP) ）`是 MySQL 5.6 时添加的，它允许在访问索引时对数据进行过滤，从而减少回表的次数。
 
+如，一个 user 表创建了（name,age）的联合索引，查询语句为： `select * from user where name like '张%' and age=10;`，没有索引下推优化的情况下：MySQL 会先根据`name like '张%'` 查找条件匹配的数据，然后根据匹配到的结果，回表查询 `age=10` 的数据。
+
+如果加了索引下推优化，那么 MySQL 会把两个条件合并，即，在匹配`name like '张%'`的同时，也区匹配`age=10` 的数据；
+
 例如有一张 user 表，建了一个联合索引（name, age），查询语句：`select * from user where name like '张%' and age=10;`，没有索引下推优化的情况下：
 
 MySQL 会先根据 `name like '张%'` 查找条件匹配的数据，对于符合索引条件的每一条记录，都会去访问对应的数据行，并在 Server 层过滤 `age=10` 这个条件。
 
-这样就等于说及时 age 不等于 10，MySQL 也会执行回表操作。
+这样就等于说即使 age 不等于 10，MySQL 也会执行回表操作。
 
 ![三分恶面渣逆袭：没有使用 ICP](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mysql-c58f59e0-850b-4dfd-8129-2dfc51cf4768.jpg)
 
@@ -2207,8 +2145,6 @@ MySQL 会先根据 `name like '张%'` 查找条件匹配的数据，对于符合
 这就意味着不符合 age = 10 条件的记录将会在索引扫描时被过滤掉，从而减少了回表的次数。
 
 ### 52.如何查看是否用到了索引？（补充）
-
-> 2024 年 03 月 15 日增补。
 
 可以通过 `EXPLAIN` 关键字来查看是否使用了索引。
 
@@ -2332,8 +2268,6 @@ EXPLAIN SELECT * FROM tbn WHERE B=1 AND C=1\G
 
 #### 建立联合索引(a,b,c)，where c = 5 是否会用到索引？为什么？
 
-> 2024 年 04 月 08 日增补
-
 在这个查询中，只有索引的第三列 c 被用作查询条件，而前两列 a 和 b 没有被使用。这不符合最左前缀原则，因此 MySQL 不会使用联合索引 (a,b,c)。
 
 ```sql
@@ -2354,7 +2288,9 @@ EXPLAIN SELECT * FROM tbn WHERE C=5\G
 
 ![二哥的java 进阶之路：6 行数据](https://cdn.tobebetterjavaer.com/stutymore/mysql-20241104212743.png)
 
-`rows: 3` 表示预计扫描 3 行。`filtered: 16.67` 表示在前面的 rows 中，大约有 16.67% 的行满足 WHERE 条件。
+`rows: 3` 表示预计扫描 3 行。
+
+`filtered: 16.67` 表示在前面的 rows 中，大约有 16.67% 的行满足 WHERE 条件。
 
 如果是后缀通配符，如 `age = 18 and name LIKE 'xxx%'`，MySQL 会直接使用联合索引 age_name 找到所有符合条件的行。
 
@@ -3024,6 +2960,13 @@ ReadView 主要用来处理隔离级别为"可重复读"和"读已提交"的情�
 
 ## 高可用/性能
 
+1. 高可用： 只有一个数据库实例时，当这个数据库实例出现了问题时，会导致整个系统不可用。
+2. 高性能： 单个数据库实例所支持的 TPS 或 QPS 有限，不能满足系统的要求；
+
+对于高可用的目标，我们可以采用冗余的方式，所谓冗余，简单来讲，就是部署多台数据库实例，这样一来，当一个数据库实例不可用时，另外一个能够迅速顶上去。
+
+对于高性能的目标，我们依然可以采用冗余的方式，部署多台数据库实例，当集中到一个实例上的读写请求，分散到多个实例上去。
+
 ### 65.数据库读写分离了解吗？
 
 读写分离的基本原理是将数据库读写操作分散到不同的节点上，下面是基本架构图：
@@ -3041,7 +2984,7 @@ ReadView 主要用来处理隔离级别为"可重复读"和"读已提交"的情�
 
 将读写操作区分开来，然后访问不同的数据库服务器，一般有两种方式：程序代码封装和中间件封装。
 
-1.  程序代码封装
+1. 程序代码封装
 
 程序代码封装指在代码中抽象一个数据访问层（所以有的文章也称这种方式为 "中间层封装" ） ，实现读写操作分离和数据库服务器连接的管理。例如，基于 Hibernate 进行简单封装，就可以实现读写分离：
 
@@ -3049,7 +2992,7 @@ ReadView 主要用来处理隔离级别为"可重复读"和"读已提交"的情�
 
 目前开源的实现方案中，淘宝的 TDDL （Taobao Distributed Data Layer, 外号：头都大了）是比较有名的。
 
-2.  中间件封装
+2. 中间件封装
 
 中间件封装指的是独立一套系统出来，实现读写操作分离和数据库服务器连接的管理。中间件对业务服务器提供 SQL 兼容的协议，业务服务器无须自己进行读写分离。
 
@@ -3086,15 +3029,15 @@ MySQL 的主从复制（Master-Slave Replication）是一种数据同步机制�
 
 解决主从复制延迟有几种常见的方法:
 
-1.  写操作后的读操作指定发给数据库主服务器
+1. 写操作后的读操作指定发给数据库主服务器
 
 例如，注册账号完成后，登录时读取账号的读操作也发给数据库主服务器。这种方式和业务强绑定，对业务的侵入和影响较大，如果哪个新来的程序员不知道这样写代码，就会导致一个 bug。
 
-2.  读从机失败后再读一次主机
+2. 读从机失败后再读一次主机
 
 这就是通常所说的 "二次读取" ，二次读取和业务无绑定，只需要对底层数据库访问的 API 进行封装即可，实现代价较小，不足之处在于如果有很多二次读取，将大大增加主机的读操作压力。例如，黑客暴力破解账号，会导致大量的二次读取操作，主机可能顶不住读操作的压力从而崩溃。
 
-3.  关键业务读写操作全部指向主机，非关键业务采用读写分离
+3. 关键业务读写操作全部指向主机，非关键业务采用读写分离
 
 例如，对于一个用户管理系统来说，注册 + 登录的业务读写操作全部访问主机，用户的介绍、爰好、等级等业务，可以采用读写分离，因为即使用户改了自己的自我介绍，在查询时却看到了自我介绍还是旧的，业务影响与不能登录相比就小很多，还可以忍受。
 

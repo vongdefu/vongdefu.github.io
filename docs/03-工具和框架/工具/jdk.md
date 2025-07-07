@@ -62,3 +62,26 @@ export PATH=$PATH:$JAVA_HOME/bin
 // 使环境变量生效
 [root@home jdk1.8.0_144]# source /etc/profile
 ```
+
+- 使用 rpm 包的方式进行安装
+
+```sh
+# 安装
+rpm -ivh jdk-8u231-linux-x64.rpm
+
+# 验证
+java -version
+java
+javac
+
+# 查找安装的地址
+find / -name java
+/etc/pki/ca-trust/extracted/java
+/etc/pki/java
+/etc/alternatives/java
+/var/lib/alternatives/java
+/usr/bin/java
+/usr/java
+/usr/java/jdk1.8.0_231-amd64/bin/java
+/usr/java/jdk1.8.0_231-amd64/jre/bin/java
+```
