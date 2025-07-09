@@ -45,7 +45,7 @@ JVM 大致可以划分为三个部分：类加载器、运行时数据区和执�
 
 #### 介绍一下程序计数器？
 
-程序计数器也被称为 PC 寄存器，是一块较小的内存空间。它可以看作是当前线程所执行的字节码行号指示器。
+程序计数器也被称为 PC 寄存器，是一块较小的内存空间。它可以看作是当前线程所执行的**字节码行号指示器**。
 
 #### 介绍一下 Java 虚拟机栈？
 
@@ -122,6 +122,7 @@ public class VarDemo1 {
 - sun.misc.Unsafe 中大部分方法；
 - 获取系统时间的 `System.currentTimeMillis()` 方法就是调用本地方法，来获取操作系统当前时间的；
 - Object 类中的 `hashCode()` 方法、`clone()` 方法；
+- JUC 包中的大部分底层实现；
 
 #### native 方法解释一下？
 
@@ -137,11 +138,15 @@ Java 中“几乎”所有的对象都会在堆中分配，堆也是垃圾收集
 
 从内存回收的角度来看，由于垃圾收集器大部分都是基于`分代收集理论`设计的，所以堆又被细分为`新生代`、`老年代`、`Eden空间`、`From Survivor空间（S0区域）`、`To Survivor空间（S1区域）`等。
 
+> 2025-07-09 增补
+
+高版本的垃圾回收器也涉及到分区收集算法，如 G1 等。
+
 ![Java 堆内存结构](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-5.png)
 
 随着 JIT 编译器的发展和逃逸技术的逐渐成熟，“所有的对象都会分配到堆上”就不再那么绝对了。
 
-从 JDK 7 开始，JVM 默认开启了逃逸分析，意味着如果某些方法中的对象引用没有被返回或者没有在方法体外使用，也就是未逃逸出去，那么对象可以直接在栈上分配内存。
+从 JDK 7 开始，JVM 默认开启了逃逸分析，意味着如果某些方法中的对象引用没有被返回或者没有在方法体外使用，也就是未逃逸出去，那么对象可以直接在栈上分配内存。这样做的好处是：让这些对象拥有和线程一样的生命周期，也就是说线程执行完成之后，对象所占用的内存空间直接被回收。
 
 #### 堆和栈的区别是什么？
 
@@ -149,17 +154,23 @@ Java 中“几乎”所有的对象都会在堆中分配，堆也是垃圾收集
 
 堆属于线程共享的内存区域，几乎所有 new 出来的对象都会堆上分配，生命周期不由单个方法调用所决定，可以在方法调用结束后继续存在，直到不再被任何变量引用，最后被垃圾收集器回收。
 
-栈属于线程私有的内存区域，主要存储局部变量、方法参数、对象引用等，通常随着方法调用的结束而自动释放，不需要垃圾收集器处理。
+栈具有先进后出的特点，因此它多被用来负责指令的执行。在 jvm 层面，栈属于线程私有的内存区域，主要存储局部变量、方法参数、对象引用等，通常随着方法调用的结束而自动释放，不需要垃圾收集器处理。
 
 #### 介绍一下方法区？
 
-方法区并不真实存在，属于 Java 虚拟机规范中的一个逻辑概念，用于存储已被 JVM 加载的类信息、常量、静态变量、即时编译器编译后的代码缓存等。
+**方法区并不真实存在**，属于 Java 虚拟机规范中的一个逻辑概念，用于存储已被 JVM 加载的类信息、常量、静态变量、即时编译器编译后的代码缓存等。
+
+方法区的回收条件非常苛刻，只有在涉及到“类型卸载”等少部分场景下，才会涉及到内存区域的回收，因此这部分区域的回收收益很小。
 
 在 HotSpot 虚拟机中，方法区的实现称为永久代 PermGen，但在 Java 8 及之后的版本中，已经被元空间 Metaspace 所替代。
 
+> 2025-07-09 增补
+
+某种意义上，我们可以把方法区和堆看作一样，因此有些地方也会把方法区称为“堆外内存”。
+
 #### 变量存在堆栈的什么位置？
 
-对于局部变量，它存储在当前方法栈帧中的局部变量表中。当方法执行完毕，栈帧被回收，局部变量也会被释放。
+对于局部变量，其作用域是方法执行期间，因此它存储在当前方法栈帧中的局部变量表中，当方法执行完毕，栈帧被回收，局部变量也会被释放。
 
 ```java
 public void method() {
@@ -181,7 +192,7 @@ JDK 1.6 使用永久代来实现方法区：
 
 ![JDK 1.6内存区域](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-6.png)
 
-JDK 1.7 时仍然是永久带，但发生了一些细微变化，比如将字符串常量池、静态变量存放到了堆上。
+JDK 1.7 时仍然是永久代，但发生了一些细微变化，比如将字符串常量池、静态变量存放到了堆上。
 
 ![JDK 1.7内存区域](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-7.png)
 
@@ -231,7 +242,9 @@ JDK 8 就终于完成了这项移出工作，这样的好处就是，元空间�
 
 可以通过 `java -XX:+PrintCommandLineFlags -version` 和 `java -XX:+PrintGCDetails -version` 命令查看 JVM 的 GC 收集器。
 
-::: details 查看 JVM 的 GC 收集器
+<details class="details custom-block">
+
+<summary>查看 JVM 的 GC 收集器</summary>
 
 ```java
 zeanzai@DESKTOP-OJNPMED MINGW64 /d/03-code/Github/spring-cloud-study-notes (master)
@@ -259,7 +272,7 @@ Heap
 
 ```
 
-:::
+</details>
 
 可以看到，我本机安装的 JDK 8 默认使用的是 `Parallel Scavenge + Parallel Old`。
 
@@ -318,7 +331,11 @@ new 对象时，指针会向右移动一个对象大小的距离，假如一个�
 
 可以通过 `java -XX:+PrintFlagsFinal -version | grep TLAB` 命令查看当前 JVM 是否开启了 TLAB。
 
-::: details 查看当前 JVM 是否开启了 TLAB
+如果开启了 TLAB，会看到类似以下的输出，其中 bool UseTLAB 的值为 true。
+
+<details class="details custom-block">
+
+<summary>查看当前 JVM 是否开启了 TLAB</summary>
 
 ```java
 zeanzai@DESKTOP-OJNPMED MINGW64 /d/03-code/Github/spring-cloud-study-notes (master)
@@ -341,16 +358,14 @@ Java(TM) SE Runtime Environment (build 1.8.0_421-b09)
 Java HotSpot(TM) 64-Bit Server VM (build 25.421-b09, mixed mode)
 ```
 
-:::
-
-如果开启了 TLAB，会看到类似以下的输出，其中 bool UseTLAB 的值为 true。
+</details>
 
 我们编写一个简单的测试类，创建大量对象并强制触发垃圾回收，查看 TLAB 的使用情况。
 
 ```java
 class TLABDemo {
     public static void main(String[] args) {
-        for (int i = 0; i < 10_000_000; i++) {
+        for (int i = 0; i < 10000000; i++) {
             allocate(); // 创建大量对象
         }
         System.gc(); // 强制触发垃圾回收
@@ -361,13 +376,9 @@ class TLABDemo {
         byte[] bytes = new byte[64];
     }
 }
-```
 
 在 VM 参数中添加 `-XX:+UseTLAB -XX:+PrintTLAB -XX:+PrintGCDetails -XX:+PrintGCDateStamps`，运行后可以看到这样的内容：
 
-::: details 结果
-
-```java
 C:\Softwares\Java\jdk-1.8\bin\java.exe -XX:+UseTLAB -XX:+PrintTLAB -XX:+PrintGCDetails -XX:+PrintGCDateStamps "-javaagent:C:\Softwares\JetBrains\IntelliJ IDEA 2023.2.2\lib\idea_rt.jar=2848:C:\Softwares\JetBrains\IntelliJ IDEA 2023.2.2\bin" -Dfile.encoding=UTF-8 -classpath C:\Softwares\Java\jdk-1.8\jre\lib\charsets.jar;C:\Softwares\Java\jdk-1.8\jre\lib\deploy.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\access-bridge-64.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\cldrdata.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\dnsns.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\jaccess.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\jfxrt.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\localedata.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\nashorn.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunec.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunjce_provider.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunmscapi.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\sunpkcs11.jar;C:\Softwares\Java\jdk-1.8\jre\lib\ext\zipfs.jar;C:\Softwares\Java\jdk-1.8\jre\lib\javaws.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jce.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jfr.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jfxswt.jar;C:\Softwares\Java\jdk-1.8\jre\lib\jsse.jar;C:\Softwares\Java\jdk-1.8\jre\lib\management-agent.jar;C:\Softwares\Java\jdk-1.8\jre\lib\plugin.jar;C:\Softwares\Java\jdk-1.8\jre\lib\resources.jar;C:\Softwares\Java\jdk-1.8\jre\lib\rt.jar;D:\03-code\Github\spring-cloud-study-notes\jvm-test\target\classes;D:\00-home\repository\org\springframework\boot\spring-boot-starter\2.7.10\spring-boot-starter-2.7.10.jar;D:\00-home\repository\org\springframework\boot\spring-boot\2.7.10\spring-boot-2.7.10.jar;D:\00-home\repository\org\springframework\spring-context\5.3.26\spring-context-5.3.26.jar;D:\00-home\repository\org\springframework\boot\spring-boot-autoconfigure\2.7.10\spring-boot-autoconfigure-2.7.10.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-logging\2.7.10\spring-boot-starter-logging-2.7.10.jar;D:\00-home\repository\ch\qos\logback\logback-classic\1.2.11\logback-classic-1.2.11.jar;D:\00-home\repository\ch\qos\logback\logback-core\1.2.11\logback-core-1.2.11.jar;D:\00-home\repository\org\apache\logging\log4j\log4j-to-slf4j\2.17.2\log4j-to-slf4j-2.17.2.jar;D:\00-home\repository\org\apache\logging\log4j\log4j-api\2.17.2\log4j-api-2.17.2.jar;D:\00-home\repository\org\slf4j\jul-to-slf4j\1.7.36\jul-to-slf4j-1.7.36.jar;D:\00-home\repository\jakarta\annotation\jakarta.annotation-api\1.3.5\jakarta.annotation-api-1.3.5.jar;D:\00-home\repository\org\springframework\spring-core\5.3.26\spring-core-5.3.26.jar;D:\00-home\repository\org\springframework\spring-jcl\5.3.26\spring-jcl-5.3.26.jar;D:\00-home\repository\org\yaml\snakeyaml\1.30\snakeyaml-1.30.jar;D:\00-home\repository\org\slf4j\slf4j-api\1.7.36\slf4j-api-1.7.36.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-web\2.7.10\spring-boot-starter-web-2.7.10.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-json\2.7.10\spring-boot-starter-json-2.7.10.jar;D:\00-home\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.13.5\jackson-datatype-jdk8-2.13.5.jar;D:\00-home\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.13.5\jackson-datatype-jsr310-2.13.5.jar;D:\00-home\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.13.5\jackson-module-parameter-names-2.13.5.jar;D:\00-home\repository\org\springframework\boot\spring-boot-starter-tomcat\2.7.10\spring-boot-starter-tomcat-2.7.10.jar;D:\00-home\repository\org\apache\tomcat\embed\tomcat-embed-core\9.0.73\tomcat-embed-core-9.0.73.jar;D:\00-home\repository\org\apache\tomcat\embed\tomcat-embed-el\9.0.73\tomcat-embed-el-9.0.73.jar;D:\00-home\repository\org\apache\tomcat\embed\tomcat-embed-websocket\9.0.73\tomcat-embed-websocket-9.0.73.jar;D:\00-home\repository\org\springframework\spring-web\5.3.26\spring-web-5.3.26.jar;D:\00-home\repository\org\springframework\spring-beans\5.3.26\spring-beans-5.3.26.jar;D:\00-home\repository\org\springframework\spring-webmvc\5.3.26\spring-webmvc-5.3.26.jar;D:\00-home\repository\org\springframework\spring-aop\5.3.26\spring-aop-5.3.26.jar;D:\00-home\repository\org\springframework\spring-expression\5.3.26\spring-expression-5.3.26.jar;D:\00-home\repository\org\jsoup\jsoup\1.15.3\jsoup-1.15.3.jar;D:\00-home\repository\io\github\furstenheim\copy_down\1.0\copy_down-1.0.jar;D:\00-home\repository\org\json\json\20210307\json-20210307.jar;D:\00-home\repository\com\fasterxml\jackson\core\jackson-databind\2.13.0\jackson-databind-2.13.0.jar;D:\00-home\repository\com\fasterxml\jackson\core\jackson-annotations\2.13.5\jackson-annotations-2.13.5.jar;D:\00-home\repository\com\fasterxml\jackson\core\jackson-core\2.13.5\jackson-core-2.13.5.jar;D:\00-home\repository\org\apache\httpcomponents\httpclient\4.5.13\httpclient-4.5.13.jar;D:\00-home\repository\org\apache\httpcomponents\httpcore\4.4.16\httpcore-4.4.16.jar;D:\00-home\repository\commons-codec\commons-codec\1.15\commons-codec-1.15.jar me.zeanzai.mianzha.TLABDemo
 TLAB: gc thread: 0x0000011f599c5800 [id: 3980] desired_size: 1966KB slow allocs: 0  refill waste: 31456B alloc: 1.00000    15729KB refills: 1 waste 83.1% gc: 1674000B slow: 0B fast: 0B
 TLAB: gc thread: 0x0000011f383f4800 [id: 5212] desired_size: 1966KB slow allocs: 0  refill waste: 31456B alloc: 1.00000    15729KB refills: 7 waste 11.8% gc: 1668624B slow: 16B fast: 224B
@@ -386,8 +397,6 @@ Heap
 
 ```
 
-:::
-
 - waste ：未使用的 TLAB 空间。
 - alloc ：分配到 TLAB 的空间。
 - refills ：TLAB 被重新填充的次数。
@@ -396,7 +405,9 @@ Heap
 
 当使用 `-XX:-UseTLAB -XX:+PrintGCDetails` 关闭 TLAB 时，会看到类似以下的输出：
 
-::: details 结果
+<details class="details custom-block">
+
+<summary>结果</summary>
 
 ```java
 [GC (System.gc()) [PSYoungGen: 11800K->1053K(114176K)] 11800K->1061K(375296K), 0.0008633 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
@@ -415,7 +426,7 @@ Process finished with exit code 0
 
 ```
 
-:::
+</details>
 
 直接出现了两次 GC，因为没有 TLAB，Eden 区更快被填满，导致年轻代 GC。年轻代 GC 频繁触发，一部分长生命周期对象被晋升到老年代，间接导致老年代 GC 触发。
 
@@ -571,8 +582,6 @@ Space losses: 0 bytes internal + 4 bytes external = 4 bytes total
 
 从上面的结果能看到，对象头是 12 个字节，还有 4 个字节的 padding，`new Object()` 一共 16 个字节。
 
-:::
-
 #### 对象的引用大小了解吗？
 
 在 64 位 JVM 上，未开启压缩指针时，对象引用占用 8 字节；开启压缩指针时，对象引用会被压缩到 4 字节。HotSpot 虚拟机默认是开启压缩指针的。
@@ -671,7 +680,7 @@ static class Entry extends WeakReference<ThreadLocal<?>> {
 }
 ```
 
-虚引用主要用来跟踪对象被垃圾回收的过程，通过 PhantomReference 类实现。虚引用的对象在任何时候都可能被回收。
+虚引用主要用来跟踪对象被垃圾回收的过程，通过 PhantomReference 类实现。虚**引用的对象在任何时候都可能被回收**。
 
 ```java
 // phantomRef 就是一个虚引用
@@ -696,7 +705,7 @@ PhantomReference<String> phantomRef = new PhantomReference<>(new String("王德�
 
 新生代的垃圾收集主要采用标记-复制算法，因为新生代的存活对象比较少，每次复制少量的存活对象效率比较高。
 
-基于这种算法，虚拟机将内存分为一块较大的 Eden 空间和两块较小的 Survivor 空间，每次分配内存只使用 Eden 和其中一块 Survivor。发生垃圾收集时，将 Eden 和 Survivor 中仍然存活的对象一次性复制到另外一块 Survivor 空间上，然后直接清理掉 Eden 和已用过的那块 Survivor 空间。默认 Eden 和 Survivor 的大小比例是 8∶1。
+基于这种算法，虚拟机将内存分为一块较大的 Eden 空间和两块较小的 Survivor 空间，每次分配内存只使用 Eden 和其中一块 Survivor。发生垃圾收集时，将 Eden 和 Survivor 中仍然存活的对象一次性复制到另外一块 Survivor 空间上，然后直接清理掉 Eden 和已用过的那块 Survivor 空间。默认 Eden 和 Survivor 的大小比例是 8:1:1 。
 
 ![新生代内存划分](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-25.png)
 
@@ -836,7 +845,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.421-b09, mixed mode)
 
 根据对象逃逸的范围，可以分为**方法逃逸**和**线程逃逸**。
 
-当对象被方法外部的代码引用，生命周期超出了方法的范围，那么对象就必须分配在堆中，由垃圾收集器管理。
+当对象被方法外部的代码引用，生命周期超出了方法所能管理的范围，那么对象就必须分配在堆中，由垃圾收集器管理。
 
 ```java
 public Person createPerson() {
@@ -863,7 +872,9 @@ public void threadEscapeExample() {
 
 #### 逃逸分析会带来什么好处？
 
-主要有三个。栈上分配、同步消除、标量替换。
+好处就是可以让本来应该分配到堆上的对象，分配到了栈上，这就使得对象的生命周期会随着栈的执行结束而自动消亡，也就使得这些对象可以不用经过垃圾回收器就可以直接回收。
+
+逃逸分析所采用的具体手段有三个：栈上分配、同步消除、标量替换。
 
 第一，如果确定一个对象不会逃逸，那么就可以考虑栈上分配，对象占用的内存随着栈帧出栈后销毁，这样一来，垃圾收集的压力就降低很多。
 
@@ -888,7 +899,7 @@ System.out.println(x + y);
 
 ### 17.内存溢出和内存泄漏了解吗？
 
-内存溢出，俗称 OOM，是指当程序请求分配内存时，由于没有足够的内存空间，从而抛出 OutOfMemoryError。
+内存溢出，俗称 OOM，是指当程序请求分配内存时，由于**没有足够的内存空间**，从而抛出 OutOfMemoryError 。
 
 ```java
 List<String> list = new ArrayList<>();
@@ -899,7 +910,7 @@ while (true) {
 
 可能是因为堆、元空间、栈或直接内存不足导致的。可以通过优化内存配置、减少对象分配来解决。
 
-内存泄漏是指程序在使用完内存后，未能及时释放，导致占用的内存无法再被使用。随着时间的推移，内存泄漏会导致可用内存逐渐减少，最终导致内存溢出。
+内存泄漏是指程序在使用完内存后，**未能及时释放**，导致占用的内存无法再被使用。随着时间的推移，内存泄漏会导致可用内存逐渐减少，最终导致内存溢出。
 
 内存泄漏通常是因为长期存活的对象持有短期存活对象的引用，又没有及时释放，从而导致短期存活对象无法被回收而导致的。
 
@@ -960,6 +971,8 @@ Process finished with exit code 1
 ```
 
 ### 19.内存泄漏可能由哪些原因导致呢？
+
+内存空间无法释放，所占用空间不能被回收利用。
 
 比如说：
 
@@ -1065,7 +1078,7 @@ threadLocal.set(new Object()); // 未清理
 
 ![jmap](https://cdn.tobebetterjavaer.com/stutymore/jvm-20240806093153.png)
 
-如果发现 `Full GC` 次数太多，就很大概率存在内存泄漏了。
+**如果发现 `Full GC` 次数太多，就很大概率存在内存泄漏了。**
 
 第六步，生成 `dump` 文件，然后借助可视化工具分析哪个对象非常多，基本就能定位到问题根源了。
 
@@ -1111,7 +1124,7 @@ jmap -dump:format=b,file=heap.hprof <pid>
 
 当一个方法被调用时，JVM 会在栈中分配一个栈帧，用于存储该方法的执行信息。如果方法调用嵌套太深，栈帧不断压入栈中，最终会导致栈空间耗尽，抛出 StackOverflowError。
 
-最常见的栈溢出场景就是递归调用，尤其是没有正确的终止条件下，会导致递归无限进行。
+**最常见的栈溢出场景就是递归调用，尤其是没有正确的终止条件下，会导致递归无限进行**。
 
 ```java
 class StackOverflowExample {
@@ -1299,6 +1312,8 @@ class ConstantPoolReference {
 
 ### 26.finalize()方法了解吗？
 
+第二次标记时使用。
+
 垃圾回收就是古代的秋后问斩，`finalize()` 就是刀下留人，在人犯被处决之前，还要做最后一次审计，青天大老爷会看看有没有什么冤情，需不需要刀下留人。
 
 ![刀下留人](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-20.png)
@@ -1313,7 +1328,7 @@ class ConstantPoolReference {
 
 ### 27.垃圾收集算法了解吗？
 
-垃圾收集算法主要有三种，分别是标记-清除算法、标记-复制算法和标记-整理算法。
+垃圾回收算法主要有三种，分别是标记-清除算法、标记-复制算法和标记-整理算法。但是针对不同的内存划分过程，还可以分为： 分代回收算法 和 分区回收算法 以及 混合回收算法。
 
 #### 说说标记-清除算法？
 
@@ -1373,13 +1388,15 @@ Major GC 也称为 Old GC，主要指的是发生在老年代的垃圾收集。�
 
 Mixed GC 是 G1 垃圾收集器特有的一种 GC 类型，它在一次 GC 中同时清理年轻代和部分老年代。
 
-Full GC 是最彻底的垃圾收集，涉及整个 Java 堆和方法区。它是最耗时的 GC，通常在 JVM 压力很大时发生。
+Full GC 是最彻底的垃圾收集，涉及整个 Java 堆和方法区。它是最耗时的 GC，通常在 JVM 压力很大时发生。并且，**JVM 调优的目标之一就是减小 FullGC 的耗时。**
 
 #### FULL gc 怎么去清理的？
 
 Full GC 会从 GC Root 出发，标记所有可达对象。新生代使用复制算法，清空 Eden 区。老年代使用标记-整理算法，回收对象并消除碎片。
 
 停顿时间较长，会影响系统响应性能。
+
+**JVM 调优的目标之一就是缩短 FullGC 耗时。**
 
 ### 29.Young GC 什么时候触发？
 
@@ -1411,7 +1428,7 @@ ZGC 是 JDK11 推出的一款低延迟垃圾收集器，适用于大内存低延
 
 #### 说说 Serial 收集器？
 
-Serial 收集器是最基础、历史最悠久的收集器。
+Serial 收集器是最基础、历史最悠久的收集器。也叫串行回收器，所谓串行是指垃圾回收线程与用户线程是串行执行，也就是先后执行，而不是同时执行。并且垃圾回收线程是单个处理器或单个线程。
 
 如同它的名字（串行），它是一个单线程工作的收集器，使用一个处理器或一条收集线程去完成垃圾收集工作。并且进行垃圾收集时，必须暂停其他所有工作线程，直到垃圾收集结束——这就是所谓的“Stop The World”。
 
@@ -1429,7 +1446,7 @@ ParNew/Serial Old 收集器运行示意图如下：
 
 #### 说说 Parallel Scavenge 收集器？
 
-Parallel Scavenge 收集器是一款新生代收集器，基于标记-复制算法实现，也能够并行收集。和 ParNew 有些类似，但 Parallel Scavenge 主要关注的是垃圾收集的吞吐量——所谓吞吐量，就是 CPU 用于运行用户代码的时间和总消耗时间的比值，比值越大，说明垃圾收集的占比越小。
+Parallel Scavenge 收集器是一款新生代收集器，基于标记-复制算法实现，也能够并行收集。和 ParNew 有些类似，但 Parallel Scavenge 主要关注的是**垃圾收集的吞吐量**——所谓吞吐量，就是 CPU 用于运行用户代码的时间和总消耗时间的比值，比值越大，说明垃圾收集的占比越小。
 
 ![吞吐量](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-31.png)
 
@@ -1449,15 +1466,15 @@ Parallel Old 是 Parallel Scavenge 收集器的老年代版本，基于标记-�
 
 CMS 在 JDK 1.5 时引入，JDK 9 时被标记弃用，JDK 14 时被移除。
 
-CMS 是一种低延迟的垃圾收集器，采用标记-清除算法，分为初始标记、并发标记、重新标记和并发清除四个阶段，优点是垃圾回收线程和应用线程同时运行，停顿时间短，适合延迟敏感的应用，但容易产生内存碎片，可能触发 Full GC。
+CMS 是一种低延迟的垃圾收集器，采用标记-清除算法，分为**初始标记**、**并发标记**、**重新标记**和**并发清除**四个阶段，优点是垃圾回收线程和应用线程同时运行，停顿时间短，适合延迟敏感的应用，但容易产生内存碎片，可能触发 Full GC。
 
-![小潘：CMS](https://cdn.tobebetterjavaer.com/stutymore/gc-collector-20231228211056.png)
+![Concurrent Mark Sweep收集器运行示意图](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-34.png)
 
 #### 说说 G1 收集器？
 
 G1 在 JDK 1.7 时引入，在 JDK 9 时取代 CMS 成为默认的垃圾收集器。
 
-G1 是一种面向大内存、高吞吐场景的垃圾收集器，它将堆划分为多个小的 Region，通过标记-整理算法，避免了内存碎片问题。优点是停顿时间可控，适合大堆场景，但调优较复杂。
+G1 是一种面向大内存、高吞吐场景的垃圾收集器，它将堆划分为多个小的 Region，通过标记-整理算法，避免了内存碎片问题。优点是**停顿时间可控**，**适合大堆场景**，但调优较复杂。
 
 ![有梦想的肥宅：G1](https://cdn.tobebetterjavaer.com/stutymore/gc-collector-20231228213824.png)
 
@@ -1577,7 +1594,9 @@ G1 非常适合大内存、多核处理器的环境。
 
 可以通过以下命令查看当前 JVM 的垃圾收集器：
 
-::: details 查看当前 JVM 的垃圾收集器
+<details class="details custom-block">
+
+<summary>查看当前 JVM 的垃圾收集器</summary>
 
 ```java
 zeanzai@DESKTOP-OJNPMED MINGW64 /d/03-code/Github/spring-cloud-study-notes (master)
@@ -1590,7 +1609,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.421-b09, mixed mode)
 
 `UseParallelGC` = `Parallel Scavenge + Parallel Old`，表示新生代用`Parallel Scavenge`收集器，老年代使用`Parallel Old` 收集器。
 
-:::
+</details>
 
 因此你也可以这样回答：
 
@@ -1646,8 +1665,6 @@ JDK 自带的命令行工具层面，我用过 jps、jstat、jinfo、jmap、jhat
 ③、还有生成堆转储文件：`jmap -dump:format=b,file=<path> <pid>`。
 
 ![二哥的Java 进阶之路：jmap -dump](https://cdn.tobebetterjavaer.com/stutymore/console-tools-20240106184317.png)
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的哔哩哔哩同学 1 二面面试原题：你是如何使用 jmap，你用过哪些命令？
 
 ### 38.了解哪些可视化的性能监控工具？
 
@@ -2089,8 +2106,6 @@ class HotSwapClassLoader extends ClassLoader {
 
 ### 54.说说解释执行和编译执行的区别（补充）
 
-> 2024 年 03 月 08 日增补
-
 先说解释和编译的区别：
 
 - 解释：将源代码逐行转换为机器码。
@@ -2110,3 +2125,7 @@ Java 一般被称为“解释型语言”，因为 Java 代码在执行前，需
 因此，Java 的执行效率得到了大幅提升。
 
 ![图片来源于美团技术博客](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/jvm/jit-9a62fc02-1a6a-451e-bb2b-19fc086d5be0.png)
+
+https://tech.meituan.com/2020/10/22/java-jit-practice-in-meituan.html
+
+### 55.

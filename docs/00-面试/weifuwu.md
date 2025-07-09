@@ -1,20 +1,3 @@
----
-title: 微服务面试题（Dubbo、Spring Cloud），33道微服务八股文（1.4万字33张手绘图），面渣逆袭必看👍
-shortTitle: 面渣逆袭-微服务
-author: 三分恶
-category:
-  - 面渣逆袭
-tag:
-  - 面渣逆袭
-description: 下载次数超 1 万次，1.3 万字 33 张手绘图，详解 33 道微服务（Dubbo、Spring Cloud）面试高频题（让天下没有难背的八股），面渣背会这些八股文，这次吊打面试官，我觉得稳了（手动 dog）
-head:
-  - - meta
-    - name: keywords
-      content: Java,微服务,Spring Cloud,Dubbo,面试题,八股文,Microservices
----
-
-1.4 万字 33 张手绘图，详解 33 道微服务（Dubbo、Spring Cloud）面试高频题（让天下没有难背的八股），面渣背会这些八股文，这次吊打面试官，我觉得稳了（手动 dog）。整理：沉默王二，戳[转载链接](https://mp.weixin.qq.com/s/IgY6cU_5Xic-2KAAhxK9MA)，作者：三分恶，戳[原文链接](https://mp.weixin.qq.com/s/S8_I9mDNh7XnnQaXJFr2CQ)。
-
 ## 概览
 
 ### 1.什么是微服务？
@@ -38,7 +21,11 @@ head:
 
 微服务与单体服务的区别在于规模和部署方式。微服务将应用程序拆分为更小的、自治的服务单元，每个服务都有自己的数据库和代码库，可以独立开发、测试、部署和扩展，带来了更大的灵活性、可维护性、可扩展性和容错性。
 
+> SOA 与微服务的本质区别？
+
 ### 2.微服务带来了哪些挑战？
+
+> 视角有： 技术架构上、效能管理上、经济与时间成本；
 
 微服务架构不是万金油，尽它有很多优点，但是对于是否采用微服务架构，是否将原来的单体服务进行拆分，还是要考虑到服务拆分后可能带来的一些挑战和问题：
 
@@ -108,41 +95,41 @@ head:
 
 微服务的各个组件和常见实现：
 
-1.  注册中心：用于服务的注册与发现，管理微服务的地址信息。常见的实现包括：
+1. 注册中心：用于服务的注册与发现，管理微服务的地址信息。常见的实现包括：
 
-- Spring Cloud Netflix：Eureka、Consul
-- Spring Cloud Alibaba：Nacos
+   - Spring Cloud Netflix：Eureka、Consul
+   - Spring Cloud Alibaba：Nacos
 
-3.  配置中心：用于集中管理微服务的配置信息，可以动态修改配置而不需要重启服务。常见的实现包括：
+2. 配置中心：用于集中管理微服务的配置信息，可以动态修改配置而不需要重启服务。常见的实现包括：
 
-- Spring Cloud Netflix：Spring Cloud Config
-- Spring Cloud Alibaba：Nacos Config
+   - Spring Cloud Netflix：Spring Cloud Config
+   - Spring Cloud Alibaba：Nacos Config
 
-5.  远程调用：用于在不同的微服务之间进行通信和协作。常见的实现保包括：
+3. 远程调用：用于在不同的微服务之间进行通信和协作。常见的实现保包括：
 
-- RESTful API：如 RestTemplate、Feign
-- RPC（远程过程调用）：如 Dubbo、gRPC
+   - RESTful API：如 RestTemplate、Feign
+   - RPC（远程过程调用）：如 Dubbo、gRPC
 
-7.  API 网关：作为微服务架构的入口，统一暴露服务，并提供路由、负载均衡、安全认证等功能。常见的实现包括：
+4. API 网关：作为微服务架构的入口，统一暴露服务，并提供路由、负载均衡、安全认证等功能。常见的实现包括：
 
-- Spring Cloud Netflix：Zuul、Gateway
-- Spring Cloud Alibaba：Gateway、Apisix 等
+   - Spring Cloud Netflix：Zuul、Gateway
+   - Spring Cloud Alibaba：Gateway、Apisix 等
 
-9.  分布式事务：保证跨多个微服务的一致性和原子性操作。常见的实现包括：
+5. 分布式事务：保证跨多个微服务的一致性和原子性操作。常见的实现包括：
 
-- Spring Cloud Alibaba：Seata
+   - Spring Cloud Alibaba：Seata
 
-11. 熔断器：用于防止微服务之间的故障扩散，提高系统的容错能力。常见的实现包括：
+6. 熔断器：用于防止微服务之间的故障扩散，提高系统的容错能力。常见的实现包括：
 
-- Spring Cloud Netflix：Hystrix
-- Spring Cloud Alibaba：Sentinel、Resilience4j
+   - Spring Cloud Netflix：Hystrix
+   - Spring Cloud Alibaba：Sentinel、Resilience4j
 
-13. 限流和降级：用于防止微服务过载，对请求进行限制和降级处理。常见的实现包括：
+7. 限流和降级：用于防止微服务过载，对请求进行限制和降级处理。常见的实现包括：
 
 - Spring Cloud Netflix：Hystrix
 - Spring Cloud Alibaba：Sentinel
 
-15. 分布式追踪和监控：用于跟踪和监控微服务的请求流程和性能指标。常见的实现包括：
+8. 分布式追踪和监控：用于跟踪和监控微服务的请求流程和性能指标。常见的实现包括：
 
 - Spring Cloud Netflix：Spring Cloud Sleuth + Zipkin
 - Spring Cloud Alibaba：SkyWalking、Sentinel Dashboard
@@ -167,11 +154,11 @@ head:
 
 SpringCloud 可以与多种注册中心进行集成，常见的注册中心包括：
 
-1.  Eureka：Eureka 是 Netflix 开源的服务发现框架，具有高可用、弹性、可扩展等特点，并与 Spring Cloud 集成良好。
-2.  Consul：Consul 是一种分布式服务发现和配置管理系统，由 HashiCorp 开发。它提供了服务注册、服务发现、健康检查、键值存储等功能，并支持多数据中心部署。
-3.  ZooKeeper：ZooKeeper 是 Apache 基金会开源的分布式协调服务，可以用作服务注册中心。它具有高可用、一致性、可靠性等特点。
-4.  Nacos：Nacos 是阿里巴巴开源的一个动态服务发现、配置管理和服务管理平台。它提供了服务注册和发现、配置管理、动态 DNS 服务等功能。
-5.  etcd：etcd 是 CoreOS 开源的一种分布式键值存储系统，可以被用作服务注册中心。它具有高可用、强一致性、分布式复制等特性。
+1. Eureka：Eureka 是 Netflix 开源的服务发现框架，具有高可用、弹性、可扩展等特点，并与 Spring Cloud 集成良好。
+2. Consul：Consul 是一种分布式服务发现和配置管理系统，由 HashiCorp 开发。它提供了服务注册、服务发现、健康检查、键值存储等功能，并支持多数据中心部署。
+3. ZooKeeper：ZooKeeper 是 Apache 基金会开源的分布式协调服务，可以用作服务注册中心。它具有高可用、一致性、可靠性等特点。
+4. Nacos：Nacos 是阿里巴巴开源的一个动态服务发现、配置管理和服务管理平台。它提供了服务注册和发现、配置管理、动态 DNS 服务等功能。
+5. etcd：etcd 是 CoreOS 开源的一种分布式键值存储系统，可以被用作服务注册中心。它具有高可用、强一致性、分布式复制等特性。
 
 ### 7.说下 Eureka、ZooKeeper、Nacos 的区别？
 
@@ -195,9 +182,9 @@ SpringCloud 可以与多种注册中心进行集成，常见的注册中心包�
 
 Eureka 的实现原理，大概可以从这几个方面来看：
 
-1.  服务注册与发现: 当一个服务实例启动时，它会向 Eureka Server 发送注册请求，将自己的信息注册到注册中心。Eureka Server 会将这些信息保存在内存中，并提供 REST 接口供其他服务查询。服务消费者可以通过查询服务实例列表来获取可用的服务提供者实例，从而实现服务的发现。
-2.  服务健康检查: Eureka 通过心跳机制来检测服务实例的健康状态。服务实例会定期向 Eureka Server 发送心跳，也就是续约，以表明自己的存活状态。如果 Eureka Server 在一定时间内没有收到某个服务实例的心跳，则会将其标记为不可用，并从服务列表中移除，下线实例。
-3.  服务负载均衡: Eureka 客户端在调用其他服务时，会从本地缓存中获取服务的注册信息。如果缓存中没有对应的信息，则会向 Eureka Server 发送查询请求。Eureka Server 会返回一个可用的服务实例列表给客户端，客户端可以使用负载均衡算法选择其中一个进行调用。
+1. 服务注册与发现: 当一个服务实例启动时，它会向 Eureka Server 发送注册请求，将自己的信息注册到注册中心。Eureka Server 会将这些信息保存在内存中，并提供 REST 接口供其他服务查询。服务消费者可以通过查询服务实例列表来获取可用的服务提供者实例，从而实现服务的发现。
+2. 服务健康检查: Eureka 通过心跳机制来检测服务实例的健康状态。服务实例会定期向 Eureka Server 发送心跳，也就是续约，以表明自己的存活状态。如果 Eureka Server 在一定时间内没有收到某个服务实例的心跳，则会将其标记为不可用，并从服务列表中移除，下线实例。
+3. 服务负载均衡: Eureka 客户端在调用其他服务时，会从本地缓存中获取服务的注册信息。如果缓存中没有对应的信息，则会向 Eureka Server 发送查询请求。Eureka Server 会返回一个可用的服务实例列表给客户端，客户端可以使用负载均衡算法选择其中一个进行调用。
 
 > 其它的注册中心，如 Nacos、Consul 等等，在服务注册和发现上，实现原理都是大同小异。
 
@@ -207,9 +194,9 @@ Eureka Server 保证高可用，主要通过这三个方面来实现：
 
 ![Eureka Server](https://cdn.tobebetterjavaer.com/paicoding/cbf6eee8064d0ece8abf8b611629136e.png)
 
-1.  多实例部署: 通过将多个 Eureka Server 实例部署在不同的节点上，可以实现高可用性。当其中一个实例发生故障时，其他实例仍然可以提供服务，并保持注册信息的一致性。
-2.  服务注册信息的复制: 当一个服务实例向 Eureka Server 注册时，每个 Eureka Server 实例都会复制其他实例的注册信息，以保持数据的一致性。当某个 Eureka Server 实例发生故障时，其他实例可以接管其工作，保证整个系统的正常运行。
-3.  自我保护机制: Eureka 还具有自我保护机制。当 Eureka Server 节点在一定时间内没有接收到心跳时，它会进入自我保护模式。在自我保护模式下，Eureka Server 不再剔除注册表中的服务实例，以保护现有的注册信息。这样可以防止由于网络抖动或其他原因导致的误剔除，进一步提高系统的稳定性。
+1. 多实例部署: 通过将多个 Eureka Server 实例部署在不同的节点上，可以实现高可用性。当其中一个实例发生故障时，其他实例仍然可以提供服务，并保持注册信息的一致性。
+2. 服务注册信息的复制: 当一个服务实例向 Eureka Server 注册时，每个 Eureka Server 实例都会复制其他实例的注册信息，以保持数据的一致性。当某个 Eureka Server 实例发生故障时，其他实例可以接管其工作，保证整个系统的正常运行。
+3. 自我保护机制: Eureka 还具有自我保护机制。当 Eureka Server 节点在一定时间内没有接收到心跳时，它会进入自我保护模式。在自我保护模式下，Eureka Server 不再剔除注册表中的服务实例，以保护现有的注册信息。这样可以防止由于网络抖动或其他原因导致的误剔除，进一步提高系统的稳定性。
 
 ## 配置中心
 
@@ -223,12 +210,12 @@ Eureka Server 保证高可用，主要通过这三个方面来实现：
 
 和注册中心一样，SpringCloud 也支持对多种配置中心的集成。常见的配置中心选型包括：
 
-1.  Spring Cloud Config：官方推荐的配置中心，支持将配置文件存储在 Git、SVN 等版本控制系统中，并提供 RESTful API 进行访问和管理。
-2.  ZooKeeper：一个开源的分布式协调服务，可以用作配置中心。它具有高可用性、一致性和通知机制等特性。
-3.  Consul：另一个开源的分布式服务发现和配置管理工具，也可用作配置中心。支持多种配置文件格式，提供健康检查、故障转移和动态变更等功能。
-4.  Etcd：一个分布式键值存储系统，可用作配置中心。它使用基于 Raft 算法的一致性机制，提供分布式数据一致性保证。
-5.  Apollo：携程开源的配置中心，支持多种语言和框架。提供细粒度的配置权限管理、配置变更通知和灰度发布等高级特性，还有可视化的配置管理界面。
-6.  Nacos：阿里巴巴开源的服务发现、配置管理和服务管理平台，也可以作为配置中心使用。支持服务注册与发现、动态配置管理、服务健康监测和动态 DNS 服务等功能。
+1. Spring Cloud Config：官方推荐的配置中心，支持将配置文件存储在 Git、SVN 等版本控制系统中，并提供 RESTful API 进行访问和管理。
+2. ZooKeeper：一个开源的分布式协调服务，可以用作配置中心。它具有高可用性、一致性和通知机制等特性。
+3. Consul：另一个开源的分布式服务发现和配置管理工具，也可用作配置中心。支持多种配置文件格式，提供健康检查、故障转移和动态变更等功能。
+4. Etcd：一个分布式键值存储系统，可用作配置中心。它使用基于 Raft 算法的一致性机制，提供分布式数据一致性保证。
+5. Apollo：携程开源的配置中心，支持多种语言和框架。提供细粒度的配置权限管理、配置变更通知和灰度发布等高级特性，还有可视化的配置管理界面。
+6. Nacos：阿里巴巴开源的服务发现、配置管理和服务管理平台，也可以作为配置中心使用。支持服务注册与发现、动态配置管理、服务健康监测和动态 DNS 服务等功能。
 
 ### 12.Nacos 配置中心的原理了解吗？
 
@@ -238,10 +225,10 @@ Eureka Server 保证高可用，主要通过这三个方面来实现：
 
 具体的实现大概可以分成这么几个部分：
 
-1.  配置信息存储：Nacos 默认使用内嵌数据库 Derby 来存储配置信息，还可以采用 MySQL 等关系型数据库。
-2.  注册配置信息：服务启动时，Nacos Client 会向 Nacos Server 注册自己的配置信息，这个注册过程就是把配置信息写入存储，并生成版本号。
-3.  获取配置信息：服务运行期间，Nacos Client 通过 API 从 Nacos Server 获取配置信息。Server 根据键查找对应的配置信息，并返回给 Client。
-4.  监听配置变化：Nacos Client 可以通过注册监听器的方式，实现对配置信息的监听。当配置信息发生变化时，Nacos Server 会通知已注册的监听器，并触发相应的回调方法。
+1. 配置信息存储：Nacos 默认使用内嵌数据库 Derby 来存储配置信息，还可以采用 MySQL 等关系型数据库。
+2. 注册配置信息：服务启动时，Nacos Client 会向 Nacos Server 注册自己的配置信息，这个注册过程就是把配置信息写入存储，并生成版本号。
+3. 获取配置信息：服务运行期间，Nacos Client 通过 API 从 Nacos Server 获取配置信息。Server 根据键查找对应的配置信息，并返回给 Client。
+4. 监听配置变化：Nacos Client 可以通过注册监听器的方式，实现对配置信息的监听。当配置信息发生变化时，Nacos Server 会通知已注册的监听器，并触发相应的回调方法。
 
 ### 13.Nacos 配置中心长轮询机制？
 
@@ -253,10 +240,10 @@ Eureka Server 保证高可用，主要通过这三个方面来实现：
 
 ![Nacos长轮询](https://cdn.tobebetterjavaer.com/paicoding/16de67d4619e2844fb0812cf994cd7e7.png)
 
-1.  客户端发起 Pull 请求，服务端检查配置是否有变更。如果没有变更，则设置一个定时任务，在一段时间后执行，并将当前的客户端连接加入到等待队列中。
-2.  在等待期间，如果配置发生变更，服务端会立即返回结果给客户端，完成一次"推送"操作。
-3.  如果在等待期间没有配置变更，等待时间达到预设的超时时间后，服务端会自动返回结果给客户端，即使配置没有变更。
-4.  如果在等待期间，通过 Nacos Dashboard 或 API 对配置进行了修改，会触发一个事件机制，服务端会遍历等待队列，找到发生变更的配置项对应的客户端连接，并将变更的数据通过连接返回，完成一次"推送"操作。
+1. 客户端发起 Pull 请求，服务端检查配置是否有变更。如果没有变更，则设置一个定时任务，在一段时间后执行，并将当前的客户端连接加入到等待队列中。
+2. 在等待期间，如果配置发生变更，服务端会立即返回结果给客户端，完成一次"推送"操作。
+3. 如果在等待期间没有配置变更，等待时间达到预设的超时时间后，服务端会自动返回结果给客户端，即使配置没有变更。
+4. 如果在等待期间，通过 Nacos Dashboard 或 API 对配置进行了修改，会触发一个事件机制，服务端会遍历等待队列，找到发生变更的配置项对应的客户端连接，并将变更的数据通过连接返回，完成一次"推送"操作。
 
 通过长轮询的方式，Nacos 客户端能够实时感知配置的变化，并及时获取最新的配置信息。同时，这种方式也降低了服务端的压力，避免了大量的长连接占用内存资源。
 
@@ -291,8 +278,6 @@ RPC 是远程过程调用协议，用于实现分布式系统中不同节点之�
 RPC（Remote Procedure Call）是一种远程过程调用协议，用于实现分布式系统中不同节点之间的通信。它基于方法调用模型，允许客户端调用远程服务的方法，并等待结果返回。
 
 像 gRPC、Dubbo、Thrift 等都是 RPC 框架，它们提供了 IDL（接口定义语言）来定义服务接口，以及序列化协议来进行数据传输。
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的腾讯面经同学 24 面试原题：RPC 了解吗？
 
 ### 15.那 Feign 和 Dubbo 的区别呢？
 
@@ -391,12 +376,12 @@ Ribbon 通过从服务注册中心获取可用服务列表，并通过负载均�
 
 ![常见负载均衡算法](https://cdn.tobebetterjavaer.com/paicoding/10f8e977199a2b42be5a5f3d47ca798f.png)
 
-1.  **轮询算法（Round Robin）**：轮询算法是最简单的负载均衡算法之一。它按照顺序将请求依次分配给每个后端服务器，循环往复。当请求到达时，负载均衡器按照事先定义的顺序选择下一个服务器。轮询算法适用于后端服务器具有相同的处理能力和性能的场景。
-2.  **加权轮询算法（Weighted Round Robin）**：加权轮询算法在轮询算法的基础上增加了权重的概念。每个后端服务器都被赋予一个权重值，权重值越高，被选中的概率就越大。这样可以根据服务器的处理能力和性能调整请求的分配比例，使得性能较高的服务器能够处理更多的请求。
-3.  **随机算法（Random）**：随机算法将请求随机分配给后端服务器。每个后端服务器有相等的被选中概率，没有考虑服务器的实际负载情况。这种算法简单快速，适用于后端服务器性能相近且无需考虑请求处理能力的场景。
-4.  **加权随机算法（Weighted Random）**：加权随机算法在随机算法的基础上引入了权重的概念。每个后端服务器被赋予一个权重值，权重值越高，被选中的概率就越大。这样可以根据服务器的处理能力和性能调整请求的分配比例。
-5.  **最少连接算法（Least Connection）**：最少连接算法会根据后端服务器当前的连接数来决定请求的分配。负载均衡器会选择当前连接数最少的服务器进行请求分配，以保证后端服务器的负载均衡。这种算法适用于后端服务器的处理能力不同或者请求的处理时间不同的场景。
-6.  **哈希算法（Hash）**：哈希算法会根据请求的某个特定属性（如客户端 IP 地址、请求 URL 等）计算哈希值，然后根据哈希值选择相应的后端服务器。
+1. **轮询算法（Round Robin）**：轮询算法是最简单的负载均衡算法之一。它按照顺序将请求依次分配给每个后端服务器，循环往复。当请求到达时，负载均衡器按照事先定义的顺序选择下一个服务器。轮询算法适用于后端服务器具有相同的处理能力和性能的场景。
+2. **加权轮询算法（Weighted Round Robin）**：加权轮询算法在轮询算法的基础上增加了权重的概念。每个后端服务器都被赋予一个权重值，权重值越高，被选中的概率就越大。这样可以根据服务器的处理能力和性能调整请求的分配比例，使得性能较高的服务器能够处理更多的请求。
+3. **随机算法（Random）**：随机算法将请求随机分配给后端服务器。每个后端服务器有相等的被选中概率，没有考虑服务器的实际负载情况。这种算法简单快速，适用于后端服务器性能相近且无需考虑请求处理能力的场景。
+4. **加权随机算法（Weighted Random）**：加权随机算法在随机算法的基础上引入了权重的概念。每个后端服务器被赋予一个权重值，权重值越高，被选中的概率就越大。这样可以根据服务器的处理能力和性能调整请求的分配比例。
+5. **最少连接算法（Least Connection）**：最少连接算法会根据后端服务器当前的连接数来决定请求的分配。负载均衡器会选择当前连接数最少的服务器进行请求分配，以保证后端服务器的负载均衡。这种算法适用于后端服务器的处理能力不同或者请求的处理时间不同的场景。
+6. **哈希算法（Hash）**：哈希算法会根据请求的某个特定属性（如客户端 IP 地址、请求 URL 等）计算哈希值，然后根据哈希值选择相应的后端服务器。
 
 常见的负载均衡器，比如 Ribbion、Gateway 等等，基本都支持这些负载均衡算法。
 
@@ -412,9 +397,9 @@ Ribbon 通过从服务注册中心获取可用服务列表，并通过负载均�
 
 一般，为了防止服务雪崩，可以采用这些措施：
 
-1.  服务高可用部署：确保各个服务都具备高可用性，通过冗余部署、故障转移等方式来减少单点故障的影响。
-2.  限流和熔断：对服务之间的请求进行限流和熔断，以防止过多的请求涌入导致后端服务不可用。
-3.  缓存和降级：合理使用缓存来减轻后端服务的负载压力，并在必要时进行服务降级，保证核心功能的可用性。
+1. 服务高可用部署：确保各个服务都具备高可用性，通过冗余部署、故障转移等方式来减少单点故障的影响。
+2. 限流和熔断：对服务之间的请求进行限流和熔断，以防止过多的请求涌入导致后端服务不可用。
+3. 缓存和降级：合理使用缓存来减轻后端服务的负载压力，并在必要时进行服务降级，保证核心功能的可用性。
 
 ### 22.什么是服务熔断？什么是服务降级？
 
@@ -438,30 +423,30 @@ Ribbon 通过从服务注册中心获取可用服务列表，并通过负载均�
 
 目前常见的服务熔断降级实现方案有这么几种：
 
-| 框架         | 实现方案        | 特点                                                |
-| ------------ | --------------- | --------------------------------------------------- |
-| Spring Cloud | Netflix Hystrix | \- 提供线程隔离、服务降级、请求缓存、请求合并等功能 |
+1. SpringCloud - Netflix Hystrix
 
-\- 可与 Spring Cloud 其他组件无缝集成
+   - 提供线程隔离、服务降级、请求缓存、请求合并等功能
+   - 可与 Spring Cloud 其他组件无缝集成
+   - 官方已宣布停止维护，推荐使用 Resilience4j 代替
 
-\- 官方已宣布停止维护，推荐使用 Resilience4j 代替|
-Spring Cloud|Resilience4j|\- 轻量级服务熔断库
+2. SpringCloud - Resilience4j
 
-\- 提供类似于 Hystrix 的功能
+   - 轻量级服务熔断库
+   - 提供类似于 Hystrix 的功能
+   - 具有更好的性能和更简洁的 API
+   - 可与 Spring Cloud 其他组件无缝集成
 
-\- 具有更好的性能和更简洁的 API
+3. Spring Cloud Alibaba - Sentinel
 
-\- 可与 Spring Cloud 其他组件无缝集成|
-Spring Cloud Alibaba|Sentinel|\- 阿里巴巴开源的流量控制和熔断降级组件
+   - 阿里巴巴开源的流量控制和熔断降级组件
+   - 提供实时监控、流量控制、熔断降级等功能
+   - 与 Spring Cloud Alibaba 生态系统紧密集成
 
-\- 提供实时监控、流量控制、熔断降级等功能
+4. Dubbo
 
-\- 与 Spring Cloud Alibaba 生态系统紧密集成|
-Dubbo|Dubbo 自带熔断降级机制|\- Dubbo 框架本身提供的熔断降级机制
-
-\- 可通过配置实现服务熔断和降级
-
-\- 与 Dubbo 的 RPC 框架紧密集成|
+   - Dubbo 框架本身提供的熔断降级机制
+   - 可通过配置实现服务熔断和降级
+   - 与 Dubbo 的 RPC 框架紧密集成
 
 ### 23.Hystrix 怎么实现服务容错？
 
@@ -469,10 +454,10 @@ Dubbo|Dubbo 自带熔断降级机制|\- Dubbo 框架本身提供的熔断降级�
 
 ![Hystrix服务容错六大机制](https://cdn.tobebetterjavaer.com/paicoding/bfc1fcd689ccab76f23abc3cd1c6ddf3.png)
 
-1.  服务熔断（Circuit Breaker）：Hystrix 通过设置阈值来监控服务的错误率或响应时间。当错误率或响应时间超过预设的阈值时，熔断器将会打开，后续的请求将不再发送到实际的服务提供方，而是返回预设的默认值或错误信息。这样可以快速隔离故障服务，防止故障扩散，提高系统的稳定性和可用性。
-2.  服务降级（Fallback）：当服务熔断打开时，Hystrix 可以提供一个备用的降级方法或返回默认值，以保证系统继续正常运行。开发者可以定义降级逻辑，例如返回缓存数据、执行简化的逻辑或调用其他可靠的服务，以提供有限但可用的功能。
+1. 服务熔断（Circuit Breaker）：Hystrix 通过设置阈值来监控服务的错误率或响应时间。当错误率或响应时间超过预设的阈值时，熔断器将会打开，后续的请求将不再发送到实际的服务提供方，而是返回预设的默认值或错误信息。这样可以快速隔离故障服务，防止故障扩散，提高系统的稳定性和可用性。
+2. 服务降级（Fallback）：当服务熔断打开时，Hystrix 可以提供一个备用的降级方法或返回默认值，以保证系统继续正常运行。开发者可以定义降级逻辑，例如返回缓存数据、执行简化的逻辑或调用其他可靠的服务，以提供有限但可用的功能。
 
-```
+```java
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
  /**
@@ -497,18 +482,18 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
  }
 ```
 
-3.  请求缓存（Request Caching）：Hystrix 可以缓存对同一请求的响应结果，当下次请求相同的数据时，直接从缓存中获取，避免重复的网络请求，提高系统的性能和响应速度。
-4.  请求合并（Request Collapsing）：Hystrix 可以将多个并发的请求合并为一个批量请求，减少网络开销和资源占用。这对于一些高并发的场景可以有效地减少请求次数，提高系统的性能。
-5.  实时监控和度量（Real-time Monitoring and Metrics）：Hystrix 提供了实时监控和度量功能，可以对服务的执行情况进行监控和统计，包括错误率、响应时间、并发量等指标。通过监控数据，可以及时发现和解决服务故障或性能问题。
-6.  线程池隔离（Thread Pool Isolation）：Hystrix 将每个依赖服务的请求都放在独立的线程池中执行，避免因某个服务的故障导致整个系统的线程资源耗尽。通过线程池隔离，可以提高系统的稳定性和可用性。
+3. 请求缓存（Request Caching）：Hystrix 可以缓存对同一请求的响应结果，当下次请求相同的数据时，直接从缓存中获取，避免重复的网络请求，提高系统的性能和响应速度。
+4. 请求合并（Request Collapsing）：Hystrix 可以将多个并发的请求合并为一个批量请求，减少网络开销和资源占用。这对于一些高并发的场景可以有效地减少请求次数，提高系统的性能。
+5. 实时监控和度量（Real-time Monitoring and Metrics）：Hystrix 提供了实时监控和度量功能，可以对服务的执行情况进行监控和统计，包括错误率、响应时间、并发量等指标。通过监控数据，可以及时发现和解决服务故障或性能问题。
+6. 线程池隔离（Thread Pool Isolation）：Hystrix 将每个依赖服务的请求都放在独立的线程池中执行，避免因某个服务的故障导致整个系统的线程资源耗尽。通过线程池隔离，可以提高系统的稳定性和可用性。
 
 ### 24.Sentinel 怎么实现限流的？
 
 Sentinel 通过动态管理限流规则，根据定义的规则对请求进行限流控制。具体实现步骤如下：
 
-1.  定义资源：在 Sentinel 中，资源可以是 URL、方法等，用于标识需要进行限流的请求。
+1. 定义资源 ：在 Sentinel 中，资源可以是 URL、方法等，用于标识需要进行限流的请求。
 
-```
+```java
 // 原本的业务方法.
  @SentinelResource(blockHandler = "blockHandlerForGetUser")
  public User getUserById(String id) {
@@ -521,9 +506,9 @@ Sentinel 通过动态管理限流规则，根据定义的规则对请求进行�
  }
 ```
 
-2.  配置限流规则：在 Sentinel 的配置文件中定义资源的限流规则。规则可以包括资源名称、限流阈值、限流模式（令牌桶或漏桶）等。
+2. 配置限流规则 ：在 Sentinel 的配置文件中定义资源的限流规则。规则可以包括资源名称、限流阈值、限流模式（令牌桶或漏桶）等。
 
-```
+```java
 private static void initFlowQpsRule() {
      List<FlowRule> rules = new ArrayList<>();
      FlowRule rule1 = new FlowRule();
@@ -537,17 +522,17 @@ private static void initFlowQpsRule() {
  }
 ```
 
-3.  监控流量：Sentinel 会监控每个资源的流量情况，包括请求的 QPS（每秒请求数）、线程数、响应时间等。
+3. 监控流量 ：Sentinel 会监控每个资源的流量情况，包括请求的 QPS（每秒请求数）、线程数、响应时间等。
 
 ![Sentinel控制台](https://cdn.tobebetterjavaer.com/paicoding/54206a2d5b5ab4f1387c2d344b5b9e5d.png)
 
-4.  限流控制：当请求到达时，Sentinel 会根据资源的限流规则判断是否需要进行限流控制。如果请求超过了限流阈值，则可以进行限制、拒绝或进行其他降级处理。
+4. 限流控制 ：当请求到达时，Sentinel 会根据资源的限流规则判断是否需要进行限流控制。如果请求超过了限流阈值，则可以进行限制、拒绝或进行其他降级处理。
 
 ![Sentinel总体框架-来源官网](https://cdn.tobebetterjavaer.com/paicoding/ec903e569092136bb03d9e3a89e40474.png)
 
 #### Sentinel 采用的什么限流算法？
 
-Sentinel 使用滑动窗口限流算法来实现限流。
+Sentinel 使用**滑动窗口**限流算法来实现限流。
 
 滑动窗口限流算法是一种基于时间窗口的限流算法。它将一段时间划分为多个时间窗口，并在每个时间窗口内统计请求的数量。通过动态地调整时间窗口的大小和滑动步长，可以更精确地控制请求的通过速率。
 
@@ -557,7 +542,7 @@ Sentinel 使用滑动窗口限流算法来实现限流。
 
 Sentinel 利用了 Token Server 和 Token Client 的机制来实现集群限流。
 
-开启集群限流后，Client 向 Token Server 发送请求，Token Server 根据配置的规则决定是否限流。T
+开启集群限流后，Client 向 Token Server 发送请求，Token Server 根据配置的规则决定是否限流。
 
 ![Token Server和Client](https://cdn.tobebetterjavaer.com/paicoding/a387826853b4c459a52a5762eeec8427.png)
 
@@ -571,13 +556,13 @@ API 网关（API Gateway）是一种中间层服务器，用于集中管理、�
 
 API 网关的主要功能包括：
 
-1.  路由转发：API 网关根据请求的 URL 路径或其他标识，将请求路由到相应的后端服务。通过配置路由规则，可以灵活地将请求分发给不同的后端服务。
-2.  负载均衡：API 网关可以在后端服务之间实现负载均衡，将请求平均分发到多个实例上，提高系统的吞吐量和可扩展性。
-3.  安全认证与授权：API 网关可以集中处理身份验证和授权，确保只有经过身份验证的客户端才能访问后端服务。它可以与身份提供者（如 OAuth、OpenID Connect）集成，进行用户认证和授权操作。
-4.  缓存：API 网关可以缓存后端服务的响应，减少对后端服务的请求次数，提高系统性能和响应速度。
-5.  监控与日志：API 网关可以收集和记录请求的指标和日志，提供实时监控和分析，帮助开发人员和运维人员进行故障排查和性能优化。
-6.  数据转换与协议转换：API 网关可以在客户端和后端服务之间进行数据格式转换和协议转换，如将请求从 HTTP 转换为 WebSocket，或将请求的参数进行格式转换，以满足后端服务的需求。
-7.  API 版本管理：API 网关可以管理不同版本的 API，允许同时存在多个 API 版本，并通过路由规则将请求正确地路由到相应的 API 版本上。
+1. 路由转发：API 网关根据请求的 URL 路径或其他标识，将请求路由到相应的后端服务。通过配置路由规则，可以灵活地将请求分发给不同的后端服务。
+2. 负载均衡：API 网关可以在后端服务之间实现负载均衡，将请求平均分发到多个实例上，提高系统的吞吐量和可扩展性。
+3. 安全认证与授权：API 网关可以集中处理身份验证和授权，确保只有经过身份验证的客户端才能访问后端服务。它可以与身份提供者（如 OAuth、OpenID Connect）集成，进行用户认证和授权操作。
+4. 缓存：API 网关可以缓存后端服务的响应，减少对后端服务的请求次数，提高系统性能和响应速度。
+5. 监控与日志：API 网关可以收集和记录请求的指标和日志，提供实时监控和分析，帮助开发人员和运维人员进行故障排查和性能优化。
+6. 数据转换与协议转换：API 网关可以在客户端和后端服务之间进行数据格式转换和协议转换，如将请求从 HTTP 转换为 WebSocket，或将请求的参数进行格式转换，以满足后端服务的需求。
+7. API 版本管理：API 网关可以管理不同版本的 API，允许同时存在多个 API 版本，并通过路由规则将请求正确地路由到相应的 API 版本上。
 
 ……
 
@@ -587,10 +572,10 @@ API 网关的主要功能包括：
 
 使用 SpringCloud 开发，可以采用以下的 API 网关选型：
 
-1.  Netflix Zuul（已停止更新）：Netflix Zuul 是 Spring Cloud 早期版本中提供的默认 API 网关。它基于 Servlet 技术栈，可以进行路由、过滤、负载均衡等功能。然而，自 2020 年 12 月起，Netflix 宣布停止对 Zuul 1 的维护，转而支持新的 API 网关项目。
-2.  Spring Cloud Gateway：Spring Cloud Gateway 是 Spring Cloud 官方推荐的 API 网关，取代了 Netflix Zuul。它基于非阻塞的 WebFlux 框架，充分利用了响应式编程的优势，并提供了路由、过滤、断路器、限流等特性。Spring Cloud Gateway 还支持与 Spring Cloud 的其他组件集成，如服务发现、负载均衡等。
-3.  Kong：Kong 是一个独立的、云原生的 API 网关和服务管理平台，可以与 Spring Cloud 集成。Kong 基于 Nginx，提供了强大的路由、认证、授权、监控和扩展能力。它支持多种插件和扩展，可满足不同的 API 管理需求。
-4.  APISIX：APISIX 基于 Nginx 和 Lua 开发，它具有强大的路由、流量控制、插件扩展等功能。APISIX 支持灵活的配置方式，可以根据需求进行动态路由、负载均衡和限流等操作。
+1. Netflix Zuul（已停止更新）：Netflix Zuul 是 Spring Cloud 早期版本中提供的默认 API 网关。它基于 Servlet 技术栈，可以进行路由、过滤、负载均衡等功能。然而，自 2020 年 12 月起，Netflix 宣布停止对 Zuul 1 的维护，转而支持新的 API 网关项目。
+2. Spring Cloud Gateway：Spring Cloud Gateway 是 Spring Cloud 官方推荐的 API 网关，取代了 Netflix Zuul。它基于非阻塞的 WebFlux 框架，充分利用了响应式编程的优势，并提供了路由、过滤、断路器、限流等特性。Spring Cloud Gateway 还支持与 Spring Cloud 的其他组件集成，如服务发现、负载均衡等。
+3. Kong：Kong 是一个独立的、云原生的 API 网关和服务管理平台，可以与 Spring Cloud 集成。Kong 基于 Nginx，提供了强大的路由、认证、授权、监控和扩展能力。它支持多种插件和扩展，可满足不同的 API 管理需求。
+4. APISIX：APISIX 基于 Nginx 和 Lua 开发，它具有强大的路由、流量控制、插件扩展等功能。APISIX 支持灵活的配置方式，可以根据需求进行动态路由、负载均衡和限流等操作。
 
 ……
 
@@ -627,16 +612,16 @@ API 网关的主要功能包括：
 
 Spring Cloud 提供了多种选择的微服务链路追踪方案。以下是一些常用的方案：
 
-1.  Zipkin：Zipkin 是一个开源的分布式实时追踪系统，由 Twitter 开发并贡献给开源社区。Spring Cloud Sleuth 提供了与 Zipkin 的集成，可以通过在微服务中添加相应的依赖和配置，将追踪信息发送到 Zipkin 服务器，并通过 Zipkin UI 进行可视化展示和查询。
+1. Zipkin：Zipkin 是一个开源的分布式实时追踪系统，由 Twitter 开发并贡献给开源社区。Spring Cloud Sleuth 提供了与 Zipkin 的集成，可以通过在微服务中添加相应的依赖和配置，将追踪信息发送到 Zipkin 服务器，并通过 Zipkin UI 进行可视化展示和查询。
 
 ![Zipkin界面](https://cdn.tobebetterjavaer.com/paicoding/4acc0c39bc776867b76f0ade4c3440b8.png)
 
-2.  Jaeger：Jaeger 是 Uber 开源的分布式追踪系统，也被纳入了 CNCF（云原生计算基金会）的维护。通过使用 Spring Cloud Sleuth 和 Jaeger 客户端库，可以将追踪信息发送到 Jaeger 并进行可视化展示和查询。
-3.  SkyWalking：Apache SkyWalking 是一款开源的应用性能监控与分析系统，提供了对 Java、.NET 和 Node.js 等语言的支持。它可以与 Spring Cloud Sleuth 集成，将追踪数据发送到 SkyWalking 服务器进行可视化展示和分析。
+2. Jaeger：Jaeger 是 Uber 开源的分布式追踪系统，也被纳入了 CNCF（云原生计算基金会）的维护。通过使用 Spring Cloud Sleuth 和 Jaeger 客户端库，可以将追踪信息发送到 Jaeger 并进行可视化展示和查询。
+3. SkyWalking：Apache SkyWalking 是一款开源的应用性能监控与分析系统，提供了对 Java、.NET 和 Node.js 等语言的支持。它可以与 Spring Cloud Sleuth 集成，将追踪数据发送到 SkyWalking 服务器进行可视化展示和分析。
 
 ![SkyWalking示例界面](https://cdn.tobebetterjavaer.com/paicoding/882b9ae41162ba6bb7c41d9d7ad82736.png)
 
-4.  Pinpoint：Pinpoint 是 Naver 开源的分布式应用性能监控系统，支持 Java 和 .NET。它提供了与 Spring Cloud Sleuth 的集成，可以将追踪数据发送到 Pinpoint 服务器，并通过其 UI 进行分析和监控。
+4. Pinpoint：Pinpoint 是 Naver 开源的分布式应用性能监控系统，支持 Java 和 .NET。它提供了与 Spring Cloud Sleuth 的集成，可以将追踪数据发送到 Pinpoint 服务器，并通过其 UI 进行分析和监控。
 
 ![Pinpoint示意图](https://cdn.tobebetterjavaer.com/paicoding/df73e94d1eb19ca40d150788cee2c360.png)
 
@@ -650,19 +635,19 @@ Spring Cloud 提供了多种选择的微服务链路追踪方案。以下是一�
 
 Seata 以下几种模式的分布式事务：
 
-1.  AT（Atomikos）模式：AT 模式是 Seata 默认支持的模式，也是最常用的模式之一。在 AT 模式下，Seata 通过在业务代码中嵌入事务上下文，实现对分布式事务的管理。Seata 会拦截并解析业务代码中的 SQL 语句，通过对数据库连接进行拦截和代理，实现事务的管理和协调。
+1. AT（Atomikos）模式：AT 模式是 Seata 默认支持的模式，也是最常用的模式之一。在 AT 模式下，Seata 通过在业务代码中嵌入事务上下文，实现对分布式事务的管理。Seata 会拦截并解析业务代码中的 SQL 语句，通过对数据库连接进行拦截和代理，实现事务的管理和协调。
 
 ![AT模式示意图](https://cdn.tobebetterjavaer.com/paicoding/5069b45cedaab00a06ab5cc98a0baa6c.png)
 
-2.  TCC（Try-Confirm-Cancel）模式：TCC 模式是一种基于补偿机制的分布式事务模式。在 TCC 模式中，业务逻辑需要实现 Try、Confirm 和 Cancel 三个阶段的操作。Seata 通过调用业务代码中的 Try、Confirm 和 Cancel 方法，并在每个阶段记录相关的操作日志，来实现分布式事务的一致性。
+2. TCC（Try-Confirm-Cancel）模式：TCC 模式是一种基于补偿机制的分布式事务模式。在 TCC 模式中，业务逻辑需要实现 Try、Confirm 和 Cancel 三个阶段的操作。Seata 通过调用业务代码中的 Try、Confirm 和 Cancel 方法，并在每个阶段记录相关的操作日志，来实现分布式事务的一致性。
 
 ![Seata TCC模式](https://cdn.tobebetterjavaer.com/paicoding/d8131fd04bb31e3b0ca26016c302e3cb.png)
 
-3.  SAGA 模式：SAGA 模式是一种基于事件驱动的分布式事务模式。在 SAGA 模式中，每个服务都可以发布和订阅事件，通过事件的传递和处理来实现分布式事务的一致性。Seata 提供了与 SAGA 模式兼容的 Saga 框架，用于管理和协调分布式事务的各个阶段。
+3. SAGA 模式：SAGA 模式是一种基于事件驱动的分布式事务模式。在 SAGA 模式中，每个服务都可以发布和订阅事件，通过事件的传递和处理来实现分布式事务的一致性。Seata 提供了与 SAGA 模式兼容的 Saga 框架，用于管理和协调分布式事务的各个阶段。
 
 ![SAGA模式状态机引擎](https://cdn.tobebetterjavaer.com/paicoding/a36315dedde1aacdda94aebf58bbfd68.png)
 
-4.  XA 模式：XA 模式是一种基于两阶段提交（Two-Phase Commit）协议的分布式事务模式。在 XA 模式中，Seata 通过与数据库的 XA 事务协议进行交互，实现对分布式事务的管理和协调。XA 模式需要数据库本身支持 XA 事务，并且需要在应用程序中配置相应的 XA 数据源。
+4. XA 模式：XA 模式是一种基于两阶段提交（Two-Phase Commit）协议的分布式事务模式。在 XA 模式中，Seata 通过与数据库的 XA 事务协议进行交互，实现对分布式事务的管理和协调。XA 模式需要数据库本身支持 XA 事务，并且需要在应用程序中配置相应的 XA 数据源。
 
 ![XA模式示意图](https://cdn.tobebetterjavaer.com/paicoding/5614543d4fac09e7501379989a44a8c0.png)
 
@@ -742,5 +727,3 @@ Seata 的事务回滚是通过回滚日志实现的。每个参与者在执行�
 4.  使用 Kibana 进行可视化和分析：通过 Kibana 连接到 Elasticsearch，创建仪表盘、图表和搜索查询，实时监控和分析微服务的日志数据。
 
 除了应用最广泛的 ELK，还有一些其它的方案比如`Fluentd`、`Graylog`、`Loki`、`Filebeat`，一些云厂商也提供了付费方案，比如阿里云的`sls`。
-
-> 1.3 万字 33 张手绘图，详解 33 道微服务（Dubbo、Spring Cloud）面试高频题（让天下没有难背的八股），面渣背会这些八股文，这次吊打面试官，我觉得稳了（手动 dog）。整理：沉默王二，戳[转载链接](https://mp.weixin.qq.com/s/IgY6cU_5Xic-2KAAhxK9MA)，作者：三分恶，戳[原文链接](https://mp.weixin.qq.com/s/S8_I9mDNh7XnnQaXJFr2CQ)。
