@@ -130,3 +130,5 @@ https://vitepress.dev/zh/guide/data-loading
 ## 比较好看的博客
 
 https://ti.bi/
+
+![Alt](https://repobeats.axiom.co/api/embed/0e6e9fad8acc0c3b1eb9f67548b25ff7a780681a.svg "Repobeats analytics image")
