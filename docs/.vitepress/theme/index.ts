@@ -17,5 +17,6 @@ export default {
   },
   enhanceApp({ app, router, siteData }) {
     // ...
+    // app.component("VPDocAsideOutline" /* ... */);
   },
 } satisfies Theme;

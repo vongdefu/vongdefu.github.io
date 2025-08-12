@@ -20,18 +20,24 @@ export default defineConfig({
     },
   },
   // 重写内部组件： https://vitepress.dev/zh/guide/extending-default-theme#overriding-internal-components
-  // vite: {
-  //   resolve: {
-  //     alias: [
-  //       {
-  //         find: /^.*\/VPDocOutlineItem\.vue$/,
-  //         replacement: fileURLToPath(
-  //           new URL("./theme/components/VPDocOutlineItem.vue", import.meta.url)
-  //         ),
-  //       },
-  //     ],
-  //   },
-  // },
+  vite: {
+    resolve: {
+      alias: [
+        {
+          find: /^.*\/VPDocOutlineItem\.vue$/,
+          replacement: fileURLToPath(
+            new URL("./theme/components/VPDocOutlineItem.vue", import.meta.url)
+          ),
+        },
+        // {
+        //   find: /^.*\/VPDocAsideOutline\.vue$/,
+        //   replacement: fileURLToPath(
+        //     new URL("./theme/components/VPDocAsideOutline.vue", import.meta.url)
+        //   ),
+        // },
+      ],
+    },
+  },
 
   // https://vitepress.dev/zh/reference/site-config#head
   head: [
