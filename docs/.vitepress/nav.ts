@@ -2,7 +2,7 @@ import { DefaultTheme } from "vitepress";
 
 export const nav: DefaultTheme.Config["nav"] = [
   { text: "Home", link: "/" },
-  { text: "面试", link: "/00-面试/os" },
+  { text: "面试", link: "/00-面试/01.操作系统" },
   { text: "CS基础", link: "/01-CS基础/前端" },
   { text: "java", link: "/02-java/java基础/基础概念" },
   {

@@ -86,6 +86,14 @@ Vagrant 将在一个一致的环境中隔离依赖关系及其配置，而不会
 
   ```
 
+  docker run -d \
+   --name libretv \
+   --restart unless-stopped \
+   -p 8899:8899 \
+   -e PASSWORD=root1003 \
+   -e ADMINPASSWORD=root1003 \
+   bestzwei/libretv:latest
+
 - 启动： vagrant up
 - 登录： vagrant ssh
   - vagrant / vagrant

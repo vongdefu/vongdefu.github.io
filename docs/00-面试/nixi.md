@@ -78,22 +78,6 @@ head:
 
 硬核理解版八股文，包括 Java 基础（JavaSE）、Java 集合框架、Java 并发编程（Java 多线程）、Java 虚拟机（JVM）、Spring、MySQL、Redis、MyBatis、操作系统、计算机网络、RocketMQ、分布式、微服务、设计模式等等，助你拿到心仪 offer！
 
-- [面渣逆袭（Java 基础篇面试题八股文）必看 👍](./01-javase.md)
-- [面渣逆袭（Java 集合框架篇面试题八股文）必看 👍](./02-collection.md)
-- [面渣逆袭（Java 并发编程篇面试题八股文）必看 👍](./03-javathread.md)
-- [面渣逆袭（Java 虚拟机篇面试题八股文）必看 👍](./jvm.md)
-- [面渣逆袭（Spring 面试题八股文）必看 👍](./spring.md)
-- [面渣逆袭（MySQL 面试题八股文）必看 👍](./mysql.md)
-- [面渣逆袭（Redis 面试题八股文）必看 👍](./redis.md)
-- [面渣逆袭（MyBatis 面试题八股文）必看 👍](./mybatis.md)
-- [面渣逆袭（操作系统面试题八股文）必看 👍](./os.md)
-- [面渣逆袭（计算机网络面试题八股文）必看 👍](./network.md)
-- [面渣逆袭（RocketMQ 面试题八股文）必看 👍](./rocketmq.md)
-- [面渣逆袭（分布式面试题八股文）必看 👍](./fenbushi.md)
-- [面渣逆袭（微服务面试题八股文）必看 👍](./weifuwu.md)
-- [面渣逆袭（设计模式面试题八股文）必看 👍](./shejimoshi.md)
-- [面渣逆袭（Linux 面试题八股文）必看 👍](./linux.md)
-
 ## PDF 介绍
 
 有些同学喜欢打印或者阅读 PDF 版本，这里也安排上了。先带大家预览一下：

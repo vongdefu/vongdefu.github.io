@@ -4,9 +4,13 @@
 
 #### 你是如何理解线程安全的？
 
-推荐阅读：[多线程带来了哪些问题？](https://javabetter.cn/thread/thread-bring-some-problem.html)
+> 2025-07-14 增补
 
-如果一段代码块或者一个方法被多个线程同时执行，还能够正确地处理共享数据，那么这段代码块或者这个方法就是线程安全的。
+有时候线程安全问题，也被成为线程同步问题，二者在中文语境中意思几乎一致。
+
+**如果一段代码块或者一个方法被多个线程同时执行，还能够正确地处理共享数据，那么这段代码块或者这个方法就是线程安全的。**
+
+线程安全问题以及线程同步问题，出现的本质原因是： 计算机硬件系统的发展，导致出现了同一段代码或同一个方法被多核系统或类多核系统同时调用的问题。核心是： **同一个代码或同一方法，被多线程同时执行**。所采用的线程安全的措施或线程同步的措施的目标是：保证共享变量被正确处理。
 
 可以从三个要素来确保线程安全：
 
@@ -23,8 +27,6 @@ count.incrementAndGet(); // 原子操作
 
 **②、可见性**：当一个线程修改了共享变量，其他线程能够立即看到变化。
 
-![雷小帅：可见性](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/thread/thread-bring-some-problem-d91ca0c2-4f39-4e98-90e2-8acb793eb983.png)
-
 可以通过 volatile 关键字来保证可见性。
 
 ```java
@@ -33,12 +35,11 @@ private volatile String itwanger = "沉默王二";
 
 **③、有序性**：要确保线程不会因为死锁、饥饿、活锁等问题导致无法继续执行。
 
-![雷小帅：有序性](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/thread/thread-bring-some-problem-d4e65d5f-3de1-4a1c-8ae1-02cb3bfb528c.png)
+编译器在进行编译过程中，为了提高编译效率及代码运行效率，会对代码顺序进行优化，这就是**指令重排序**。但指令重排不会影响单个线程的执行，但是会影响线程并发执行的结果。要想保证线程安全，就必须要保证编译后的指令的有序性。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的华为 OD 面经同学 1 一面面试原题：对于多线程编程的了解?
-> 2. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手面经同学 1 部门主站技术部面试原题：你对线程安全的理解是什么？
+> 2025-07-14 增补
 
-memo：2025 年 1 月 22 日修改至此。
+举例说明“指令重排序对单个线程的执行没有影响，但是会影响多线程并发执行”。
 
 ### 🌟2.说说进程和线程的区别？
 
@@ -61,25 +62,6 @@ fun main() = runBlocking {
     println("Hello,")
 }
 ```
-
-#### 线程间是如何进行通信的？
-
-原则上可以通过消息传递和共享内存两种方法来实现。Java 采用的是共享内存的并发模型。
-
-这个模型被称为 Java 内存模型，简写为 JMM，它决定了一个线程对共享变量的写入，何时对另外一个线程可见。当然了，本地内存是 JMM 的一个抽象概念，并不真实存在。
-
-用一句话来概括就是：共享变量存储在主内存中，每个线程的私有本地内存，存储的是这个共享变量的副本。
-
-![深入浅出 Java 多线程：JMM](https://cdn.tobebetterjavaer.com/stutymore/javathread-20240315111143.png)
-
-线程 A 与线程 B 之间如要通信，需要要经历 2 个步骤：
-
-- 线程 A 把本地内存 A 中的共享变量副本刷新到主内存中。
-- 线程 B 到主内存中读取线程 A 刷新过的共享变量，再同步到自己的共享变量副本中。
-
-![深入浅出 Java 多线程：线程间通信](https://cdn.tobebetterjavaer.com/stutymore/javathread-20240315111130.png)
-
-memo：2025 年 1 月 23 日修改至此。
 
 ### 🌟3.说说线程有几种创建方式？
 
@@ -265,7 +247,9 @@ thread.interrupt(); // 中断线程
 
 memo：2025 年 1 月 27 日修改至此。
 
-### 6.线程有几种状态？
+#### 说说 join 方法？
+
+### :star: 6.线程有几种状态？
 
 6 种。
 
@@ -347,6 +331,10 @@ public class Main {
 
 ### 7.什么是线程上下文切换？
 
+线程的运行过程大概是，先把线程所需要的变量和指令加载到内存中，然后由操作系统的调度子系统，按照设定的顺序交给 CPU 执行，并获取结果。
+
+所谓线程上下文，就是线程执行时的现场环境。
+
 线程上下文切换是指 CPU 从一个线程切换到另一个线程执行时的过程。
 
 在线程切换的过程中，CPU 需要保存当前线程的执行状态，并加载下一个线程的上下文。
@@ -377,7 +365,33 @@ JVM 启动时会调用 main 方法，main 方法所在的线程就是一个用�
 
 ### 9.线程间有哪些通信方式？
 
-线程之间传递信息的方式有多种，比如说使用 volatile 和 synchronized 关键字共享对象、使用 `wait()` 和 `notify()` 方法实现生产者-消费者模式、使用 Exchanger 进行数据交换、使用 Condition 实现线程间的协调等。
+> 2025-07-14 增补 总结
+
+1. 计算机领域内，实现线程通信的方式主要有两种：消息传递和共享内存。
+2. 消息传递是，当一个线程修改了共享变量之后，会立刻通知到另外的线程，另外线程会立刻感知到共享变量的修改结果。
+3. 共享内存是，每一个线程都持有共享变量的副本，线程要想感知到共享变量的修改结果，只能去共享内存读取。
+4. Java 采用的是共享内存的通信方式，它的多线程编程模型就是 JMM。
+5. Java 中实现线程通信的具体举措有很多：
+   1. 使用 volatile 和 synchronized 关键字共享对象；
+   2. 使用 `wait()` 和 `notify()` 方法实现生产者-消费者模式；
+   3. 使用 Exchanger 进行数据交换、使用 Condition 实现线程间的协调等；
+
+#### 线程间是如何进行通信的？
+
+原则上可以通过**消息传递和共享内存**两种方法来实现。Java 采用的是共享内存的并发模型。
+
+这个模型被称为 Java 内存模型，简写为 JMM，它决定了一个线程对共享变量的写入，何时对另外一个线程可见。当然了，本地内存是 JMM 的一个抽象概念，并不真实存在。
+
+用一句话来概括就是：共享变量存储在主内存中，每个线程的私有本地内存，存储的是这个共享变量的副本。
+
+![深入浅出 Java 多线程：JMM](https://cdn.tobebetterjavaer.com/stutymore/javathread-20240315111143.png)
+
+线程 A 与线程 B 之间如要通信，需要要经历 2 个步骤：
+
+- 线程 A 把本地内存 A 中的共享变量副本刷新到主内存中。
+- 线程 B 到主内存中读取线程 A 刷新过的共享变量，再同步到自己的共享变量副本中。
+
+![深入浅出 Java 多线程：线程间通信](https://cdn.tobebetterjavaer.com/stutymore/javathread-20240315111130.png)
 
 #### 简单说说 volatile 和 synchronized 的使用方式？
 
@@ -491,6 +505,11 @@ public class Main {
 
 [Condition](https://javabetter.cn/thread/condition.html) 也提供了类似的方法，`await()` 负责阻塞、`signal()` 和 `signalAll()` 负责通知。
 
+> 2025-07-14 增补
+
+1. condition 的使用案例，尤其是关于 await、signal 和 signalall 这几个方法的使用案例。
+2. condition 的这几个方法与 wait 和 notify 有何区别？
+
 通常与锁 [ReentrantLock](https://javabetter.cn/thread/reentrantLock.html) 一起使用，为线程提供了一种等待某个条件成真的机制，并允许其他线程在该条件变化时通知等待线程。
 
 #### Exchanger 的使用方式了解吗？
@@ -528,6 +547,10 @@ class Main {
 }
 ```
 
+> 2025-07-14 增补
+
+Exchanger 原理是什么？
+
 #### CompletableFuture 的使用方式了解吗？
 
 CompletableFuture 是 Java 8 引入的一个类，支持异步编程，允许线程在完成计算后将结果传递给其他线程。
@@ -549,7 +572,9 @@ class Main {
 }
 ```
 
-memo：2025 年 1 月 28 日修改至此。
+> 2025-07-14 增补
+
+1. CompletableFuture 有哪些方法？结合你做过的项目，有哪些实际的使用场景？
 
 ### 10.请说说 sleep 和 wait 的区别？（补充）
 
@@ -601,7 +626,7 @@ class SleepDoesNotReleaseLock {
 
 输出结果：
 
-```
+```java
 Thread 1 会继续持有锁，并且进入睡眠状态
 Thread 1 醒来了，并且释放了锁
 Thread 2 进入同步代码块
@@ -646,7 +671,7 @@ class WaitReleasesLock {
 
 输出结果：
 
-```
+```java
 Thread 1 持有锁，准备等待 5 秒
 Thread 2 尝试唤醒等待中的线程
 Thread 2 执行完了 notify
@@ -717,7 +742,7 @@ memo：2025 年 1 月 29 日修改至此。
 
 > 2024 年 05 月 01 日增补
 
-线程安全是指在并发环境下，多个线程访问共享资源时，程序能够正确地执行，而不会出现数据不一致的问题。
+**线程安全是指在并发环境下，多个线程访问共享资源时，程序能够正确地执行，而不会出现数据不一致的问题。**
 
 为了保证线程安全，可以使用 [synchronized 关键字](https://javabetter.cn/thread/synchronized-1.html)对方法加锁，对代码块加锁。线程在执行同步方法、同步代码块时，会获取类锁或者对象锁，其他线程就会阻塞并等待锁。
 
@@ -885,7 +910,12 @@ class DistributedKeyManager {
 
 #### 说一个线程安全的使用场景？
 
-单例模式。在多线程环境下，如果多个线程同时尝试创建实例，单例类必须确保只创建一个实例，并提供一个全局访问点。
+1. 自己看过源码的 Hashtable、ConcurrencyHashMap；
+2. 早期做过的项目中使用 ThreadLocal 保存会话信息；
+3.
+4.
+
+单例模式。在点多线程环境下，如果多个线程同时尝试创建实例，单例类必须确保只创建一个实例，并提供一个全局访问。
 
 饿汉式是一种比较直接的实现方式，它通过在类加载时就立即初始化单例对象来保证线程安全。
 
@@ -1471,8 +1501,6 @@ private void init(ThreadGroup g, Runnable target, String name, long stackSize) {
 }
 ```
 
-<ZSMZNXQRcodeBanner />
-
 memo：2025 年 02 月 04 日修改至此。
 
 ## Java 内存模型
@@ -1578,8 +1606,6 @@ i = i + 1;
 - 第 2 行先读 i 的值，再赋值给 j，不是原子操作。
 - 第 3 和第 4 行都不是原子操作，都需要先读取 i 的值，再+1，然后再赋值给 i。
 
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的京东同学 4 云实习面试原题：i++是原子操作吗
-
 ### 22.说说什么是指令重排？
 
 指令重排是指 CPU 或编译器为了提高程序的执行效率，改变代码执行顺序的一种优化技术。
@@ -1613,6 +1639,12 @@ public class Singleton {
 
 正确的方式是给 instance 变量加上 `volatile` 关键字，禁止指令重排。
 
+> 2025-07-16 增补
+
+为什么 volatile 关键字可以禁止指令重排？因为 happens-before 规则中 volatile 变量规则要求：写 volatile 变量 Happens-Before 读 volatile， 这是从事实标准的角度规范了 JVM 对 volatile 关键字的实现过程。
+
+happens-before 规则，是 Java 虚拟机规范上要求所有具体的虚拟机实现都需要满足的规则。
+
 ```java
 class Singleton {
     private static volatile Singleton instance;
@@ -1630,11 +1662,9 @@ class Singleton {
 }
 ```
 
-memo：2025 年 02 月 06 日修改至此。
-
 ### 23.happens-before 了解吗？
 
-Happens-Before 是 Java 内存模型定义的一种保证线程间可见性和有序性的规则。
+Happens-Before（aka，先行发生原则） 是 Java 内存模型定义的一种保证线程间可见性和有序性的规则。换句话来说，所有的具体的某一款虚拟机实现，都需要遵循这个规则。其存在的意义是，给虚拟机实现提供了一个事实标准。
 
 如果操作 A Happens-Before 操作 B，那么：
 
@@ -1661,8 +1691,6 @@ JMM 规定了 6 种 Happens-Before 规则，满足这些规则的操作不会被
 
 ⑥、线程终止规则：线程的所有操作 Happens-Before `Thread.join()`；例如 `t.join();` 之后，主线程一定能看到 t 的修改。
 
-memo：2025 年 02 月 07 日修改至此。
-
 ### 24.as-if-serial 了解吗？
 
 As-If-Serial 规则允许 CPU 和编译器优化代码顺序，但不会改变单线程的执行结果。它只适用于单线程，多线程环境仍然可能发生指令重排，需要 volatile 和 synchronized 等机制来保证有序性。
@@ -1687,7 +1715,7 @@ C 依赖于 A，同时 C 也依赖着 B。
 
 ![三分恶面渣逆袭：两种执行结果](https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/javathread-25.png)
 
-Happens-Before 规则保证了多线程环境下的有序性，防止指令重排导致的并发问题。As-If-Serial 规则保证了单线程代码不会因优化而执行错误。
+**Happens-Before 规则保证了多线程环境下的有序性，防止指令重排导致的并发问题。As-If-Serial 规则保证了单线程代码不会因优化而执行错误。**
 
 ### 25.volatile 了解吗？
 
@@ -1711,7 +1739,7 @@ StoreLoad;    // 保证写入后，其他线程立即可见
 
 在 x86 架构下，通常会使用 `lock` 指令来实现写屏障，例如：
 
-```
+```shell
 mov [a], 2          ; 将值 2 写入内存地址 a
 lock add [a], 0     ; lock 指令充当写屏障，确保内存可见性
 ```
@@ -1765,10 +1793,6 @@ private volatile SomeObject obj = new SomeObject();
 
 如果需要保证引用对象内部状态的线程安全，需要使用 `synchronized` 或 `ReentrantLock` 等锁机制。
 
-<ZSMZNXQRcodeBanner />
-
-memo：2025 年 02 月 08 日修改至此，昨天主要是做 [deepseek API 技术派的集成](https://mp.weixin.qq.com/s/F6BOxQvRELUJaU_O4dmwmQ)。
-
 ## 锁
 
 ### 26.synchronized 用过吗？
@@ -1804,8 +1828,6 @@ public void increment() {
     }
 }
 ```
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的 360 面经同学 3 Java 后端技术一面面试原题：说说别的你知道的关键字，比如 synchronized
 
 ### 27.synchronized 的实现原理了解吗？
 
@@ -1852,7 +1874,7 @@ ObjectMonitor() {
 
 结构示意图：
 
-```
+```txt
 +----------------------+
 |  ObjectMonitor      |
 |  ----------------   |
@@ -1868,8 +1890,6 @@ ObjectMonitor() {
 
 会，synchronized 升级为重量级锁时，依赖于操作系统的互斥量——mutex 来实现，mutex 用于保证任何给定时间内，只有一个线程可以执行某一段特定的代码段。
 
-memo：2025 年 02 月 09 日修改至此。
-
 ### 28.synchronized 怎么保证可见性？
 
 通过两步操作：
@@ -1877,7 +1897,7 @@ memo：2025 年 02 月 09 日修改至此。
 - 加锁时，线程必须从主内存读取最新数据。
 - 释放锁时，线程必须将修改的数据刷回主内存，这样其他线程获取锁后，就能看到最新的数据。
 
-```
+```txt
 线程 A                  线程 B
   ┌────────────────────┐
   │ synchronized(lock) │
@@ -1984,8 +2004,6 @@ Method2 acquired lock
 |  _count = 2         |  // 线程重入了 2 次
 +----------------------+
 ```
-
-> 1. [Java 面试指南（付费）](https://javabetter.cn/zhishixingqiu/mianshi.html)收录的快手面经同学 5 面试原题：synchronized 可重入锁怎么实现的
 
 memo：2025 年 02 月 10 日修改至此。
 

@@ -6,7 +6,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       text: "CS 基础",
       base: "/00-面试",
       items: [
-        { text: "操作系统", link: "/os" },
+        { text: "操作系统", link: "/01.操作系统" },
         { text: "计算机网络", link: "/network" },
         { text: "Linux", link: "/linux" },
         { text: "设计模式", link: "/shejimoshi" },
@@ -92,7 +92,6 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       },
     ],
   },
-
   "/02-java/": [
     {
       text: "java基础",
