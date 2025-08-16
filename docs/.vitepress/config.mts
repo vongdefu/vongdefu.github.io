@@ -29,12 +29,12 @@ export default defineConfig({
             new URL("./theme/components/VPDocOutlineItem.vue", import.meta.url)
           ),
         },
-        // {
-        //   find: /^.*\/VPDocAsideOutline\.vue$/,
-        //   replacement: fileURLToPath(
-        //     new URL("./theme/components/VPDocAsideOutline.vue", import.meta.url)
-        //   ),
-        // },
+        {
+          find: /^.*\/VPDocAsideOutline\.vue$/,
+          replacement: fileURLToPath(
+            new URL("./theme/components/VPDocAsideOutline.vue", import.meta.url)
+          ),
+        },
       ],
     },
   },

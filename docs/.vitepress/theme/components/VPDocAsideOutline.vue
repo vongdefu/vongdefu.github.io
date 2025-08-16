@@ -1,16 +1,24 @@
-<!-- <script setup lang="ts">
-import { ref } from "vue";
-import { useData } from "vitepress";
-import { resolveTitle, useActiveAnchor } from "../composables/outline";
+<script setup lang="ts">
+import { onContentUpdated, useData } from "vitepress";
+import { ref, shallowRef } from "vue";
+import {
+  getHeaders,
+  resolveTitle,
+  useActiveAnchor,
+  type MenuItem,
+} from "vitepress/dist/client/theme-default/composables/outline.js";
 import VPDocOutlineItem from "./VPDocOutlineItem.vue";
-import { useLayout } from "../composables/layout";
 
-const { theme } = useData();
+const { frontmatter, theme } = useData();
+
+const headers = shallowRef<MenuItem[]>([]);
+
+onContentUpdated(() => {
+  headers.value = getHeaders(frontmatter.value.outline ?? theme.value.outline);
+});
 
 const container = ref();
 const marker = ref();
-
-const { headers, hasLocalNav } = useLayout();
 
 useActiveAnchor(container, marker);
 </script>
@@ -19,7 +27,7 @@ useActiveAnchor(container, marker);
   <nav
     aria-labelledby="doc-outline-aria-label"
     class="VPDocAsideOutline"
-    :class="{ 'has-outline': hasLocalNav }"
+    :class="{ 'has-outline': headers.length > 0 }"
     ref="container"
   >
     <div class="content">
@@ -34,7 +42,7 @@ useActiveAnchor(container, marker);
         {{ resolveTitle(theme) }}
       </div>
 
-      <VPDocOutlineItem :headers :root="true" />
+      <VPDocOutlineItem :headers="headers" :root="true" />
     </div>
   </nav>
 </template>
@@ -62,9 +70,9 @@ useActiveAnchor(container, marker);
   left: -1px;
   z-index: 0;
   opacity: 0;
-  width: 2px;
+  width: 4px;
   border-radius: 2px;
-  /* height: 18px; */
+  height: 10px;
   background-color: var(--vp-c-brand-1);
   transition: top 0.25s cubic-bezier(0, 1, 0.5, 1), background-color 0.5s,
     opacity 0.25s;
@@ -75,4 +83,4 @@ useActiveAnchor(container, marker);
   font-size: 14px;
   font-weight: 600;
 }
-</style> -->
+</style>

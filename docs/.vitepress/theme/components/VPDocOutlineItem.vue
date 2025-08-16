@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { DefaultTheme } from "vitepress/theme";
+import type { MenuItem } from "vitepress/dist/client/theme-default/composables/outline.js";
 
 defineProps<{
-  headers: DefaultTheme.OutlineItem[];
+  headers: MenuItem[];
   root?: boolean;
 }>();
 
@@ -16,9 +16,9 @@ function onClick({ target: el }: Event) {
 <template>
   <ul class="VPDocOutlineItem" :class="root ? 'root' : 'nested'">
     <li v-for="{ children, link, title } in headers">
-      <a class="outline-link" :href="link" @click="onClick" :title>
-        {{ title }}
-      </a>
+      <a class="outline-link" :href="link" @click="onClick" :title="title">{{
+        title
+      }}</a>
       <template v-if="children?.length">
         <VPDocOutlineItem :headers="children" />
       </template>
@@ -39,7 +39,7 @@ function onClick({ target: el }: Event) {
 
 .outline-link {
   display: block;
-  /* line-height: 32px; */
+  line-height: 20px;
   font-size: 14px;
   font-weight: 400;
   color: var(--vp-c-text-2);
