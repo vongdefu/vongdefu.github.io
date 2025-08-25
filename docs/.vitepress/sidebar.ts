@@ -256,6 +256,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           { text: "索引", link: "/03-索引" },
           { text: "隔离级别", link: "/04-隔离级别" },
           { text: "高可用与高性能", link: "/05-高可用与高性能" },
+          { text: "实战", link: "/99-实战" },
           // { text: "SQL优化", link: "/SQL优化" },
           // { text: "MySQL集群", link: "/MySQL集群" },
         ],
