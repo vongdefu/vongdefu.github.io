@@ -1,5 +1,6 @@
 import { DefaultTheme } from "vitepress";
-import { sourcecodeNavbar } from "./navbar/sourcecodeNavbar";
+import { sourcecodeNavbar } from "./navbar/sourcecodeNavbar"; // vongdefu-sourcecode-hub仓库的导航栏
+import { websiteMaintainNavbar } from "./navbar/websiteMaintainNavbar"; // vongdefu.github.io仓库的导航栏
 
 export const nav: DefaultTheme.Config["nav"] = [
   { text: "Home", link: "/" },
@@ -18,4 +19,5 @@ export const nav: DefaultTheme.Config["nav"] = [
   { text: "软件质量管理", link: "/06-软件质量管理/README" },
   { text: "工程设计", link: "/07-工程设计/README" },
   sourcecodeNavbar,
+  websiteMaintainNavbar,
 ];

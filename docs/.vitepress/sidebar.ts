@@ -1,6 +1,7 @@
 import { DefaultTheme } from "vitepress";
 import { interviewSidebar } from "./sidebar/interview";
 import { sourcecodeSidebar } from "./sidebar/sourcecodeSidebar";
+import { websiteMaintainSidebar } from "./sidebar/websiteMaintainSidebar";
 
 export const sidebar: DefaultTheme.Config["sidebar"] = {
   "/00-面试/": interviewSidebar,
@@ -306,4 +307,5 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
     },
   ],
   "/项目实战/": sourcecodeSidebar,
+  "/网站维护/": websiteMaintainSidebar,
 };
