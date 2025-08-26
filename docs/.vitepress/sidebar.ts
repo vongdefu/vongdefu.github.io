@@ -1,10 +1,10 @@
 import { DefaultTheme } from "vitepress";
-import { interviewSidebar } from "./sidebar/interview";
+import { mianzhasidebar } from "./sidebar/mianzhasidebar";
 import { sourcecodeSidebar } from "./sidebar/sourcecodeSidebar";
 import { websiteMaintainSidebar } from "./sidebar/websiteMaintainSidebar";
 
 export const sidebar: DefaultTheme.Config["sidebar"] = {
-  "/00-面试/": interviewSidebar,
+  "/面渣/": mianzhasidebar,
   "/01-CS基础/": {
     base: "/01-CS基础",
     items: [
