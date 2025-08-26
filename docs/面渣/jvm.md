@@ -1234,7 +1234,7 @@ public class StackReference {
 
 可以使用 idea 开发工具中的 debug 运行模式来查看虚拟机栈中的方法：
 
-![1747322335546](./../jvm/image/1747322335546.png)
+![1747322335546](./jvm/image/1747322335546.png)
 
 在 greet 方法中，localVar 是一个局部变量，存在于虚拟机栈中，可以被认为是 GC Roots。
 

@@ -21,7 +21,7 @@ Redis 是 **R**emote **D**ictionary **S**ervice 三个单词中加粗字母的�
 
 在[技术派实战项目](https://javabetter.cn/zhishixingqiu/paicoding.html)中，很多地方都用到了 Redis，比如说用户活跃排行榜、作者白名单、常用热点数据（文章标签、文章分类）、计数统计（文章点赞收藏评论数粉丝数）等等。
 
-![技术派专栏](./../redis/image/redis-20240420093229.png)
+![技术派专栏](./redis/image/redis-20240420093229.png)
 
 #### 部署过 Redis 吗？
 
@@ -46,13 +46,13 @@ Redis 可以用来做缓存、排行榜、分布式锁等等。
 
 缓存是 Redis 最常见的用途，由于 Redis 的数据存储在内存中，所以读写速度非常快，远超基于磁盘存储的数据库。使用 Redis 缓存可以极大地提高应用的响应速度和吞吐量。
 
-![Redis缓存](./../redis/image/redis-d44c2397-5994-452f-8b7b-eb85d2b87685.png)
+![Redis缓存](./redis/image/redis-d44c2397-5994-452f-8b7b-eb85d2b87685.png)
 
 ②、排行榜/计数器
 
 Redis 的 ZSet 非常适合用来实现排行榜的功能，可以根据 score（分值）进行排序，实时展示用户的活跃度。
 
-![技术派阅读活跃榜](./../redis/image/redis-20240420100012.png)
+![技术派阅读活跃榜](./redis/image/redis-20240420100012.png)
 
 同时 Redis 的原子递增操作可以用来实现计数器功能。
 
@@ -64,7 +64,7 @@ Redis 可以实现分布式锁，用来控制跨多个进程的资源访问。
 
 Redis 有五种基本数据类型，这五种数据类型分别是：string（字符串）、hash（哈希）、list（列表）、set（集合）、sorted set（有序集合，也叫 zset）。
 
-![Redis基本数据类型](./../redis/image/redis-10434dc7-c7a3-4c1a-b484-de3fb37669ee.png)
+![Redis基本数据类型](./redis/image/redis-10434dc7-c7a3-4c1a-b484-de3fb37669ee.png)
 
 #### 简单介绍下 string？
 
@@ -94,7 +94,7 @@ Redis 有五种基本数据类型，这五种数据类型分别是：string（�
 
 来感受一下，使用字符串类型存储用户信息和使用哈希类型存储用户信息的区别：
 
-![二哥的 Java 进阶之路](./../redis/image/redis-20240315115713.png)
+![二哥的 Java 进阶之路](./redis/image/redis-20240315115713.png)
 
 可以看得出，使用 hash 比使用 string 更便于进行序列化，我们可以将一整个用户对象序列化，然后作为一个 value 存储在 Redis 中，存取更加便捷。
 
@@ -115,11 +115,11 @@ Set 是一个无序集合，元素是唯一的，不允许重复。
 
 Zset 是有序集合，比 set 多了一个排序属性 score。
 
-![二哥的 Java 进阶之路](./../redis/image/redis-20240315120652.png)
+![二哥的 Java 进阶之路](./redis/image/redis-20240315120652.png)
 
 可以用来实现排行榜，比如[技术派实战项目](https://javabetter.cn/zhishixingqiu/paicoding.html)中，我们就使用了 Zset 来实现用户活跃排行榜。
 
-![技术派用户活跃榜](./../redis/image/redis-20240315120856.png)
+![技术派用户活跃榜](./redis/image/redis-20240315120856.png)
 
 ### 4.Redis 为什么快呢？
 
@@ -131,7 +131,7 @@ Redis 的速度⾮常快，单机的 Redis 就可以⽀撑每秒十几万的并�
 
 ③、**IO 多路复⽤**，基于 Linux 的 select/epoll 机制。该机制允许内核中同时存在多个监听套接字和已连接套接字，内核会一直监听这些套接字上的连接请求或者数据请求，一旦有请求到达，就会交给 Redis 处理，就实现了所谓的 Redis 单个线程处理多个 IO 读写的请求。
 
-![Redis使用IO多路复用和自身事件模型](./../redis/image/redis-e05bca61-4600-495c-b92a-25ac822e034e.png)
+![Redis使用IO多路复用和自身事件模型](./redis/image/redis-e05bca61-4600-495c-b92a-25ac822e034e.png)
 
 ④、**高效的数据结构**，Redis 提供了多种高效的数据结构，如字符串（String）、列表（List）、集合（Set）、有序集合（Sorted Set）等，这些数据结构经过了高度优化，能够支持快速的数据操作。
 
@@ -156,7 +156,7 @@ IO 多路复用是一种高效管理多个 IO 事件的技术，通过单线程�
 
 这种模式就是 IO 多路复用，你只需要在讲台上等，谁举手谁回答，不需要一个一个去问。
 
-![有盐先生：IO 多路复用](./../redis/image/redis-20240918114125.png)
+![有盐先生：IO 多路复用](./redis/image/redis-20240918114125.png)
 
 Redis 就是使用 epoll 这样的 I/O 多路复用机制，在单线程模型下实现高效的网络 I/O，从而支持高并发的请求处理。
 
@@ -170,7 +170,7 @@ Redis 就是使用 epoll 这样的 I/O 多路复用机制，在单线程模型�
 
 第一种就是阻塞 IO 模型，第三种就是 I/O 复用模型。
 
-![图片来源于网络：多路复用模型](./../redis/image/redis-eb541432-d68a-4dd9-b427-96c4dd607d64.png)
+![图片来源于网络：多路复用模型](./redis/image/redis-eb541432-d68a-4dd9-b427-96c4dd607d64.png)
 
 Linux 系统有三种方式实现 IO 多路复用：select、poll 和 epoll。
 
@@ -190,7 +190,7 @@ epoll 使用红黑树和链表管理 fd，每次调用只需要将 fd 集合从�
 
 官方解释：https://redis.io/topics/faq
 
-![官方单线程解释](./../redis/image/redis-344b8461-98d4-495b-a697-70275b0abad6.png)
+![官方单线程解释](./redis/image/redis-344b8461-98d4-495b-a697-70275b0abad6.png)
 **官方 FAQ 表示，因为 Redis 是基于内存的操作，CPU 成为 Redis 的瓶颈的情况很少见，Redis 的瓶颈最有可能是内存的大小或者网络限制**。
 
 如果想要最大程度利用 CPU，可以在一台机器上启动多个 Redis 实例。
@@ -203,7 +203,7 @@ PS：网上有这样的回答，吐槽官方的解释有些敷衍，其实就是
 
 单线程模型意味着 Redis 在大量 IO 请求时，无法充分利用多核 CPU 的优势。
 
-![Redis6.0多线程](./../redis/image/redis-b7b24e25-d2dc-4457-994f-95bdb3674b8e.png)
+![Redis6.0多线程](./redis/image/redis-b7b24e25-d2dc-4457-994f-95bdb3674b8e.png)
 
 在 Redis 6.0 中，多线程主要用来处理网络 IO 操作，命令解析和执行仍然是单线程完成，这样既可以发挥多核 CPU 的优势，又能避免锁和上下文切换带来的性能损耗。
 
@@ -298,7 +298,7 @@ redis-benchmark -h 127.0.0.1 -p 6379 -c 50 -n 10000
 
 我本机是一台 macOS，4 GHz 四核 Intel Core i7，32 GB 1867 MHz DDR3，测试结果如下：
 
-![二哥的 Java 进阶之路](./../redis/image/redis-20240408100900.png)
+![二哥的 Java 进阶之路](./redis/image/redis-20240408100900.png)
 
 可以看得出，每秒能处理超过 10 万次请求。
 
@@ -310,7 +310,7 @@ Redis 的持久化机制保证了 Redis 服务器在重启后数据不丢失，�
 
 这两种持久化方式可以单独使用，也可以同时使用。
 
-![Redis持久化的两种方式](./../redis/image/redis-3bda4a46-adc3-4f0d-a135-b8ae5d4c0d5d.png)
+![Redis持久化的两种方式](./redis/image/redis-3bda4a46-adc3-4f0d-a135-b8ae5d4c0d5d.png)
 
 #### 说一下 RDB？
 
@@ -318,7 +318,7 @@ RDB 持久化通过创建数据集的快照来工作，在指定的时间间隔�
 
 可通过 save 和 bgsave 命令两个命令来手动触发 RDB 持久化操作：
 
-![save和bgsave](./../redis/image/redis-ffe56e32-34c5-453d-8859-c2febbe6a038.png)
+![save和bgsave](./redis/image/redis-ffe56e32-34c5-453d-8859-c2febbe6a038.png)
 
 **①、save 命令**：会同步地将 Redis 的所有数据保存到磁盘上的一个 RDB 文件中。这个操作会阻塞所有客户端请求直到 RDB 文件被完全写入磁盘。
 
@@ -362,7 +362,7 @@ AOF 的主要作用是解决了数据持久化的实时性，目前已经是 Red
 
 AOF 的工作流程分为四个步骤：命令写入、文件同步、文件重写、重启加载。
 
-![AOF工作流程](./../redis/image/redis-a9fb6202-b1a1-484d-a4fa-fef519090b44.png)
+![AOF工作流程](./redis/image/redis-a9fb6202-b1a1-484d-a4fa-fef519090b44.png)
 
 1）当 AOF 持久化机制被启用时，Redis 服务器会将接收到的所有写命令追加到 AOF 缓冲区的末尾。
 
@@ -399,7 +399,7 @@ AOF 的工作流程分为四个步骤：命令写入、文件同步、文件重�
 
 AOF 文件存储的是 Redis 所有的写操作命令，比如 SET、HSET、INCR 等。
 
-![二哥的Java 进阶之路：AOF文件内容](./../redis/image/redis-20241208204853.png)
+![二哥的Java 进阶之路：AOF文件内容](./redis/image/redis-20241208204853.png)
 
 #### AOF 重写期间命令可能会写入两次，会造成什么影响？
 
@@ -438,7 +438,7 @@ AOF 的最大优点是灵活，实时性好，可以设置不同的 fsync 策略
 
 可以将 RDB 文件或者 AOF 文件复制到 Redis 的数据目录下，然后重启 Redis 服务，Redis 会自动加载数据文件并恢复数据。
 
-![Redis启动加载数据](./../redis/image/redis-f9aab5e9-a875-4316-9ec9-0c5650afe5c1.png)
+![Redis启动加载数据](./redis/image/redis-f9aab5e9-a875-4316-9ec9-0c5650afe5c1.png)
 
 **Redis** 启动时加载数据的流程：
 
@@ -453,7 +453,7 @@ AOF 的最大优点是灵活，实时性好，可以设置不同的 fsync 策略
 
 在 Redis 4.0 版本中，混合持久化模式会在 AOF 重写的时候同时生成一份 RDB 快照，然后将这份快照作为 AOF 文件的一部分，最后再附加新的写入命令。
 
-![混合持久化](./../redis/image/redis-19c531e5-da95-495a-a4c4-d63a0b8bba95.png)
+![混合持久化](./redis/image/redis-19c531e5-da95-495a-a4c4-d63a0b8bba95.png)
 
 这样，当需要恢复数据时，Redis 先加载 RDB 文件来恢复到快照时刻的状态，然后应用 RDB 之后记录的 AOF 命令来恢复之后的数据更改，既快又可靠。
 
@@ -527,7 +527,7 @@ Redis 除了单机部署外，还可以通过主从复制、哨兵模式和集�
 
 前者称为主节点 master，后者称为从节点 slave。且数据的复制是单向的，只能由主节点到从节点。
 
-![Redis主从复制简图](./../redis/image/redis-60497f1e-8afb-44b3-bb7a-d4c29e5ac484.png)
+![Redis主从复制简图](./redis/image/redis-60497f1e-8afb-44b3-bb7a-d4c29e5ac484.png)
 
 在 Redis 主从架构中，主节点负责处理所有的写操作，并将这些操作异步复制到从节点。从节点主要用于读取操作，以分担主节点的压力和提高读性能。
 
@@ -567,7 +567,7 @@ Redis 的主从复制是异步进行的，这意味着主节点在执行完写�
 
 具体做法是获取主节点的 master_repl_offset 和从节点的 slave_repl_offset，计算两者的差值。如果差值超过预设的阈值，采取措施（如停止从节点的数据读取）以减少读到不一致数据的情况。
 
-![极客时间：Redis 核心技术与实战](./../redis/image/redis-20240709135618.png)
+![极客时间：Redis 核心技术与实战](./redis/image/redis-20240709135618.png)
 
 #### Redis 解决单点故障主要靠什么？
 
@@ -585,24 +585,24 @@ Redis 的复制拓扑结构可以支持单层或多层复制关系，根据拓�
 
 一主一从结构是最简单的复制拓扑结构，用于主节点出现宕机时从节点提供故障转移支持。
 
-![一主一从结构](./../redis/image/redis-5d91a67c-dbff-4a8d-bf9d-1fe7602d5a27.png)
+![一主一从结构](./redis/image/redis-5d91a67c-dbff-4a8d-bf9d-1fe7602d5a27.png)
 
 2.一主多从结构
 
 一主多从结构（又称为星形拓扑结构）使得应用端可以利用多个从节点实现读写分离（见图 6-5）。对于读占比较大的场景，可以把读命令发送到从节点来分担主节点压力。
 
-![一主多从结构](./../redis/image/redis-71074254-699a-480b-bbb0-c68f364a380b.png)
+![一主多从结构](./redis/image/redis-71074254-699a-480b-bbb0-c68f364a380b.png)
 
 3.树状主从结构
 
 树状主从结构（又称为树状拓扑结构）使得从节点不但可以复制主节点数据，同时可以作为其他从节点的主节点继续向下层复制。通过引入复制中间层，可以有效降低主节点负载和需要传送给从节点的数据量。
 
-![树状主从结构](./../redis/image/redis-dff14203-5e01-4d1b-a775-10ee444ada54.png)
+![树状主从结构](./redis/image/redis-dff14203-5e01-4d1b-a775-10ee444ada54.png)
 
 ### 17.Redis 的主从复制原理了解吗？
 
 Redis 主从复制的工作流程大概可以分为如下几步：
-![Redis主从复制工作流程](./../redis/image/redis-21123b1e-68b4-436b-ac84-3365a49a81bd.png)
+![Redis主从复制工作流程](./redis/image/redis-21123b1e-68b4-436b-ac84-3365a49a81bd.png)
 
 1.  保存主节点（master）信息
     这一步只是保存主节点信息，保存主节点的 ip 和 port。
@@ -621,13 +621,13 @@ Redis 主从复制的工作流程大概可以分为如下几步：
 
 Redis 在 2.8 及以上版本使用 psync 命令完成主从数据同步，同步过程分为：全量复制和部分复制。
 
-![主从数据同步方式](./../redis/image/redis-7518f715-6dee-4e70-b972-8aed9879e451.png)
+![主从数据同步方式](./redis/image/redis-7518f715-6dee-4e70-b972-8aed9879e451.png)
 
 **全量复制**
 一般用于初次复制场景，Redis 早期支持的复制功能只有全量复制，它会把主节点全部数据一次性发送给从节点，当数据量较大时，会对主从节点和网络造成很大的开销。
 
 全量复制的完整运行流程如下：
-![全量复制](./../redis/image/redis-aa8d2960-b341-49cc-b04c-201241fd15de.png)
+![全量复制](./redis/image/redis-aa8d2960-b341-49cc-b04c-201241fd15de.png)
 
 1. 发送 psync 命令进行数据同步，由于是第一次进行复制，从节点没有复制偏移量和主节点的运行 ID，所以发送 psync-1。
 2. 主节点根据 psync-1 解析出当前为全量复制，回复+FULLRESYNC 响应。
@@ -642,7 +642,7 @@ Redis 在 2.8 及以上版本使用 psync 命令完成主从数据同步，同�
 **部分复制**
 部分复制主要是 Redis 针对全量复制的过高开销做出的一种优化措施， 使用 psync{runId}{offset}命令实现。当从节点（slave）正在复制主节点 （master）时，如果出现网络闪断或者命令丢失等异常情况时，从节点会向 主节点要求补发丢失的命令数据，如果主节点的复制积压缓冲区内存在这部分数据则直接发送给从节点，这样就可以保持主从节点复制的一致性。
 
-![部分复制](./../redis/image/redis-87600c72-cc6a-4656-81b2-e71864c97f23.png)
+![部分复制](./redis/image/redis-87600c72-cc6a-4656-81b2-e71864c97f23.png)
 
 1.  当主从节点之间网络出现中断时，如果超过 repl-timeout 时间，主节点会认为从节点故障并中断复制连接
 2.  主从连接中断期间主节点依然响应命令，但因复制连接中断命令无法发送给从节点，不过主节点内部存在的复制积压缓冲区，依然可以保存最近一段时间的写命令数据，默认最大缓存 1MB。
@@ -669,25 +669,25 @@ Redis 的脑裂问题是指在主从模式或集群模式下，由于网络分�
 
 哨兵（Sentinel）机制是 Redis 提供的一个高可用性解决方案，主要用来监控 Redis 主从架构中的实例，并在主节点出现故障时，自动进行故障转移。
 
-![Redis Sentinel](./../redis/image/redis-8b1a055c-f077-49ff-9432-c194d4fc3639.png)
+![Redis Sentinel](./redis/image/redis-8b1a055c-f077-49ff-9432-c194d4fc3639.png)
 
 ### 21.Redis 哨兵实现原理知道吗？
 
 哨兵的工作流程包括定时监控、主观下线和客观下线、领导者 Sentinel 节点选举、故障转移等。
 
-![Redis Sentinel工作流程](./../redis/image/redis-4074d72a-886a-4892-8f55-80112005aad8.png)
+![Redis Sentinel工作流程](./redis/image/redis-4074d72a-886a-4892-8f55-80112005aad8.png)
 
 每个 Sentinel 实例会定期通过 PING 命令向主节点和从节点发送心跳包。
 
-![三个定时任务](./../redis/image/redis-e7708f8d-ef34-4255-b5d0-cb300c649716.png)
+![三个定时任务](./redis/image/redis-e7708f8d-ef34-4255-b5d0-cb300c649716.png)
 
 如果一个节点长时间没有响应 PING 命令，Sentinel 会将该节点标记为主观下线。当多个 Sentinel 同时认为一个节点不可用时，该节点被标记为客观下线。
 
-![主观下线和客观下线](./../redis/image/redis-11839a24-9249-48a5-8c9d-888aa80d91dc.png)
+![主观下线和客观下线](./redis/image/redis-11839a24-9249-48a5-8c9d-888aa80d91dc.png)
 
 当主节点被确认下线后，Sentinel 之间会通过类似 Raft 的选举算法进行协商，选出一个领导者 Sentinel 来负责执行故障转移。
 
-![故障转移](./../redis/image/redis-0618a5e2-e94f-40d7-888a-e78019ba8f93.png)
+![故障转移](./redis/image/redis-0618a5e2-e94f-40d7-888a-e78019ba8f93.png)
 
 1. 将某个从节点提升为新的主节点。
 2. 通知其他从节点重新复制新的主节点的数据。
@@ -696,7 +696,7 @@ Redis 的脑裂问题是指在主从模式或集群模式下，由于网络分�
 
 Redis 使用 Raft 算法实现领导者选举的：当主节点挂掉后，新的主节点是由剩余的从节点发起选举后晋升的。
 
-![二哥的 Java 进阶之路：领导者Sentinel节点选举](./../redis/image/redis-20240819112712.png)
+![二哥的 Java 进阶之路：领导者Sentinel节点选举](./redis/image/redis-20240819112712.png)
 
 ①、每个在线的 Sentinel 节点都有资格成为领导者，当它确认主节点下线时候，会向其他哨兵节点发送命令，表明希望由自己来执行主从切换，并让所有其他哨兵进行投票。
 
@@ -719,7 +719,7 @@ Redis 使用 Raft 算法实现领导者选举的：当主节点挂掉后，新�
 ### 23.新的主节点是怎样被挑选出来的？
 
 选出新的主节点，大概分为这么几步：
-![新的主节点](./../redis/image/redis-03976d35-20b6-4efe-aa9c-7d3759460d34.png)
+![新的主节点](./redis/image/redis-03976d35-20b6-4efe-aa9c-7d3759460d34.png)
 
 1.  过滤：“不健康”（主观下线、断线）、5 秒内没有回复过 Sentinel 节 点 ping 响应、与主节点失联超过 down-after-milliseconds\*10 秒。
 2.  选择 slave-priority（从节点优先级）最高的从节点列表，如果存在则返回，不存在则继续。
@@ -730,7 +730,7 @@ Redis 使用 Raft 算法实现领导者选举的：当主节点挂掉后，新�
 
 前面说到了主从存在高可用和分布式的问题，哨兵解决了高可用的问题，而集群就是终极方案，一举解决高可用和分布式问题。
 
-![Redis 集群示意图](./../redis/image/redis-5cbc6009-251e-4d5b-8f22-8d543938eccb.png)
+![Redis 集群示意图](./redis/image/redis-5cbc6009-251e-4d5b-8f22-8d543938eccb.png)
 
 1. **数据分区：** 数据分区 _(或称数据分片)_ 是集群最核心的功能。集群将数据分散到多个节点，一方面 突破了 Redis 单机内存大小的限制，**存储容量大大增加**；**另一方面** 每个主节点都可以对外提供读服务和写服务，**大大提高了集群的响应能力**。
 
@@ -740,7 +740,7 @@ Redis 使用 Raft 算法实现领导者选举的：当主节点挂掉后，新�
 
 切片集群是一种将数据分片存储在多个 Redis 实例上的集群架构，每个 Redis 实例负责存储部分数据。比如说把 25G 的数据平均分为 5 份，每份 5G，然后启动 5 个 Redis 实例，每个实例保存一份数据。
 
-![极客时间：切片集群架构图](./../redis/image/redis-20240408104101.png)
+![极客时间：切片集群架构图](./redis/image/redis-20240408104101.png)
 
 在 Redis 3.0 之前，官方并没有针对切片集群提供具体的解决方案；但是在 Redis 3.0 之后，官方提供了 Redis Cluster，数据和实例之间的映射通过哈希槽（hash slot）来实现。
 
@@ -748,7 +748,7 @@ Redis Cluster 有 16384 个哈希槽，每个键根据其名字的 CRC16 值被�
 
 > CRC16 是一种哈希算法，它可以将任意长度的输入数据映射为一个 16 位的哈希值。
 
-![槽](./../redis/image/redis-e0ed9d62-3406-40db-8b01-c931f1020612.png)
+![槽](./redis/image/redis-e0ed9d62-3406-40db-8b01-c931f1020612.png)
 
 例如，如果我们有 3 个 Redis 实例，那么每个实例可能会负责大约 5461 个哈希槽。
 
@@ -758,7 +758,7 @@ Redis Cluster 有 16384 个哈希槽，每个键根据其名字的 CRC16 值被�
 
 在 Redis 集群中，数据分区是通过将数据分散到不同的节点来实现的，常见的数据分区规则有三种：节点取余分区、一致性哈希分区、虚拟槽分区。
 
-![分布式数据分区](./../redis/image/redis-ceb49e41-dfd7-4d1e-91f9-c299437227d2.png)
+![分布式数据分区](./redis/image/redis-ceb49e41-dfd7-4d1e-91f9-c299437227d2.png)
 
 #### 说说节点取余分区
 
@@ -768,7 +768,7 @@ Redis Cluster 有 16384 个哈希槽，每个键根据其名字的 CRC16 值被�
 
 缺点是扩缩容时，大多数数据需要重新分配，因为节点总数的改变会影响取余结果，这可能导致大量数据迁移。
 
-![节点取余分区](./../redis/image/redis-8b1fcaec-37e6-420a-9ca2-03615232af17.png)
+![节点取余分区](./redis/image/redis-8b1fcaec-37e6-420a-9ca2-03615232af17.png)
 
 #### 说说一致性哈希分区
 
@@ -776,7 +776,7 @@ Redis Cluster 有 16384 个哈希槽，每个键根据其名字的 CRC16 值被�
 
 从而来减少节点变动时数据迁移的量。
 
-![一致性哈希分区](./../redis/image/redis-89bd1c1c-251c-4f53-bba3-fe945b2ae9e2.png)
+![一致性哈希分区](./redis/image/redis-89bd1c1c-251c-4f53-bba3-fe945b2ae9e2.png)
 
 Key 1 和 Key 2 会落入到 Node 1 中，Key 3、Key 4 会落入到 Node 2 中，Key 5 落入到 Node 3 中，Key 6 落入到 Node 4 中。
 
@@ -793,7 +793,7 @@ Key 1 和 Key 2 会落入到 Node 1 中，Key 3、Key 4 会落入到 Node 2 中�
 
 这种分区可以灵活地将槽（以及槽中的数据）从一个节点迁移到另一个节点，从而实现平滑扩容和缩容；数据分布也更加均匀，Redis Cluster 采用的正是这种分区方式。
 
-![虚拟槽分配](./../redis/image/redis-e0ed9d62-3406-40db-8b01-c931f1020612.png)
+![虚拟槽分配](./redis/image/redis-e0ed9d62-3406-40db-8b01-c931f1020612.png)
 
 假设系统中有 4 个实际节点，假设为其分配了 16 个槽(0-15)；
 
@@ -818,12 +818,12 @@ Redis 集群通过数据分区来实现数据的分布式存储，通过自动�
 
 数据分区是在集群创建的时候完成的。
 
-![集群创建](./../redis/image/redis-046a512c-baab-4e3a-9409-2af58088cceb.png)
+![集群创建](./redis/image/redis-046a512c-baab-4e3a-9409-2af58088cceb.png)
 
 **设置节点**
 Redis 集群一般由多个节点组成，节点数量至少为 6 个才能保证组成完整高可用的集群。每个节点需要开启配置 cluster-enabled yes，让 Redis 运行在集群模式下。
 
-![节点和握手](./../redis/image/redis-e6064ba6-fd6f-4270-92f9-68c0bb98fd4b.png)
+![节点和握手](./redis/image/redis-e6064ba6-fd6f-4270-92f9-68c0bb98fd4b.png)
 
 **节点握手**
 节点握手是指一批运行在集群模式下的节点通过 Gossip 协议彼此通信， 达到感知对方的过程。节点握手是集群彼此通信的第一步，由客户端发起命 令：cluster meet{ip}{port}。完成节点握手之后，一个个的 Redis 节点就组成了一个多节点的集群。
@@ -831,7 +831,7 @@ Redis 集群一般由多个节点组成，节点数量至少为 6 个才能保�
 **分配槽（slot）**
 Redis 集群把所有的数据映射到 16384 个槽中。每个节点对应若干个槽，只有当节点分配了槽，才能响应和这些槽关联的键命令。通过 cluster addslots 命令为节点分配槽。
 
-![分配槽](./../redis/image/redis-15341792-e7a6-428c-a109-22827e02be5f.png)
+![分配槽](./redis/image/redis-15341792-e7a6-428c-a109-22827e02be5f.png)
 
 ##### 故障转移
 
@@ -840,17 +840,17 @@ Redis 集群的故障转移和哨兵的故障转移类似，但是 Redis 集群�
 **故障发现**
 Redis 集群内节点通过 ping/pong 消息实现节点通信，集群中每个节点都会定期向其他节点发送 ping 消息，接收节点回复 pong 消息作为响应。如果在 cluster-node-timeout 时间内通信一直失败，则发送节 点会认为接收节点存在故障，把接收节点标记为主观下线（pfail）状态。
 
-![主观下线](./../redis/image/redis-84a2a89e-f9ea-4681-b748-1a4f1dee172b.png)
+![主观下线](./redis/image/redis-84a2a89e-f9ea-4681-b748-1a4f1dee172b.png)
 
 当某个节点判断另一个节点主观下线后，相应的节点状态会跟随消息在集群内传播。通过 Gossip 消息传播，集群内节点不断收集到故障节点的下线报告。当 半数以上持有槽的主节点都标记某个节点是主观下线时。触发客观下线流程。
 
-![主观下线和客观下线](./../redis/image/redis-b61a6109-7aea-45ab-a53c-267eebb9180a.png)
+![主观下线和客观下线](./redis/image/redis-b61a6109-7aea-45ab-a53c-267eebb9180a.png)
 
 **故障恢复**
 
 故障节点变为客观下线后，如果下线节点是持有槽的主节点则需要在它 的从节点中选出一个替换它，从而保证集群的高可用。
 
-![故障恢复流程](./../redis/image/redis-0e5a49b3-cb5a-4aef-a81f-fce50a012a39.png)
+![故障恢复流程](./redis/image/redis-0e5a49b3-cb5a-4aef-a81f-fce50a012a39.png)
 
 1. 资格检查
    每个从节点都要检查最后与主节点断线时间，判断是否有资格替换故障 的主节点。
@@ -861,7 +861,7 @@ Redis 集群内节点通过 ping/pong 消息实现节点通信，集群中每个
 4. 选举投票
    持有槽的主节点处理故障选举消息。投票过程其实是一个领导者选举的过程，如集群内有 N 个持有槽的主节 点代表有 N 张选票。由于在每个配置纪元内持有槽的主节点只能投票给一个 从节点，因此只能有一个从节点获得 N/2+1 的选票，保证能够找出唯一的从节点。
 
-   ![选举投票](./../redis/image/redis-d0e16ea3-6683-43f4-82a3-80478703ae06.png)
+   ![选举投票](./redis/image/redis-d0e16ea3-6683-43f4-82a3-80478703ae06.png)
 
 5. 替换主节点
    当从节点收集到足够的选票之后，触发替换主节点操作。
@@ -874,11 +874,11 @@ Redis 集群内节点通过 ping/pong 消息实现节点通信，集群中每个
 
 Redis 集群使用数据分片和哈希槽的机制将数据分布到不同的节点上。集群扩容和缩容的关键，在于槽和节点之间的对应关系。
 
-![集群的伸缩](./../redis/image/redis-dd3e9494-eddb-4861-85f7-2646018d93f6.png)
+![集群的伸缩](./redis/image/redis-dd3e9494-eddb-4861-85f7-2646018d93f6.png)
 
 当需要扩容时，新的节点被添加到集群中，集群会自动执行数据迁移，以重新分布哈希槽到新的节点。数据迁移的过程可以确保在扩容期间数据的正常访问和插入。
 
-![扩容实例](./../redis/image/redis-1d24bb63-2b05-4db9-bd6b-983f16a4830e.png)
+![扩容实例](./redis/image/redis-1d24bb63-2b05-4db9-bd6b-983f16a4830e.png)
 
 当数据正在迁移时，客户端请求可能被路由到原有节点或新节点。Redis Cluster 会根据哈希槽的映射关系判断请求应该被路由到哪个节点，并在必要时进行重定向。
 
@@ -896,13 +896,13 @@ Redis 集群使用数据分片和哈希槽的机制将数据分布到不同的�
 
 缓存击穿是指某一个或少数几个数据被高频访问，当这些数据在缓存中过期的那一刻，大量请求就会直接到达数据库，导致数据库瞬间压力过大。
 
-![缓存击穿](./../redis/image/redis-86579ee6-9dae-4274-a5cc-af6812f48da4.png)
+![缓存击穿](./redis/image/redis-86579ee6-9dae-4274-a5cc-af6812f48da4.png)
 
 解决⽅案：
 
 ①、加锁更新，⽐如请求查询 A，发现缓存中没有，对 A 这个 key 加锁，同时去数据库查询数据，写⼊缓存，再返回给⽤户，这样后⾯的请求就可以从缓存中拿到数据了。
 
-![加锁更新](./../redis/image/redis-cf63911a-8501-493e-a375-8b47a9f33358.png)
+![加锁更新](./redis/image/redis-cf63911a-8501-493e-a375-8b47a9f33358.png)
 
 ②、将过期时间组合写在 value 中，通过异步的⽅式不断的刷新过期时间，防⽌此类现象。
 
@@ -918,7 +918,7 @@ Redis 集群使用数据分片和哈希槽的机制将数据分布到不同的�
 
 缓存穿透是指查询不存在的数据，由于缓存没有命中（因为数据根本就不存在），请求每次都会穿过缓存去查询数据库。如果这种查询非常频繁，就会给数据库造成很大的压力。
 
-![缓存穿透](./../redis/image/redis-029951e6-8b99-4364-a570-010853deb594.png)
+![缓存穿透](./redis/image/redis-029951e6-8b99-4364-a570-010853deb594.png)
 
 缓存穿透意味着缓存失去了减轻数据压力的意义。缓存穿透可能有两种原因：
 
@@ -931,7 +931,7 @@ Redis 集群使用数据分片和哈希槽的机制将数据分布到不同的�
 
 客户端请求某个 ID 的数据，首先检查缓存是否命中。如果缓存未命中，查询数据库。如果数据库查询结果为空，将该空结果（如 null 或 {}）缓存起来，并设置一个合理的过期时间。当后续请求再访问相同 ID 时，缓存直接返回空结果，避免每次都打到数据库。
 
-![缓存空值/默认值](./../redis/image/redis-288af5a2-ae5a-427a-95e9-b4a658b01386.png)
+![缓存空值/默认值](./redis/image/redis-288af5a2-ae5a-427a-95e9-b4a658b01386.png)
 
 代码示例：
 
@@ -959,7 +959,7 @@ if (result == null) {
 - 如果布隆过滤器认为该键不存在，直接返回空，不会查询数据库。
 - 如果布隆过滤器认为该键可能存在，则查询缓存和数据库。
 
-![布隆过滤器](./../redis/image/redis-0e18ea40-a2e5-4fa6-989e-e771f6e4b0fc.png)
+![布隆过滤器](./redis/image/redis-0e18ea40-a2e5-4fa6-989e-e771f6e4b0fc.png)
 
 代码示例：
 
@@ -979,7 +979,7 @@ if (!bloomFilter.mightContain(requestedKey)) {
 
 两种解决方案的对比：
 
-![缓存空对象和布隆过滤器方案](./../redis/image/redis-e8a382c9-4379-44ab-b1dc-fb598a228105.png)
+![缓存空对象和布隆过滤器方案](./redis/image/redis-e8a382c9-4379-44ab-b1dc-fb598a228105.png)
 
 查询不存在的数据，由于数据不存在，请求就直接打到数据库了。某种意义上，算是缓存的一个漏洞。比如前端请求了一个 id=-1 的用户信息。
 
@@ -994,7 +994,7 @@ if (!bloomFilter.mightContain(requestedKey)) {
 
 总之就是，崩了，崩的非常严重，就叫雪崩了（电影电视里应该看到过，非常夸张）。
 
-![缓存雪崩](./../redis/image/redis-1464fe22-c463-4850-8989-b899510cb10e.png)
+![缓存雪崩](./redis/image/redis-1464fe22-c463-4850-8989-b899510cb10e.png)
 
 #### 如何解决缓存雪崩呢？
 
@@ -1004,11 +1004,11 @@ if (!bloomFilter.mightContain(requestedKey)) {
 
 可以利用 Redis Cluster。
 
-![Rajat Pachauri：Redis Cluster](./../redis/image/redis-20240326220634.png)
+![Rajat Pachauri：Redis Cluster](./redis/image/redis-20240326220634.png)
 
 或者第三方集群方案 Codis。
 
-![极客时间：Codis](./../redis/image/redis-20240326220408.png)
+![极客时间：Codis](./redis/image/redis-20240326220408.png)
 
 **02、备份缓存**：对于关键数据，除了在主缓存中存储，还可以在备用缓存中保存一份。当主缓存不可用时，可以快速切换到备用缓存，确保系统的稳定性和可用性。
 
@@ -1016,7 +1016,7 @@ if (!bloomFilter.mightContain(requestedKey)) {
 
 这个过程称为“降级”，意味着系统在失去优先级高的资源时仍能继续提供服务。
 
-![技术派教程](./../redis/image/redis-20240421105333.png)
+![技术派教程](./redis/image/redis-20240421105333.png)
 
 当从 Redis 获取数据失败时，尝试从本地缓存读取数据。
 
@@ -1063,7 +1063,7 @@ public UserPermissions loadPermissionsFromRedis(String userId) {
 
 布隆过滤器是一种空间效率极高的概率型数据结构，用于快速检查一个元素是否存在于一个集合中。
 
-![布隆过滤器](./../redis/image/redis-d0b8d85c-85dc-4843-b4be-d5d48338a44e.png)
+![布隆过滤器](./redis/image/redis-d0b8d85c-85dc-4843-b4be-d5d48338a44e.png)
 
 布隆过滤器由一个长度为 m 的位数组和 k 个哈希函数组成。
 
@@ -1075,7 +1075,7 @@ public UserPermissions loadPermissionsFromRedis(String userId) {
 
 布隆过滤器的优点是空间效率和查询时间都远远超过一般的算法，缺点是存在误判和删除困难。
 
-![勇哥：布隆过滤器](./../redis/image/redis-20241019191741.png)
+![勇哥：布隆过滤器](./redis/image/redis-20241019191741.png)
 
 当布隆过滤器保存的元素越多，被置为 1 的 bit 位就会越多。假设元素 x 没有存储过，但其他元素的哈希函数映射到位数组的三个位刚好都为 1 且恰好覆盖了元素 x 映射的位置，那么对于布隆过滤器来讲，元素 x 这个值就是存在的，也就是说布隆过滤器存在一定的误判率。
 
@@ -1085,7 +1085,7 @@ public UserPermissions loadPermissionsFromRedis(String userId) {
 2. 哈希函数的数量（k）：哈希函数的数量决定了每个元素在位数组中标记的位数。哈希函数越多，碰撞的概率也会相应变化。如果哈希函数太少，则过滤器很快会变得不精确；如果太多，误判率也会升高，效率下降。
 3. 存入的元素数量（n）：存入的元素越多，哈希碰撞的几率越大，从而导致更高的误判率。
 
-![勇哥：布隆过滤器的误判](./../redis/image/redis-20241019192648.png)
+![勇哥：布隆过滤器的误判](./redis/image/redis-20241019192648.png)
 
 误判率公式如下：
 
@@ -1132,9 +1132,9 @@ $$
 
 现在解决第一种情况，第一种方式是利用消息的事务和持久化机制，在写请求更新完 db 之后，给消息队列里面发送一个删除缓存的消息，这样一定可以保证删除缓存的成功；第二种方式是引入阿里的 canal 组件，它能监听 db 的 binlog 变更，并删除缓存，但这种方案增加了系统复杂度的问题，也存在过度设计的嫌疑；第三种方式是给缓存设置一个 TTL，在 TTL 内可能会短暂不一致，但之后就是一致的新数据了，这种方式最简单有效，可以当作兜底方案。
 
-![利用mq的持久化与事务机制保证缓存删除成功](./../redis/image/1747978293737.png)
+![利用mq的持久化与事务机制保证缓存删除成功](./redis/image/1747978293737.png)
 
-![利用binlog订阅机制+mq保证缓存删除成功](./../redis/image/1747978300830.png)
+![利用binlog订阅机制+mq保证缓存删除成功](./redis/image/1747978300830.png)
 
 我们对这个问题升维。既然不管怎样，都会有不一致的问题，那么我们干脆就以缓存为主，我们单独写一个服务，让这个服务对外提供操作缓存的接口，屏蔽对缓存和 db 的操作细节。在读请求时，先去缓存中读，读不到再去 db 中去读，读到之后回写到缓存，然后返回。在写请求时，先去看看是否命中缓存，如果命中，就先更新缓存再更新 db；如果没有命中，就只更新 db。或者再对这种方案迭代，在写请求时，不管是否命中缓存，都只更新缓存，然后写一个补偿程序，定期把缓存中的数据回写到 db 中。这种两种都是把缓存当数据库来用，可以用到强一致性的业务场景中，但同时要配合 redis 的高可用机制使用，比如要配置 redis 的集群模式和持久化机制，同时也要关注数据有可能丢失的极限业务场景。
 
@@ -1142,7 +1142,7 @@ $$
 
 在[技术派实战项目](https://javabetter.cn/zhishixingqiu/paicoding.html)中，我们采用的是先写 MySQL，再删除 Redis 的方式来保证缓存和数据库的数据一致性。
 
-![技术派教程](./../redis/image/redis-20240325221330.png)
+![技术派教程](./redis/image/redis-20240325221330.png)
 
 我举例说明一下。
 
@@ -1178,7 +1178,7 @@ product_id = "product_123"
 redis.del(product_id)
 ```
 
-![删除缓存和更新缓存](./../redis/image/redis-ebad0a67-3012-4466-a4dc-e834104c48f8.png)
+![删除缓存和更新缓存](./redis/image/redis-ebad0a67-3012-4466-a4dc-e834104c48f8.png)
 
 假如是更新缓存，那么可能请求 A 更新完 MySQL 后在更新 Redis 中，请求 B 已经读取到 Redis 中的旧值返回了，又一次导致了缓存和数据库不一致。
 
@@ -1190,7 +1190,7 @@ redis.del(product_id)
 
 缓存中不存在，数据库又没有完成更新，此时有请求进来读取数据，并写入到缓存，那么在更新完缓存后，缓存中这个 key 就成了一个脏数据。
 
-![先更数据库还是先删缓存](./../redis/image/redis-5c929a9e-a723-43b3-8f3c-f22c83765f9d.png)
+![先更数据库还是先删缓存](./redis/image/redis-5c929a9e-a723-43b3-8f3c-f22c83765f9d.png)
 
 目前最流行的缓存读写策略 Cache Aside Pattern（[旁路缓存模式](https://coolshell.cn/articles/17416.html)）就是采用的先写数据库，再删缓存的方式。
 
@@ -1198,7 +1198,7 @@ redis.del(product_id)
 - 命中：应用程序从缓存读取数据，如果数据存在，直接返回。
 - 更新：先把数据写入数据库，成功后，再让缓存失效。
 
-![左耳朵耗子：Cache Aside Pattern](./../redis/image/redis-20240325224814.png)
+![左耳朵耗子：Cache Aside Pattern](./redis/image/redis-20240325224814.png)
 
 #### 那假如对一致性要求很高，该怎么办呢？
 
@@ -1209,13 +1209,13 @@ redis.del(product_id)
 
 那通常有四种方案可以解决。
 
-![](./../redis/image/redis-20240325225250.png)
+![](./redis/image/redis-20240325225250.png)
 
 **①、引入消息队列保证缓存被删除**
 
 使用消息队列（如 Kafka、RabbitMQ）保证数据库更新和缓存更新之间的最终一致性。当数据库更新完成后，将更新事件发送到消息队列。有专门的服务监听这些事件并负责更新或删除缓存。
 
-![消息队列保证key被删除](./../redis/image/redis-e4a61193-515a-409f-a436-2733abc3a86e.png)
+![消息队列保证key被删除](./redis/image/redis-e4a61193-515a-409f-a436-2733abc3a86e.png)
 
 这种方案很不错，缺点是对业务代码有一定的侵入，毕竟引入了消息队列嘛。
 
@@ -1223,11 +1223,11 @@ redis.del(product_id)
 
 可以专门起一个服务（比如 [Canal](https://github.com/alibaba/canal)，阿里巴巴 MySQL binlog 增量订阅&消费组件）去监听 MySQL 的 binlog，获取需要操作的数据。
 
-![技术派教程](./../redis/image/redis-20240325225809.png)
+![技术派教程](./redis/image/redis-20240325225809.png)
 
 然后用一个公共的服务获取订阅程序传来的信息，进行缓存删除。
 
-![数据库订阅+消息队列保证key被删除](./../redis/image/redis-37c07418-9cd8-43d9-90e7-0cb43b329025.png)
+![数据库订阅+消息队列保证key被删除](./redis/image/redis-37c07418-9cd8-43d9-90e7-0cb43b329025.png)
 
 这种方式虽然降低了对业务的侵入，但增加了整个系统的复杂度，适合基建完善的大厂。
 
@@ -1237,7 +1237,7 @@ redis.del(product_id)
 
 主要针对缓存不存在，但写入了脏数据的情况。在先删缓存，再写数据库的更新策略下发生的比较多。
 
-![延时双删](./../redis/image/redis-fab24753-9c53-4432-9413-5feba07ae1e3.png)
+![延时双删](./redis/image/redis-fab24753-9c53-4432-9413-5feba07ae1e3.png)
 
 这种方式的延时时间需要仔细考量和测试。
 
@@ -1249,7 +1249,7 @@ redis.del(product_id)
 
 在[技术派实战项目](https://javabetter.cn/zhishixingqiu/paicoding.html)中，为了减轻 Redis 的负载，我又追加了一层本地缓存 Caffeine。
 
-![延时双删](./../redis/image/redis-6d4ab7e6-8337-4576-bbf0-79202a1c3331.png)
+![延时双删](./redis/image/redis-6d4ab7e6-8337-4576-bbf0-79202a1c3331.png)
 
 为了保证本地缓存和 Redis 缓存的一致性，通常采用的策略有：
 
@@ -1259,21 +1259,21 @@ redis.del(product_id)
 
 ③、Redis 缓存发生变化时，引入消息队列，比如 RocketMQ、RabbitMQ 去更新本地缓存。
 
-![本地缓存/分布式缓存保持一致](./../redis/image/redis-20c15f0d-fb3c-4922-94b1-edcd856658be.png)
+![本地缓存/分布式缓存保持一致](./redis/image/redis-20c15f0d-fb3c-4922-94b1-edcd856658be.png)
 
 由于技术派本身对缓存的一致性要求不是特别高，所以我就采用第一种方式。
 
 另外，在技术派实战项目中，我对缓存的使用场景做了细化。比如说，使用 CacheBuilder 来完成 Guava Cache 的构建，像一些简单的缓存场景，比如说获取菜单分类、获取登录验证码、获取用户转存图片等，都使用了 Guava Cache。
 
-![技术派教程：Guava](./../redis/image/redis-20240507105407.png)
+![技术派教程：Guava](./redis/image/redis-20240507105407.png)
 
 像首页侧边栏、专栏侧边栏、文章详情侧边栏等缓存场景，就使用了 Caffeine 作为本地缓存，通过 @Cacheable、@CacheEvit、@CachePut 等注解实现，非常轻巧。
 
-![技术派教程：Caffeine](./../redis/image/redis-20240507110254.png)
+![技术派教程：Caffeine](./redis/image/redis-20240507110254.png)
 
 而像用户 Session 和网站地图 SiteMap 等缓存场景，就使用了 Redis 来作为缓存。
 
-![技术派教程：Redis](./../redis/image/redis-20240507110652.png)
+![技术派教程：Redis](./redis/image/redis-20240507110652.png)
 
 #### 如果在项目中多个地方都要使用到二级缓存的逻辑，如何设计这一块？
 
@@ -1315,7 +1315,7 @@ Redis 还可以持久化数据，支持数据备份和恢复，适用于对数�
 
 #### 怎么处理热 key？
 
-![热key处理](./../redis/image/redis-6fa972ec-5531-48f2-a608-4465d79d4518.png)
+![热key处理](./redis/image/redis-6fa972ec-5531-48f2-a608-4465d79d4518.png)
 
 对热 key 的处理，最关键的是对热 key 的监控:
 
@@ -1333,13 +1333,13 @@ Redis 还可以持久化数据，支持数据备份和恢复，适用于对数�
 
 > monitor 命令的使用：`redis-cli monitor`
 
-![二哥的 Java 进阶之路：monitor](./../redis/image/redis-20240309085135.png)
+![二哥的 Java 进阶之路：monitor](./redis/image/redis-20240309085135.png)
 
 还可以通过 bigkeys 参数来分析热 Key。
 
 > bigkeys 命令的使用：`redis-cli --bigkeys`
 
-![二哥的 Java 进阶之路：bigkeys](./../redis/image/redis-20240309090340.png)
+![二哥的 Java 进阶之路：bigkeys](./redis/image/redis-20240309090340.png)
 
 只要监控到了热 key，对热 key 的处理就简单了：
 
@@ -1482,7 +1482,7 @@ Redis 内存不足有这么几种处理方式：
 
 Redis 的 key 过期回收策略主要有两种：惰性删除和定期删除。
 
-![二哥的 Java 进阶之路：Redis 的过期淘汰策略](./../redis/image/redis-20240326214119.png)
+![二哥的 Java 进阶之路：Redis 的过期淘汰策略](./redis/image/redis-20240326214119.png)
 
 当某个键被访问时，如果发现它已经过期，Redis 会立即删除该键，俗称惰性删除。但这也意味着如果一个已过期的键从未被访问，它就不会被删除，会占用额外的内存空间。
 
@@ -1490,11 +1490,11 @@ Redis 的 key 过期回收策略主要有两种：惰性删除和定期删除。
 
 可以通过 `config get hz` 命令查看 Redis 内部定时任务的频率。
 
-![二哥的 Java 进阶之路：config get hz](./../redis/image/redis-20240326214800.png)
+![二哥的 Java 进阶之路：config get hz](./redis/image/redis-20240326214800.png)
 
 结果显示 hz 的值为 "10"，意味着 Redis 服务器每秒执行定时任务的频率是 10 次。可以通过 `CONFIG SET hz 20` 进行调整。
 
-![二哥本地 Redis 的配置文件路径和 hz 的默认值](./../redis/image/redis-20240326215240.png)
+![二哥本地 Redis 的配置文件路径和 hz 的默认值](./redis/image/redis-20240326215240.png)
 
 ### 39.Redis 有哪些内存淘汰策略？
 
@@ -1502,7 +1502,7 @@ Redis 的 key 过期回收策略主要有两种：惰性删除和定期删除。
 
 > 最大值通过 maxmemory 参数设置
 
-![Redis六种内存溢出控制策略](./../redis/image/redis-5be7405c-ee11-4d2b-bea4-9598f10a1b17.png)
+![Redis六种内存溢出控制策略](./redis/image/redis-5be7405c-ee11-4d2b-bea4-9598f10a1b17.png)
 
 常见的策略有：
 
@@ -1523,7 +1523,7 @@ LFU（Least Frequently Used）：基于次数维度，淘汰访问频率最低�
 ### 40.Redis 阻塞？怎么解决？
 
 Redis 发生阻塞，可以从以下几个方面排查：
-![Redis阻塞排查](./../redis/image/redis-e6a35258-7a78-4489-90b7-e47a4190802b.png)
+![Redis阻塞排查](./redis/image/redis-e6a35258-7a78-4489-90b7-e47a4190802b.png)
 
 - **API 或数据结构使用不合理**
 
@@ -1579,7 +1579,7 @@ Redis 发生阻塞，可以从以下几个方面排查：
 
 > bigkeys 命令的使用：`redis-cli --bigkeys`
 
-![](./../redis/image/redis-20240309091503.png)
+![](./redis/image/redis-20240309091503.png)
 
 ②、redis-rdb-tools：redis-rdb-tools 是由 Python 语言编写的用来分析 Redis 中 rdb 快照文件的工具。
 
@@ -1587,13 +1587,13 @@ Redis 发生阻塞，可以从以下几个方面排查：
 
 > rdb，全称 Redis DataBase，是 Redis 在内存中的数据格式的一种持久化存储方式。
 
-![](./../redis/image/redis-20240309092121.png)
+![](./redis/image/redis-20240309092121.png)
 
 推荐阅读：[RDB 详解](https://redisbook.readthedocs.io/en/latest/internal/rdb.html)
 
 **如何处理大 key?**
 
-![大key处理](./../redis/image/redis-e4aaafda-fce1-47f0-8b2b-7261d47b720b.png)
+![大key处理](./redis/image/redis-e4aaafda-fce1-47f0-8b2b-7261d47b720b.png)
 
 ①、**删除大 key**
 
@@ -1625,13 +1625,13 @@ Redis 发生阻塞，可以从以下几个方面排查：
 - **使用 list 作为队列，lpush 生产消息，rpop 消费消息**
 
 这种方式，消费者死循环 rpop 从队列中消费消息。但是这样，即使队列里没有消息，也会进行 rpop，会导致 Redis CPU 的消耗。
-![list作为队列](./../redis/image/redis-e4b192a1-3ba7-4f4e-98de-e93f437cff7c.png)
+![list作为队列](./redis/image/redis-e4b192a1-3ba7-4f4e-98de-e93f437cff7c.png)
 可以通过让消费者休眠的方式的方式来处理，但是这样又会又消息的延迟问题。
 
 -**使用 list 作为队列，lpush 生产消息，brpop 消费消息**
 
 brpop 是 rpop 的阻塞版本，list 为空的时候，它会一直阻塞，直到 list 中有值或者超时。
-![list作为队列，brpop](./../redis/image/redis-e9581e51-ffc8-4326-9af4-07816743dc88.png)
+![list作为队列，brpop](./redis/image/redis-e9581e51-ffc8-4326-9af4-07816743dc88.png)
 
 这种方式只能实现一对一的消息队列。
 
@@ -1639,7 +1639,7 @@ brpop 是 rpop 的阻塞版本，list 为空的时候，它会一直阻塞，直
 
 发布/订阅模式可以 1：N 的消息发布/订阅。发布者将消息发布到指定的频道频道（channel），订阅相应频道的客户端都能收到消息。
 
-![pub/sub](./../redis/image/redis-bc6d05be-3701-4e23-b4ca-6330c949f020.png)
+![pub/sub](./redis/image/redis-bc6d05be-3701-4e23-b4ca-6330c949f020.png)
 但是这种方式不是可靠的，它不保证订阅者一定能收到消息，也不进行消息的存储。
 
 所以，一般的异步队列的实现还是交给专业的消息队列。
@@ -1648,7 +1648,7 @@ brpop 是 rpop 的阻塞版本，list 为空的时候，它会一直阻塞，直
 
 可以使用 Redis 的 zset（有序集合）来实现延时队列。
 
-![zset实现延时队列](./../redis/image/redis-54bbcc36-0b00-4142-a6eb-bf2ef48c2213.png)
+![zset实现延时队列](./redis/image/redis-54bbcc36-0b00-4142-a6eb-bf2ef48c2213.png)
 
 第一步，将任务添加到 zset 中，score 为任务的执行时间戳，value 为任务的内容。
 
@@ -1677,11 +1677,11 @@ Redis 支持简单的事务，可以将多个命令打包，然后一次性的�
 - discard：取消事务，放弃执行事务块内的所有命令
 - watch：监视一个或多个 key，如果在事务执行之前这个 key 被其他命令所改动，那么事务将被打断
 
-![二哥的 Java 进阶之路：Redis 事务](./../redis/image/redis-20240314101439.png)
+![二哥的 Java 进阶之路：Redis 事务](./redis/image/redis-20240314101439.png)
 
 #### 说一下 Redis 事务的原理？
 
-![Redis事务](./../redis/image/redis-2ed7ae21-16a6-4716-ac89-117a8c76d3db.png)
+![Redis事务](./redis/image/redis-2ed7ae21-16a6-4716-ac89-117a8c76d3db.png)
 
 - 使用 MULTI 命令开始一个事务。从这个命令执行之后开始，所有的后续命令都不会立即执行，而是被放入一个队列中。在这个阶段，Redis 只是记录下了这些命令。
 - 使用 EXEC 命令触发事务的执行。一旦执行了 EXEC，之前 MULTI 后队列中的所有命令会被原子地（atomic）执行。这里的“原子”意味着这些命令要么全部执行，要么（在出现错误时）全部不执行。
@@ -1767,7 +1767,7 @@ Pipeline 是 Redis 提供的一种优化手段，允许客户端一次性向服�
 
 例如，批量写入大量数据或执行一系列查询时，可以将这些操作打包通过 Pipeline 执行。
 
-![Pipelining示意图](./../redis/image/redis-38aee4c1-efd2-495e-8a6d-164d21a129b1.png)
+![Pipelining示意图](./redis/image/redis-38aee4c1-efd2-495e-8a6d-164d21a129b1.png)
 
 在 Pipeline 模式下，客户端不会在每条命令发送后立即等待 Redis 的响应，而是将多个命令依次写入 TCP 缓冲区，所有命令一起发送到 Redis 服务器。
 
@@ -1783,7 +1783,7 @@ Redis 服务器执行完所有命令后，将每条命令的结果一次性打�
 
 **可以使用 Redis 的 SET 命令实现分布式锁**。同时添加过期时间，以防止死锁的发生。
 
-![set原子命令](./../redis/image/redis-710cdd19-98ea-4e96-b579-ff1ebb0d5de9.png)
+![set原子命令](./redis/image/redis-710cdd19-98ea-4e96-b579-ff1ebb0d5de9.png)
 
 ```
 SET key value NX PX 30000
@@ -1814,25 +1814,25 @@ if (isLocked) {
 
 setnx 从 Redis 版本 2.6.12 开始被弃用，因为可以通过 set 命令的 NX 选项来实现相同的功能。
 
-![截图来自Redis docs](./../redis/image/redis-20241122182250.png)
+![截图来自Redis docs](./redis/image/redis-20241122182250.png)
 
 使用 setnx 创建分布式锁时，虽然设置过期时间可以避免死锁问题，但可能存在这样的问题：线程 A 获取锁后开始任务，如果任务执行时间超过锁的过期时间，锁会提前释放，导致线程 B 也获取了锁并开始执行任务。这会破坏锁的独占性，导致并发访问资源，进而造成数据不一致。
 
-![技术派：Redis 锁](./../redis/image/redis-20241122191044.png)
+![技术派：Redis 锁](./redis/image/redis-20241122191044.png)
 
 可以引入锁的自动续约机制，在任务执行过程中定期续期，确保锁在任务完成之前不会过期。
 
-![技术派：redisson 看门狗](./../redis/image/redis-20241122192038.png)
+![技术派：redisson 看门狗](./redis/image/redis-20241122192038.png)
 
 比如说 Redisson 的 RedissonLock 就支持自动续期，通过看门狗机制定期续期锁的有效期。
 
-![二哥的Java 进阶之路：renewExpirationAsync](./../redis/image/redis-20241122192708.png)
+![二哥的Java 进阶之路：renewExpirationAsync](./redis/image/redis-20241122192708.png)
 
 #### Redisson 了解吗？
 
 开发中，我们可以使用专业的轮子——[Redisson](https://xie.infoq.cn/article/d8e897f768eb1a358a0fd6300)。
 
-![图片来源于网络](./../redis/image/redis-20240308174708.png)
+![图片来源于网络](./redis/image/redis-20240308174708.png)
 
 Redisson 是一个基于 Redis 的 Java 驻内存数据网格，提供了一系列 API 用来操作 Redis，其中最常用的功能就是分布式锁。
 
@@ -1848,7 +1848,7 @@ try {
 
 实现源码在 RedissonLock 类中，通过 Lua 脚本封装 Redis 命令来实现，比如说 tryLockInnerAsync 源码：
 
-![二哥的 Java 进阶之路：RedissonLock](./../redis/image/redis-20240425120229.png)
+![二哥的 Java 进阶之路：RedissonLock](./redis/image/redis-20240425120229.png)
 
 其中 hincrby 命令用于对哈希表中的字段值执行自增操作，pexpire 命令用于设置键的过期时间。
 
@@ -1895,7 +1895,7 @@ Redlock 是 Redis 作者提出的一种分布式锁实现方案，用于确保�
 
 Redisson 中的 RedLock 是基于 RedissonMultiLock（联锁）实现的。
 
-![二哥的 Java 进阶之路：RedissonRedLock](./../redis/image/redis-20240816113330.png)
+![二哥的 Java 进阶之路：RedissonRedLock](./redis/image/redis-20240816113330.png)
 
 RedissonMultiLock 的 tryLock 方法会在指定的 Redis 实例上逐一尝试获取锁。
 
@@ -1940,7 +1940,7 @@ try {
 
 Redisson 提供的分布式锁是支持锁自动续期的，也就是说，如果线程在锁到期之前还没有执行完，那么 Redisson 会自动给锁续期。
 
-![郭慕荣博客园：看门狗](./../redis/image/redis-20240918110433.png)
+![郭慕荣博客园：看门狗](./redis/image/redis-20240918110433.png)
 
 这被称为“看门狗”机制。
 
@@ -2001,11 +2001,11 @@ end
 
 Redis 的底层数据结构有**动态字符串(sds)**、**链表(list)**、**字典(ht)**、**跳跃表(skiplist)**、**整数集合(intset)**、**压缩列表(ziplist)** 等。
 
-![Redis Object对应的映射](./../redis/image/redis-a1b2d2f9-6895-4749-9bda-9314f08bca68.png)
+![Redis Object对应的映射](./redis/image/redis-a1b2d2f9-6895-4749-9bda-9314f08bca68.png)
 
 比如说 string 是通过 SDS 实现的，list 是通过链表实现的，hash 是通过字典实现的，set 是通过字典实现的，zset 是通过跳跃表实现的。
 
-![类型-编码-结构](./../redis/image/redis-7cf91aa9-8db5-4abe-803e-a9e8f3bcb9e4.png)
+![类型-编码-结构](./redis/image/redis-7cf91aa9-8db5-4abe-803e-a9e8f3bcb9e4.png)
 
 #### 简单介绍下 SDS？
 
@@ -2023,7 +2023,7 @@ struct sdshdr {
 
 ⽽ SDS 保存了⻓度信息，这样就将获取字符串⻓度的时间由 O(N) 降低到了 O(1)。
 
-![SDS](./../redis/image/redis-7c038f2c-b5ee-4229-9449-713fab3b1855.png)
+![SDS](./redis/image/redis-7c038f2c-b5ee-4229-9449-713fab3b1855.png)
 
 #### 简单介绍下链表 linkedlist
 
@@ -2031,7 +2031,7 @@ Redis 的链表是⼀个双向⽆环链表结构，和 Java 中的 [LinkedList](
 
 链表的节点由⼀个叫做 listNode 的结构来表示，每个节点都有指向其前置节点和后置节点的指针，同时头节点的前置和尾节点的后置均指向 null。
 
-![链表linkedlist](./../redis/image/redis-1adef9c0-8feb-4836-8997-84bda96e2498.png)
+![链表linkedlist](./redis/image/redis-1adef9c0-8feb-4836-8997-84bda96e2498.png)
 
 #### 简单介绍下字典 dict
 
@@ -2039,7 +2039,7 @@ Redis 的链表是⼀个双向⽆环链表结构，和 Java 中的 [LinkedList](
 
 每个字典带有两个 hash 表，供平时使⽤和 rehash 时使⽤，hash 表使⽤链地址法来解决键冲突，被分配到同⼀个索引位置的多个键值对会形成⼀个单向链表，在对 hash 表进⾏扩容或者缩容的时候，为了服务的可⽤性，rehash 的过程不是⼀次性完成的，⽽是渐进式的。
 
-![字典](./../redis/image/redis-9934b4a2-c253-4d42-acf4-c6c940840779.png)
+![字典](./redis/image/redis-9934b4a2-c253-4d42-acf4-c6c940840779.png)
 
 #### 简单介绍下跳表 skiplist
 
@@ -2047,7 +2047,7 @@ Redis 的链表是⼀个双向⽆环链表结构，和 Java 中的 [LinkedList](
 
 跳表是有序集合 Zset 的底层实现之⼀。在 Redis 7.0 之前，如果有序集合的元素个数小于 128 个，并且每个元素的值小于 64 字节时，Redis 会使用压缩列表作为 Zset 的底层实现，否则会使用跳表；在 Redis 7.0 之后，压缩列表已经废弃，交由 listpack 来替代。
 
-![跳表](./../redis/image/redis-886ee2a8-fb02-4908-bbba-d4ad2a211094.png)
+![跳表](./redis/image/redis-886ee2a8-fb02-4908-bbba-d4ad2a211094.png)
 
 跳表由 zskiplist 和 zskiplistNode 组成，zskiplist ⽤于保存跳表的基本信息（表头、表尾、⻓度、层高等）。
 
@@ -2077,23 +2077,23 @@ typedef struct zskiplistNode {
 
 ⽤于保存整数值的集合抽象数据结构，不会出现重复元素，底层实现为数组。
 
-![整数集合intset](./../redis/image/redis-833dbfb2-7c79-4e7b-a143-8a4a2936cdd8.png)
+![整数集合intset](./redis/image/redis-833dbfb2-7c79-4e7b-a143-8a4a2936cdd8.png)
 
 #### 简单介绍下压缩列表 ziplist
 
 压缩列表是为节约内存⽽开发的顺序性数据结构，它可以包含任意多个节点，每个节点可以保存⼀个字节数组或者整数值。
 
-![压缩列表组成](./../redis/image/redis-99bcbe82-1d91-41bf-8900-a240856071f5.png)
+![压缩列表组成](./redis/image/redis-99bcbe82-1d91-41bf-8900-a240856071f5.png)
 
 #### 简单介绍下紧凑列表 listpack
 
 listpack 是 Redis 用来替代压缩列表（ziplist）的一种内存更加紧凑的数据结构。
 
-![极客时间：listpack](./../redis/image/redis-20240403105313.png)
+![极客时间：listpack](./redis/image/redis-20240403105313.png)
 
 为了避免 ziplist 引起的连锁更新问题，listpack 中的元素不再像 ziplist 那样，保存其前一个元素的长度，而是保存当前元素的编码类型、数据，以及编码类型和数据的长度。
 
-![极客时间：listpack 的元素](./../redis/image/redis-20240403105754.png)
+![极客时间：listpack 的元素](./redis/image/redis-20240403105754.png)
 
 listpack 每个元素项不再保存上一个元素的长度，而是优化元素内字段的顺序，来保证既可以从前也可以向后遍历。
 
@@ -2103,7 +2103,7 @@ listpack 每个元素项不再保存上一个元素的长度，而是优化元�
 
 C 语言使用了一个长度为 `N+1` 的字符数组来表示长度为 `N` 的字符串，并且字符数组最后一个元素总是 `\0`，这种简单的字符串表示方式 不符合 Redis 对字符串在安全性、效率以及功能方面的要求。
 
-![C语言的字符串](./../redis/image/redis-2541fd26-4e84-467d-8d8c-c731154a85d7.png)
+![C语言的字符串](./redis/image/redis-2541fd26-4e84-467d-8d8c-c731154a85d7.png)
 
 #### C 语言的字符串可能有什么问题？
 
@@ -2115,7 +2115,7 @@ C 语言使用了一个长度为 `N+1` 的字符数组来表示长度为 `N` 的
 
 #### Redis 如何解决？优势？
 
-![Redis sds](./../redis/image/redis-fc26a4e7-1c8d-4e82-b7f8-1f6b43d16d38.png)
+![Redis sds](./redis/image/redis-fc26a4e7-1c8d-4e82-b7f8-1f6b43d16d38.png)
 
 简单来说一下 Redis 如何解决的：
 
@@ -2132,7 +2132,7 @@ C 语言使用了一个长度为 `N+1` 的字符数组来表示长度为 `N` 的
 
 **Redis** 中的字典相当于 Java 中的 **HashMap**，内部实现也差不多类似，采用哈希与运算计算下标位置；通过 **"数组 + 链表" **的**链地址法** 来解决哈希冲突，同时这样的结构也吸收了两种不同数据结构的优点。
 
-![Redis字典结构](./../redis/image/redis-e08347a6-efd5-47c0-9adb-23baff82dbbd.png)
+![Redis字典结构](./redis/image/redis-e08347a6-efd5-47c0-9adb-23baff82dbbd.png)
 
 #### 字典是怎么扩容的？
 
@@ -2144,7 +2144,7 @@ C 语言使用了一个长度为 `N+1` 的字符数组来表示长度为 `N` 的
 
 跳表是一种有序的数据结构，它通过在每个节点中维持多个指向其它节点的指针，从而达到快速访问节点的目的。
 
-![跳表](./../redis/image/redis-08391728-5ba8-42a0-a287-9284451e0ee7.png)
+![跳表](./redis/image/redis-08391728-5ba8-42a0-a287-9284451e0ee7.png)
 
 #### 为什么使用跳表？
 
@@ -2173,7 +2173,7 @@ C 语言使用了一个长度为 `N+1` 的字符数组来表示长度为 `N` 的
 
 我们看一下跳跃表从表头到表尾，遍历所有节点的路径：
 
-![通过前进指针遍历](./../redis/image/redis-b153f782-e2e5-4f98-b251-04f06e16c073.png)
+![通过前进指针遍历](./redis/image/redis-b153f782-e2e5-4f98-b251-04f06e16c073.png)
 
 ③、**跨度**
 
@@ -2181,7 +2181,7 @@ C 语言使用了一个长度为 `N+1` 的字符数组来表示长度为 `N` 的
 
 例如查找，分值为 3.0、成员对象为 o3 的节点时，沿途经历的层：查找的过程只经过了一个层，并且层的跨度为 3，所以目标节点在跳跃表中的排位为 3。
 
-![计算节点的排位](./../redis/image/redis-d2395b7e-2f31-4ca8-b06d-2cb47afaeb74.png)
+![计算节点的排位](./redis/image/redis-d2395b7e-2f31-4ca8-b06d-2cb47afaeb74.png)
 
 ④、**分值和成员**
 
@@ -2207,15 +2207,15 @@ C 语言使用了一个长度为 `N+1` 的字符数组来表示长度为 `N` 的
 
 压缩列表是 Redis **为了节约内存** 而使用的一种数据结构，由一系列特殊编码的连续内存块组成的顺序型数据结构。
 
-![压缩列表组成部分](./../redis/image/redis-6be492f7-9f92-4607-a4c4-81a612a3d7bd.png)
+![压缩列表组成部分](./redis/image/redis-6be492f7-9f92-4607-a4c4-81a612a3d7bd.png)
 
 hash、list、zset 在元素较少时会使用压缩列表。
 
-![截图来自 Redis 官网](./../redis/image/redis-20241225105623.png)
+![截图来自 Redis 官网](./redis/image/redis-20241225105623.png)
 
 一个压缩列表包含任意多个节点，每个节点可以保存一个字节数组或者一个整数值。
 
-![压缩列表示例](./../redis/image/redis-b5d224c2-53ee-40a3-9efc-2feb7dd3d7a8.png)
+![压缩列表示例](./redis/image/redis-b5d224c2-53ee-40a3-9efc-2feb7dd3d7a8.png)
 
 - **zlbyttes**：记录整个压缩列表占用的内存字节数
 - **zltail**：记录压缩列表表尾节点距离压缩列表的起始地址有多少字节
@@ -2232,7 +2232,7 @@ Redis 早期版本存储 list 列表数据结构使用的是压缩列表 ziplist
 后来 Redis 新版本（3.2）对列表数据结构进行了改造，使用 `quicklist` 代替了 `ziplist` 和 `linkedlist`，quicklist 是综合考虑了时间效率与空间效率引入的新型数据结构。
 
 quicklist 由 list 和 ziplist 结合而成，它是一个由 ziplist 充当节点的双向链表。
-![quicklist](./../redis/image/redis-3b9785b0-6573-4c2d-8b7d-d5d1be799e26.png)
+![quicklist](./redis/image/redis-3b9785b0-6573-4c2d-8b7d-d5d1be799e26.png)
 
 ## 补充
 
@@ -2248,7 +2248,7 @@ quicklist 由 list 和 ziplist 结合而成，它是一个由 ziplist 充当节�
 
 但是对于秒杀活动的初心来说，肯定是希望参与的用户越多越好，但真正开始下单时，最好能把请求控制在服务器能够承受的范围之内（😂）。
 
-![许令波-秒杀系统的设计](./../redis/image/redis-20240420102552.png)
+![许令波-秒杀系统的设计](./redis/image/redis-20240420102552.png)
 
 解决这一问题的关键就在于错峰削峰和限流。当然了，前端页面的静态化、按钮防抖也能够有效的减轻服务器的压力。
 
@@ -2267,13 +2267,13 @@ quicklist 由 list 和 ziplist 结合而成，它是一个由 ziplist 充当节�
 
 ②、**消息队列**：引入消息队列，将请求异步处理，减少瞬时请求压力。消息队列就像一个水库，可以削减上游的洪峰流量。
 
-![许令波-排队](./../redis/image/redis-20240420104633.png)
+![许令波-排队](./redis/image/redis-20240420104633.png)
 
 ③、**多阶段多时间窗口**：将秒杀活动分为多个阶段，每个阶段设置不同的时间窗口，让用户在不同的时间段内参与秒杀活动。
 
 ④、**插入答题系统**：在秒杀活动中加入答题环节，只有答对题目的用户才能参与秒杀活动，这样可以减少无效请求。
 
-![许令波-答题](./../redis/image/redis-20240420104921.png)
+![许令波-答题](./redis/image/redis-20240420104921.png)
 
 #### 如何限流呢？
 
@@ -2281,7 +2281,7 @@ quicklist 由 list 和 ziplist 结合而成，它是一个由 ziplist 充当节�
 
 在实际开发中，我们需要维护一个容器，按照固定的速率往容器中放令牌（token），当请求到来时，从容器中取出一个令牌，如果容器中没有令牌，则拒绝请求。
 
-![李子捌：令牌桶](./../redis/image/redis-20240420114025.png)
+![李子捌：令牌桶](./redis/image/redis-20240420114025.png)
 
 第一步，使用 Redis 初始化令牌桶：
 
