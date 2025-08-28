@@ -21,5 +21,5 @@ export const nav: DefaultTheme.Config['nav'] = [
 
   // sourcecodeNavbar,
 
-  // { text: '网站维护', link: '/网站维护/网站维护' },
+  { text: '网站维护', link: '/网站维护/网站维护' },
 ];
