@@ -1,3 +1,7 @@
+## 测试图床功能
+
+![20250828131528](https://cdn.jsdelivr.net/gh/vongdefu/vongdefu.github.io@master/images/20250828131528.png)
+
 ## 一、引言
 
 ### 1.什么是 JVM?
