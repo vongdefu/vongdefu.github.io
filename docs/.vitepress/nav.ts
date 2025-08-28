@@ -1,5 +1,5 @@
 import { DefaultTheme } from 'vitepress';
-import { sourcecodeNavbar } from './navbar/sourcecodeNavbar';
+// import { sourcecodeNavbar } from './navbar/sourcecodeNavbar';
 
 // test
 export const nav: DefaultTheme.Config['nav'] = [
@@ -19,7 +19,7 @@ export const nav: DefaultTheme.Config['nav'] = [
   { text: '软件质量管理', link: '/06-软件质量管理/README' },
   { text: '工程设计', link: '/07-工程设计/README' },
 
-  sourcecodeNavbar,
+  // sourcecodeNavbar,
 
-  { text: '网站维护', link: '/网站维护/网站维护' },
+  // { text: '网站维护', link: '/网站维护/网站维护' },
 ];
