@@ -1,9 +1,11 @@
 import { DefaultTheme } from "vitepress"
 import { mianzhasidebar } from "./sidebar/mianzhasidebar"
+import { springcloudsidebar } from "./sidebar/springcloudsidebar"
 import { websitemaintainsidebar } from "./sidebar/websitemaintainsidebar"
 
 export const sidebar: DefaultTheme.Config["sidebar"] = {
   "/面渣/": mianzhasidebar,
+  "/SpringCloud实战/": springcloudsidebar,
   // "/01-CS基础/": {
   //   base: "/01-CS基础",
   //   items: [

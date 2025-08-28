@@ -5,6 +5,7 @@ import { DefaultTheme } from "vitepress"
 export const nav: DefaultTheme.Config["nav"] = [
   { text: "Home", link: "/" },
   { text: "面渣", link: "/面渣/jvm" },
+  { text: "SpringCloud实战", link: "/SpringCloud实战/README" },
   // { text: 'CS基础', link: '/01-CS基础/前端' },
   // { text: 'java', link: '/02-java/java基础/基础概念' },
   // {
