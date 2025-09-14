@@ -1,10 +1,11 @@
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
   <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
   <property name="LOG_HOME" value="/log" />
-  <!-- 日志最大的历史 30天 -->
-  <property name="maxHistory" value="30"/>
+  <!-- 日志最大的历史 30天 -->  
+  <property name="maxHistory" value="30"/>  
   <!-- 控制台输出 -->
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -13,108 +14,108 @@
     </encoder>
   </appender>
 
-  <!-- ERROR级别日志 -->
-  <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 RollingFileAppender-->
-  <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <!-- 过滤器，只记录WARN级别的日志 -->
-    <filter class="ch.qos.logback.classic.filter.LevelFilter">
-      <level>ERROR</level>
-      <onMatch>ACCEPT</onMatch>
-      <onMismatch>DENY</onMismatch>
-    </filter>
-    <!-- 最常用的滚动策略，它根据时间来制定滚动策略.既负责滚动也负责出发滚动 -->
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!--日志输出位置  可相对、和绝对路径 -->
-      <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/api-error-log.log</fileNamePattern>
+  <!-- ERROR级别日志 -->  
+  <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 RollingFileAppender-->  
+  <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">  
+    <!-- 过滤器，只记录WARN级别的日志 -->  
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">  
+      <level>ERROR</level>  
+      <onMatch>ACCEPT</onMatch>  
+      <onMismatch>DENY</onMismatch>  
+    </filter>  
+    <!-- 最常用的滚动策略，它根据时间来制定滚动策略.既负责滚动也负责出发滚动 -->  
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
+      <!--日志输出位置  可相对、和绝对路径 -->  
+      <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/api-error-log.log</fileNamePattern>  
 
-      <maxHistory>${maxHistory}</maxHistory>
-    </rollingPolicy>
+      <maxHistory>${maxHistory}</maxHistory>  
+    </rollingPolicy>  
 
-    <encoder>
+    <encoder>  
       <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
       <!--设置编码格式-->
       <charset>UTF-8</charset>
-    </encoder>
-  </appender>
-  <!-- WARN级别日志 appender -->
-  <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <!-- 过滤器，只记录WARN级别的日志 -->
-    <filter class="ch.qos.logback.classic.filter.LevelFilter">
-      <level>WARN</level>
-      <onMatch>ACCEPT</onMatch>
-      <onMismatch>DENY</onMismatch>
-    </filter>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!-- 按天回滚 daily -->
-      <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/api-warn-log.log
-      </fileNamePattern>
-      <!-- 日志最大的历史 60天 -->
-      <maxHistory>${maxHistory}</maxHistory>
-    </rollingPolicy>
-    <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
-    </encoder>
-  </appender>
+    </encoder>  
+  </appender>  
+  <!-- WARN级别日志 appender -->  
+  <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">  
+    <!-- 过滤器，只记录WARN级别的日志 -->  
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">  
+      <level>WARN</level>  
+      <onMatch>ACCEPT</onMatch>  
+      <onMismatch>DENY</onMismatch>  
+    </filter>  
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
+      <!-- 按天回滚 daily -->  
+      <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/api-warn-log.log  
+      </fileNamePattern>  
+      <!-- 日志最大的历史 60天 -->  
+      <maxHistory>${maxHistory}</maxHistory>  
+    </rollingPolicy>  
+    <encoder>  
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>  
+    </encoder>  
+  </appender>  
 
 
-  <!-- INFO级别日志 appender -->
-  <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <!-- 过滤器，只记录INFO级别的日志 -->
-    <filter class="ch.qos.logback.classic.filter.LevelFilter">
-      <level>INFO</level>
-      <onMatch>ACCEPT</onMatch>
-      <onMismatch>DENY</onMismatch>
-    </filter>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <!-- 按天回滚 daily -->
-      <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/api-info-log.log
-      </fileNamePattern>
-        <!-- 日志最大的历史 60天 -->
-        <maxHistory>${maxHistory}</maxHistory>
-      </rollingPolicy>
-        <encoder>
-        <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
-      </encoder>
-      </appender>
+  <!-- INFO级别日志 appender -->  
+  <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">  
+    <!-- 过滤器，只记录INFO级别的日志 -->  
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">  
+      <level>INFO</level>  
+      <onMatch>ACCEPT</onMatch>  
+      <onMismatch>DENY</onMismatch>  
+    </filter>  
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
+      <!-- 按天回滚 daily -->  
+      <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/api-info-log.log  
+      </fileNamePattern>  
+        <!-- 日志最大的历史 60天 -->  
+        <maxHistory>${maxHistory}</maxHistory>  
+      </rollingPolicy>  
+        <encoder>  
+        <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>  
+      </encoder>  
+      </appender>  
 
-        <!-- DEBUG级别日志 appender -->
-        <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- 过滤器，只记录DEBUG级别的日志 -->
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-        <level>DEBUG</level>
-        <onMatch>ACCEPT</onMatch>
-        <onMismatch>DENY</onMismatch>
-      </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-        <!-- 按天回滚 daily -->
-        <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/api-debug-log.log
-      </fileNamePattern>
-        <!-- 日志最大的历史 60天 -->
-        <maxHistory>${maxHistory}</maxHistory>
-      </rollingPolicy>
-        <encoder>
-        <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
-      </encoder>
-      </appender>
-        <!-- TRACE级别日志 appender -->
-        <appender name="TRACE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- 过滤器，只记录ERROR级别的日志 -->
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-        <level>TRACE</level>
-        <onMatch>ACCEPT</onMatch>
-        <onMismatch>DENY</onMismatch>
-      </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-        <!-- 按天回滚 daily -->
-        <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/api-trace-log.log
-      </fileNamePattern>
-        <!-- 日志最大的历史 60天 -->
-        <maxHistory>${maxHistory}</maxHistory>
-      </rollingPolicy>
-        <encoder>
-        <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
-      </encoder>
-      </appender>
+        <!-- DEBUG级别日志 appender -->  
+        <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">  
+        <!-- 过滤器，只记录DEBUG级别的日志 -->  
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">  
+        <level>DEBUG</level>  
+        <onMatch>ACCEPT</onMatch>  
+        <onMismatch>DENY</onMismatch>  
+      </filter>  
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
+        <!-- 按天回滚 daily -->  
+        <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/api-debug-log.log  
+      </fileNamePattern>  
+        <!-- 日志最大的历史 60天 -->  
+        <maxHistory>${maxHistory}</maxHistory>  
+      </rollingPolicy>  
+        <encoder>  
+        <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>  
+      </encoder>  
+      </appender>  
+        <!-- TRACE级别日志 appender -->  
+        <appender name="TRACE" class="ch.qos.logback.core.rolling.RollingFileAppender">  
+        <!-- 过滤器，只记录ERROR级别的日志 -->  
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">  
+        <level>TRACE</level>  
+        <onMatch>ACCEPT</onMatch>  
+        <onMismatch>DENY</onMismatch>  
+      </filter>  
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
+        <!-- 按天回滚 daily -->  
+        <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/api-trace-log.log  
+      </fileNamePattern>  
+        <!-- 日志最大的历史 60天 -->  
+        <maxHistory>${maxHistory}</maxHistory>  
+      </rollingPolicy>  
+        <encoder>  
+        <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>  
+      </encoder>  
+      </appender>  
 
         <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>
         <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="TRACE"/>
@@ -123,19 +124,20 @@
         <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG"/>
 
         <!-- 日志输出级别 -->
-        <root level="DEBUG">
-        <!-- 控制台输出 -->
-        <appender-ref ref="STDOUT" />
-        <!-- 文件输出 -->
-        <appender-ref ref="ERROR" />
-        <appender-ref ref="INFO" />
-        <appender-ref ref="WARN" />
-        <appender-ref ref="DEBUG" />
-        <appender-ref ref="TRACE" />
-      </root>
+        <root level="DEBUG">  
+        <!-- 控制台输出 -->  
+        <appender-ref ref="STDOUT" />  
+        <!-- 文件输出 -->  
+        <appender-ref ref="ERROR" />  
+        <appender-ref ref="INFO" />  
+        <appender-ref ref="WARN" />  
+        <appender-ref ref="DEBUG" />  
+        <appender-ref ref="TRACE" />  
+      </root> 
       </configuration>
 
 ```
+
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
@@ -265,5 +267,8 @@
 </configuration>
 
 ```
+
+
+
 
 [logback.xml](https://www.yuque.com/attachments/yuque/0/2022/xml/29433025/1666595350204-8eb0e002-a3c1-418b-800c-0f08ba9d4cdf.xml?_lake_card=%7B%22src%22%3A%22https%3A%2F%2Fwww.yuque.com%2Fattachments%2Fyuque%2F0%2F2022%2Fxml%2F29433025%2F1666595350204-8eb0e002-a3c1-418b-800c-0f08ba9d4cdf.xml%22%2C%22name%22%3A%22logback.xml%22%2C%22size%22%3A7557%2C%22ext%22%3A%22xml%22%2C%22source%22%3A%22%22%2C%22status%22%3A%22done%22%2C%22download%22%3Atrue%2C%22type%22%3A%22text%2Fxml%22%2C%22taskId%22%3A%22u672fe57b-7ac7-4832-b8d1-9d3cff81789%22%2C%22taskType%22%3A%22upload%22%2C%22__spacing%22%3A%22both%22%2C%22mode%22%3A%22title%22%2C%22id%22%3A%22u0c68910b%22%2C%22margin%22%3A%7B%22top%22%3Atrue%2C%22bottom%22%3Atrue%7D%2C%22card%22%3A%22file%22%7D)

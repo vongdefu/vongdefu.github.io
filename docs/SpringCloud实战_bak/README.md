@@ -29,7 +29,7 @@ dir:
 
 ### 1.4. SpringCloud 有哪些核心组件？
 
-![image.png](./README/image/1699281007111.png)
+![image.png](assets/1699281007111.png)
 
 三者关系
 
@@ -160,17 +160,18 @@ springcloud 中的全链路监控中间件： pinpoint、skywalking 等。
 
 ## 文章列表
 
-- [eureka 服务治理](./ch01-eureka.md)
-- [使用 Apollo 作为配置中心](./ch02-apollo.md)
-- [nacos 服务注册](./ch03-nacos-register.md)
-- [nacos 服务配置](./ch04-nacos-config.md)
-- [openfeign 远程调用](./ch05-openfeign.md)
-- [gateway 分布式网关](./ch06-gateway.md)
-- [sentinel 分布式限流](./ch07-sentinel.md)
-- [seata 分布式事务](./ch08-seata.md)
-- [统一响应体+Nacos 可配置全局异常](./ch99-appendix01-globalresponseandnacosexception.md)
-- [多租户 SaaS 实战](./ch99-appendix03-una_saas.md)
-- [统一管理依赖](./ch99-appendix02-managedependence.md)
+- [eureka 服务治理](./Eureka注册中心.md)
+- [使用 Apollo 作为配置中心](./Apollo配置中心.md)
+- [nacos 服务注册](./Nacos注册中心.md)
+- [nacos 服务配置](./Nacos配置中心.md)
+- [openfeign 远程调用](./Openfeign客户端.md)
+- [gateway 分布式网关](./Gateway网关.md)
+- [sentinel 分布式限流](./Sentinel服务限流.md)
+- [seata 分布式事务](./Seata分布式事务.md)
+- [统一响应体+Nacos 可配置全局异常](./统一响应体+Nacos可配置全局异常.md)
+- [多租户 SaaS 实战](./SAAS多租户.md)
+- [统一管理依赖](./依赖管理.md)
+- [Logback 日志](./Logback日志.md)
 
 ## 17. 如何设计一个安全可靠的 API 接口
 

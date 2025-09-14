@@ -4,10 +4,6 @@
 
 #### 1.1. 前置知识
 
-![tt](https://mmbiz.qpic.cn/mmbiz_png/iaoZiadN98hz3yg4QgCFwGGmFbicrgOaMeQrfDDXbOiaQNXLhBZVQrHt5eic4hmjmHPst1OX16XUqxPGnIaaNRTSU8A/640?wx_fmt=png&from=appmsg)
-
-![](https://vongdefu.github.io/assets/1720625982915.D6zW-MHL.png)
-
 在了解 Seata 之前，请先熟悉一下分布式事务的相关知识——分布式事务概述。简单熟悉一下 XA 模式、两阶段提交、三阶段提交、TCC、Seaga 等概念及原理。
 
 关于 Seata 的相关知识，可以先去官网了解一下。简单介绍一下，seata 支持多种分布式事务，如 AT 模式、TCC 模式、Sega 模式等。[官网在这](https://seata.io)
@@ -42,7 +38,7 @@ Seata 的用法其实很简单，我们类比于在 SpringBoot 项目中使用 M
 
 安装包下载完成之后，上传到服务器上，并完成解压。解压后的文件目录如下：
 
-![](./ch08-seata/image/1699933291740.png)
+![](assets/1699933291740.png)
 
 ##### 1.2.2. 执行脚本
 
@@ -110,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `lock_table`
 
 ```
 
-![](./ch08-seata/image/1699933291836.png)
+![](assets/1699933291836.png)
 
 步骤二，导入 Seata 项目的一些配置信息到 nacso 上去，由于配置项比较多，官方提供了使用脚本进行导入的方式，这个过程可能需要具备一些 Nacos 的基本知识。
 
@@ -132,7 +128,7 @@ store.mode=db ## 采用db的存储形式
 store.db.datasource=druid ## druid数据源
 store.db.dbType=mysql ## mysql数据库
 store.db.driverClassName=com.mysql.cj.jdbc.Driver ## mysql驱动
-store.db.url=jdbc:mysql://192.168.0.150:3306/seata_server?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Hongkong ## TC的数据库url
+store.db.url=jdbc:mysql://192.168.10.105:3306/seata_server?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Hongkong ## TC的数据库url
 store.db.user=root ## 用户名
 store.db.password=root ## 密码
 
@@ -144,12 +140,12 @@ store.db.password=root ## 密码
 sh nacos-config.sh -h 192.168.1.150 -p 8848 -g SEATA_GROUP -t bb4ba084-9183-4406-bdf4-9254d372849e -u nacos -w nacos
 
 
-sh nacos-config.sh -h 192.168.0.150 -p 8848 -g SEATA_GROUP -t 10fe07b3-354c-4540-aaea-85d14a1418c3 -u nacos -w nacos
+sh nacos-config.sh -h 192.168.10.105 -p 8848 -g SEATA_GROUP -t 10fe07b3-354c-4540-aaea-85d14a1418c3 -u nacos -w nacos
 ```
 
 执行后的效果如下：
 
-![](./ch08-seata/image/1699933291925.png)
+![](assets/1699933291925.png)
 
 ##### 1.2.3. 修改项目中的配置文件
 
@@ -254,15 +250,15 @@ config {
 
 进入安装包下面的 bin 目录，在命令行里面直接运行 seata-server.sh 即可。
 
-![](./ch08-seata/image/1699933292028.png)
+![](assets/1699933292028.png)
 
 查看日志中，已经成功启动。
 
-![](./ch08-seata/image/1699933292129.png)
+![](assets/1699933292129.png)
 
 再去 nacos 上看看，服务实例已经启动，并注册到了 Nacos 上了。
 
-![](./ch08-seata/image/1699933292251.png)
+![](assets/1699933292251.png)
 
 ### 2. AT 模式实战
 
@@ -495,7 +491,7 @@ public boolean deduct(String userId, Long money) {
 
 由于 seata-at-order 服务模块中需要使用 OpenFeign 来调用仓储和账户服务，因此还需要创建两个接口：
 
-![](./ch08-seata/image/1699933293626.png)
+![](assets/1699933293626.png)
 
 ```
 @FeignClient(value = "seata-at-account")
@@ -551,7 +547,7 @@ public boolean createOrder(String userId, Long productId, Long num) {
 
 分别启动 seata-at-storage 、 seata-at-account 、seata-at-order 模块，我们会发现已经注册到 nacos 上了。
 
-![](./ch08-seata/image/1699933293759.png)
+![](assets/1699933293759.png)
 
 之后我们只需要调用订单模块中的 createOrder 接口就行了。
 
@@ -563,7 +559,7 @@ public boolean createOrder(String userId, Long productId, Long num) {
 
 1. 首先要先启动 Seata
 
-![](./ch08-seata/image/1699933293876.png)
+![](assets/1699933293876.png)
 
 2. 在三个模块中分别添加 Seata 的配置
 
@@ -594,13 +590,13 @@ seata:
 
 3. 创建 Seata 服务端配置，这里要特别注意：值均为 default。
 
-![](./ch08-seata/image/1699933293990.png)
+![](assets/1699933293990.png)
 
-![](./ch08-seata/image/1699933294175.png)
+![](assets/1699933294175.png)
 
-![](./ch08-seata/image/1699933294281.png)
+![](assets/1699933294281.png)
 
-![](./ch08-seata/image/1699933294381.png)
+![](assets/1699933294381.png)
 
 4. 修改业务代码，在订单模块中设置生成订单的方法为全局事务
 
@@ -628,9 +624,9 @@ public boolean createOrder(String userId, Long productId, Long num) {
 
 5. 启动测试
 
-![](./ch08-seata/image/1699933294515.png)
+![](assets/1699933294515.png)
 
-![](./ch08-seata/image/1699933294615.png)
+![](assets/1699933294615.png)
 
 ### 3. TCC 模式实战
 
@@ -767,7 +763,7 @@ select count(\*) from `seata_tcc_order`.`transactional_record`;
 
 我们先来结合着上节课的生单链路，了解下什么是空回滚和悬挂：
 
-![](./ch08-seata/image/1699944644888.jpg)
+![](assets/1699944644888.jpg)
 
 可以看到，当用户提交订单时，订单系统向 Seata Server 发送一个请求，开启一个分布式事务，并获取分布式事务对应的 xid，然后订单系统通过 dubbo，向库存系统发送一个 rpc 请求并传递相应的 xid，请求锁定库存。
 
@@ -777,13 +773,13 @@ select count(\*) from `seata_tcc_order`.`transactional_record`;
 
 而第一个可能出现的问题，就是在调用 try 方法时，可能因为网络不通畅等原因，导致 try 方法调用时阻塞住，一直卡在半路当中，此时，销售库存的数据，当然也就没来得及扣减成功。
 
-![](./ch08-seata/image/1699944644987.jpg)
+![](assets/1699944644987.jpg)
 
 这个时候，Seata TCC 可能还误以为写库接口中的 try 方法，已经执行成功了，这个时候，Seata TCC 还没等到写库接口的 try 方法执行成功，就开始执行写缓存接口中的 try 方法：
 
 可以看到，在执行写缓存接口中的 try 方法时，倘若是出现了任何异常的情况，根据我们前面分析的，此时，出现异常的方法，就会原地进行本地事务回滚，Seata TCC 同时也会调用写库接口中的 cancel 方法进行回滚。
 
-![](./ch08-seata/image/1699944645086.jpg)
+![](assets/1699944645086.jpg)
 
 现在最大的问题在于，写库接口中的 try 方法，前面因为网络不通畅等问题，还没来得及执行成功，此时，Seata TCC 就要调用写库接口的 cancel 方法进行回滚，对销售库存进行增加，这样就会导致销售库存，莫名其妙多出了一些库存数据，整体的库存数据就不一致了。
 
@@ -795,7 +791,7 @@ select count(\*) from `seata_tcc_order`.`transactional_record`;
 
 可以看到，倘若各个接口的 try 方法，现在都执行成功了，接下来，Seata TCC 就会依次调用各个接口中的 confirm 方法，完成核心的业务逻辑。
 
-![](./ch08-seata/image/1699944645188.jpg)
+![](assets/1699944645188.jpg)
 
 Seata TCC 底层，一旦发现所有接口的 try 方法都执行成功，就会依次调用各个接口 confirm 方法，如果 confirm 方法执行失败，Seata TCC 底层就会重复调用接口的 confirm 方法，务必确保每个接口的 confirm 方法，一定能执行成功。
 
@@ -807,7 +803,7 @@ Seata TCC 底层，一旦发现所有接口的 try 方法都执行成功，就�
 
 所以，我们可以看到，在 Seata TCC 分布式事务中，不论是调用 confirm 方法还是调用 cancel 方法，都存在一定的概率重复调用，也就是说 confirm 方法调用和 cancel 方法调用，都存在幂等性的问题。
 
-![](./ch08-seata/image/1699944645340.jpg)
+![](assets/1699944645340.jpg)
 
 #### 5.3. 3.如何解决空回滚、悬挂以及幂等性问题呢？
 
@@ -824,13 +820,13 @@ Seata TCC 底层，一旦发现所有接口的 try 方法都执行成功，就�
 
 如果 try 方法都还没有执行，得到的 value 结果肯定就为 null，此时，cancel 方法中的逻辑就直接取消执行，避免空回滚逻辑的执行。
 
-![](./ch08-seata/image/1699944645438.jpg)
+![](assets/1699944645438.jpg)
 
 并且，因为当前 try 方法都还没有开始执行就调用 cancel 方法了，空回滚的问题就已经发生了，所以，我们可以事先在数据库中自定义一张表，专门用来存放空回滚的记录。
 
 空回滚发生的同时，我们可以在数据库中，及时插入一条空回滚的记录，这样，接下来一旦 try 方法由于网络而恢复执行了，就可以利用数据库的空回滚记录，控制 try 方法的执行了，我们具体来看下：
 
-![](./ch08-seata/image/1699944645532.jpg)
+![](assets/1699944645532.jpg)
 
 可以看到，try 方法执行时，首先会到数据库中检查一下，如果发现当前已经出现空回滚了，try 方法就算恢复网络也不会被允许实际的去执行了，直接就取消 try 方法的执行了，通过以上这套思路，空回滚和悬挂的问题也就解决了。
 
@@ -865,7 +861,7 @@ Seata TCC 底层，一旦发现所有接口的 try 方法都执行成功，就�
 
 可以看到，库存系统在本地开启一个分支事务之后，紧接着，就会调用数据库缓存双写的入口逻辑，从这里开始，我们就进入到了 Seata TCC 分布式事务的运行范围之内了。
 
-![](./ch08-seata/image/1699944645672.jpg)
+![](assets/1699944645672.jpg)
 
 可以看到，首先会依次调用写库接口和写缓存接口的 try 方法了，当所有接口的 try 方法都执行成功之后，注意，此时并不是立即依次执行各个接口的 confirm 方法，而是顺着生单链路的执行流程，继续执行其他分支的事务。
 
@@ -873,11 +869,11 @@ Seata TCC 底层，一旦发现所有接口的 try 方法都执行成功，就�
 
 比如，接下来该轮到订单系统的 Seata 分支事务执行了：
 
-![](./ch08-seata/image/1699944645764.jpg)
+![](assets/1699944645764.jpg)
 
 当生单链路中的所有分支事务都执行完成之后，接下来，就会提交整体的 Seata 分布式事务了：
 
-![](./ch08-seata/image/1699944645859.jpg)
+![](assets/1699944645859.jpg)
 
 可以看到，Seata 分布式事务提交时，才会依次的去调用库存系统对应的 Seata TCC 分布式事务的 confirm 方法，提交库存系统的分支事务，最后，完成整体分支事务的提交。
 
@@ -889,13 +885,13 @@ Seata TCC 底层，一旦发现所有接口的 try 方法都执行成功，就�
 
 分析到这里，想必大家已经看出一些端倪了，也就是说 Seata TCC 分布式事务在执行时，依次执行完各个接口的 try 方法之后，并不是一气呵成执行各个接口的 confirm 方法，而是得要等到整体的 Seata 分布式事务提交时，才会依次执行各个接口的 confirm 方法，相当于 Seata TCC 分布式事务的提交阶段，是异步执行的了。
 
-![](./ch08-seata/image/1699944645958.jpg)
+![](assets/1699944645958.jpg)
 
 此时，如果当前正在执行的分布式事务，如果还没来得及执行 confirm 方法，此时，如果其他分布式事务过来执行锁定库存操作，大家觉得 try 方法的执行会出问题吗？答案是不会的。
 
 如图，可以看到在调用数据库缓存双写逻辑前，首先得要获取一把分布式锁：
 
-![](./ch08-seata/image/1699944646061.jpg)
+![](assets/1699944646061.jpg)
 
 即使前一个分布式事务，已经将分布式锁释放了，但是，如果其他多个分布式事务过来执行各个接口的 try 方法，分布式锁还是能够保证多个分布式事务，顺序地执行各个接口的 try 方法的，所以，各个接口 try 方法的执行，还是可以保证并发安全性的。
 
@@ -903,7 +899,7 @@ Seata TCC 底层，一旦发现所有接口的 try 方法都执行成功，就�
 
 可以看到，假如当前分布式事务 1 先执行写库接口的 try 方法后，销售库存扣减 1 从 10 变为 9，然后，分布式事务 1 释放分布式锁后，继续去执行落库生单操作，库存的锁定操作，现在还差 confirm 方法累加锁定库存的操作。
 
-![](./ch08-seata/image/1699944646172.jpg)
+![](assets/1699944646172.jpg)
 
 可以看到，假设此时分布式事务 2，在分布式事务 1 初步锁定库存的基础上，获取相同的一件商品的库存数据，也就是销售库存为 9，锁定库存为 0，这个时候，分布式事务 2 获取到的库存数据中，锁定库存数据就出问题了。
 
@@ -911,7 +907,7 @@ Seata TCC 底层，一旦发现所有接口的 try 方法都执行成功，就�
 
 其他分布式事务过来，按理说正确获取到的库存数据，应该是上个分布式事务，已经锁定库存操作完毕的数据，而不是锁定库存逻辑执行一半的库存数据，所以，分布式事务 2 基于错误的数据，进行 try 方法以及后续的 confirm 方法的执行，就会出现数据不一致性的问题了。
 
-![](./ch08-seata/image/1699944646281.jpg)
+![](assets/1699944646281.jpg)
 
 为了让其他分布式事务执行 try 方法时，能获取到正确的库存数据，我们可以在 confirm 方法调用结束后，随即插入一条库存数据的操作日志：
 
@@ -921,13 +917,13 @@ Seata TCC 底层，一旦发现所有接口的 try 方法都执行成功，就�
 
 可以看到，我们可以预先在数据库中，定义一张库存数据的操作日志表，当 confirm 方法执行完毕之后，插入一条操作日志。
 
-![](./ch08-seata/image/1699944646387.jpg)
+![](assets/1699944646387.jpg)
 
 然后当其他分布式事务来执行时：
 
 可以看到，虽然分布式事务 2 在执行 try 方法时，获取到的库存数据中的销售库存数量是正确的，但是锁定库存的数量是错误的，正确的锁定库存数量应该为 1。
 
-![](./ch08-seata/image/1699944646501.jpg)
+![](assets/1699944646501.jpg)
 
 此时，当分布式事务 2 在执行 confirm 方法时，就不能基于错误的锁定库存数据 0，来进行库存的累加操作，而得要先从库存操作日志表中，获取最近最新插入的一条库存记录，查询最近提交的分布式事务修改后的最新锁定库存数据。
 
