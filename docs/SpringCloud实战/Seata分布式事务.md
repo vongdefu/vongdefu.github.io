@@ -4,10 +4,6 @@
 
 #### 前置知识
 
-![tt](https://mmbiz.qpic.cn/mmbiz_png/iaoZiadN98hz3yg4QgCFwGGmFbicrgOaMeQrfDDXbOiaQNXLhBZVQrHt5eic4hmjmHPst1OX16XUqxPGnIaaNRTSU8A/640?wx_fmt=png&from=appmsg)
-
-![](https://vongdefu.github.io/assets/1720625982915.D6zW-MHL.png)
-
 在了解 Seata 之前，请先熟悉一下分布式事务的相关知识——分布式事务概述。简单熟悉一下 XA 模式、两阶段提交、三阶段提交、TCC、Seaga 等概念及原理。
 
 关于 Seata 的相关知识，可以先去官网了解一下。简单介绍一下，seata 支持多种分布式事务，如 AT 模式、TCC 模式、Sega 模式等。[官网在这](https://seata.io)

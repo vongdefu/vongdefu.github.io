@@ -34,8 +34,6 @@
 
 ## Nacos 相关概念
 
-> 微信扫码关注“天晴小猪”（ID： it-come-true），回复“springcloud”，获取本章节实战源码。
-
 关于 nacos 服务的搭建过程，请参考笔者系列文章的《分布式服务治理之 Nacos》章节，这里不再赘述。Nacos 有几个重要的概念：
 
 - Data ID ：配置项的唯一标识，可以理解为一个配置文件，它的命名格式是： `${prefix}-${spring.profiles.active}.${file-extension}`， 其中 prefix 为前缀，默认是 spring.application.name 的值，当然也可以通过 spring.cloud.nacos.config.prefix 来进行配置；spring.profiles.active 为项目生效的 profile 的名称，这个值和前面的短横杠为空时，DataID 变成 `${prefix}-${spring.profiles.active}.${file-extension}`，这种方式也是合法的；file-exetension 表示配置文件的格式，目前只支持 `properties` 和 `yaml` 类型；
@@ -203,8 +201,6 @@ public class MyBrotherInfo {
 3. 能实现集群架构下，“一处修改，处处修改”的效果；
 
 ## 开发的最佳实践
-
-> 微信扫码关注“天晴小猪”（ID： it-come-true），回复“springcloud”，获取本章节实战源码。
 
 通过上面的案例，我们可以了解到 Nacos 作为配置中心有几个重要的功能特性：
 

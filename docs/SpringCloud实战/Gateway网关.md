@@ -54,8 +54,6 @@
 
 ### 框架搭建
 
-> 微信扫码关注“天晴小猪”（ID： it-come-true），回复“springcloud”，获取本章节实战源码。
-
 搭建网关工程很简单，使用 spring initial 工具生成工程代码后，引入 gateway 依赖，再添加配置文件和启动类即可，引入的依赖如下：
 
 ```
@@ -231,8 +229,6 @@ spring:
 在微服务框架中，由于会有很多个微服务，每一个微服务都有自己的一组 API，虽然 Spring 团队为我们提供了每一个微服务自己的 API 展示组件——swagger，我们在使用时，只需要找到不同服务的 ip 和端口即可，但是在实际的开发场景中，我们希望网关上游的所有微服务的 API 能够聚合到一起。这样我们就需要记住网关的服务地址即可。
 
 要想把单个微服务的 API 文档聚合到一起，最主要的任务是要解决不同微服务的路由地址的转发不一致问题。我们这里使用[Knife4j](https://doc.xiaominfo.com/docs/action/springcloud-gateway)。
-
-> 微信扫码关注“天晴小猪”（ID： it-come-true），回复“springcloud”，获取本章节实战源码。
 
 - 创建 gateway-swagger 模块
 
