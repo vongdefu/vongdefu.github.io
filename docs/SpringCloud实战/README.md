@@ -158,20 +158,6 @@ springcloud 中的全链路监控中间件： pinpoint、skywalking 等。
 
 归根结底，SpringCloud 是技术上的一种架构，只是解决了架构层面的问题，但对于业务怎么开发、业务架构怎么治理、架构怎么防腐、如何解决应用架构间的复杂性问题，还需要方法论指导，此时，引入 DDD 面向领域设计模型的指导思想。
 
-## 文章列表
-
-- [eureka 服务治理](./ch01-eureka.md)
-- [使用 Apollo 作为配置中心](./ch02-apollo.md)
-- [nacos 服务注册](./ch03-nacos-register.md)
-- [nacos 服务配置](./ch04-nacos-config.md)
-- [openfeign 远程调用](./ch05-openfeign.md)
-- [gateway 分布式网关](./ch06-gateway.md)
-- [sentinel 分布式限流](./ch07-sentinel.md)
-- [seata 分布式事务](./ch08-seata.md)
-- [统一响应体+Nacos 可配置全局异常](./ch99-appendix01-globalresponseandnacosexception.md)
-- [多租户 SaaS 实战](./ch99-appendix03-una_saas.md)
-- [统一管理依赖](./ch99-appendix02-managedependence.md)
-
 ## 17. 如何设计一个安全可靠的 API 接口
 
 [面试四连问：API 接口如何设计？安全如何保证？防重如何实现？签名如何实现？...](https://blog.csdn.net/zhipengfang/article/details/117455598)
