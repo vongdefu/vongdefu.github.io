@@ -1,4 +1,4 @@
-# 7. sentinel 分布式限流
+# sentinel 分布式限流
 
 ### **Sentinel**
 

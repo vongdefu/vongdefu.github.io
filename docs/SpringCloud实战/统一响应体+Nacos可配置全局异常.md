@@ -1,6 +1,6 @@
-# 附录 01 统一响应体+Nacos 可配置全局异常
+# 统一响应体+Nacos 可配置全局异常
 
-### 1. 背景
+### 背景
 
 我们知道接口的返回，一般情况下就只有三种状态，成功、失败和超时响应，而接口的方法调用结果可能会出现很多异常信息。在实际的业务开发过程中，我们要求接口的异常信息是一定要处理掉的，不能直接把一个堆栈信息返回给前端用户的。这样要求的原因是：
 
@@ -10,7 +10,7 @@
 
 事实上，一个架构优良的系统，是需要前端开发和后端开发相互配合的。前端和后端开发约定好接口的响应格式，然后再根据这个格式完成前后端的公共模块的开发。这个过程中后端对应的业务功能就是`全局统一响应`。
 
-### 2. 全局统一响应
+### 全局统一响应
 
 实际上，我们可以把异常也归类为一种特殊的返回结果。全局统一响应有什么业务要求或业务特点呢？
 
@@ -47,7 +47,7 @@
 3. 统一响应体消息格式，并且可以直接使用 success 和 error 方法；
 4. 业务代码中抛出异常的方式与 jdk 抛出异常方式在使用方式上一致，但是业务中抛出的异常信息的响应结果与自定义的响应消息体格式保持一致；
 
-### 3. 实战过程
+### 实战过程
 
 主要包括三个方面：
 
@@ -56,7 +56,7 @@
 3. 构建统一响应消息体。这个步骤是格式化接口的响应信息，需要利用到上一步编写的工具类。
 4. 构建统一异常处理。这个步骤是格式化异常信息的响应信息，需要利用到第二步编写的工具类。
 
-#### 3.1. 重写语言解析器
+#### 重写语言解析器
 
 ```java
 public class LanguageResolver implements LocaleResolver {
@@ -110,7 +110,7 @@ public class MessageConfig {
 
 ```
 
-#### 3.2. 构建配置信息
+#### 构建配置信息
 
 这里我们选用 Alibaba-Nacos 组件。
 
@@ -302,7 +302,7 @@ public class MessageNacosUtil {
 
 ```
 
-#### 3.3. 构建统一响应消息体
+#### 构建统一响应消息体
 
 ```java
 @Data
@@ -368,7 +368,7 @@ public class DataResponse<T> extends BaseResponse{
 
 ```
 
-#### 3.4. 构建统一异常处理
+#### 构建统一异常处理
 
 ```java
 public class BaseException extends RuntimeException implements Serializable {
@@ -442,11 +442,11 @@ public class GlobalExceptionHandler {
 
 ```
 
-### 4. 使用
+### 使用
 
 开发过程中还涉及到请求参数的校验过程，这里我们选用 Validation 的工具类。下面是集成过程。
 
-#### 4.1. 集成 Validation
+#### 集成 Validation
 
 ```xml
 <dependency>
@@ -483,7 +483,7 @@ public class GlobalExceptionHandler {
 
 ```
 
-#### 4.2. 测试
+#### 测试
 
 我们在 nacos 上添加配置文件，并填充内容。
 
@@ -638,7 +638,7 @@ public DataResponse<UserDTO> test02_05(
 
 ![](./ch99-appendix01-globalresponseandnacosexception/image/1699933285711.png)
 
-### 5. 参考
+### 参考
 
 - [Nacos 实现 SpringBoot 国际化的增强](https://blog.csdn.net/qq_15898739/article/details/104680114)
 - [Java 统一异常处理(配置文件集中化定义)](https://mp.weixin.qq.com/s/XE4R2wOj08qNivo8Ms5ZRQ)

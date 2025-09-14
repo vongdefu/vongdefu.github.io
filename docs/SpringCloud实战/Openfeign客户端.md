@@ -1,6 +1,6 @@
-# 5. openfeign 远程调用
+# openfeign 远程调用
 
-## 1. 背景知识
+## 背景知识
 
 在单体应用，不同功能模块之间的调用过程多是通过调用方法来实现的，而拆分成微服务架构后，由于物理部署方式的改变（主要表现形式是：单个部署包变成多个部署包），不同模块之间的调用方式也发生了本质上的改变。
 
@@ -10,7 +10,7 @@
 
 在微服务的发展的早期，远程服务调用多是通过 JDK 原生的 URLConnection 来实现的，后期出现了 HttpClient、OkHttp 的组件。目前微服务架构中，多是使用 RestTemplat 和 OpenFeign 来完成远程服务调用的。
 
-## 2. 技术选型
+## 技术选型
 
 OpenFeign 是 SpringCloud 官方提供的远程服务调用的组件，我们“别无选择”，就它了。需要注意的是，SpringCloud 还提供了 RestTemplate 组件，也可以完成远程服务调用。关于 RestTemplate 方式调用和 OpenFeign 方式的简单调用，也可以参考笔者的系列文章的《服务治理之 Nacos》章节进行查阅。
 
@@ -26,15 +26,15 @@ Feign 是一个声明式 Web Service 客户端。它主要作用是使 Web Servi
 - 支持 Ribbon 的负载均衡
 - 支持 HTTP 请求和响应的压缩
 
-## 3. 实战
+## 实战
 
 要想使用 OpenFeign，我们就要先明白它的大概原理： 服务生产者与服务消费者都注册到服务治理中心上，服务调用者在调用过程中，先从服务治理中心获取服务生产者的地址，然后再组装实际的调用地址，之后完成服务的调用。因此我们还需要一个服务治理中心，这里我们还是使用 Nacos。
 
 下面带大家一起搭建一下所需要的测试框架。
 
-### 3.1. 基本使用
+### 基本使用
 
-#### 3.1.1. 服务生产者（nacos-provider）
+#### 服务生产者（nacos-provider）
 
 - 引入服务发现的依赖
 
@@ -94,7 +94,7 @@ public class HelloController {
 
 启动后，查看 nacos 控制台，服务已经注册到 nacos 上面，postman 请求 hello 接口，请求成功。
 
-#### 3.1.2. 服务消费者（nacos-consumer）
+#### 服务消费者（nacos-consumer）
 
 服务消费者框架的搭建过程与服务生产者的搭建过程一样，不再赘述。不同的是服务消费者要使用 OpenFeign，因此还需要下面几个步骤。
 
@@ -185,13 +185,13 @@ public class HelloController {
   - path
   - decode404
 
-### 3.2. OpenFeign 高级特性
+### OpenFeign 高级特性
 
 > 微信扫码关注“天晴小猪”（ID： it-come-true），回复“springcloud”，获取本章节实战源码。
 
 在实际的项目开发过程中，我们大多情况下使用的是 POST 请求，但是会有多种不同的情况，下面我们分别介绍一下 POST 协议下不同的请求方式。但是服务生产者会提供多种接口，例如：包含多个参数、路径中携带参数、需要传递对象、文件上传、下载等，下面我们实践一下。
 
-##### 3.2.1. 开启日志
+##### 开启日志
 
 在开发过程中，有时我们需要开启远程调用的日志信息，以便我们进行排错，开启只需要在消费者中配置：
 
@@ -203,7 +203,7 @@ logging:
 
 `com.tianqingxiaozhu.nacos.consumer.service` 是消费者接口所在的包路径。
 
-##### 3.2.2. 多参数
+##### 多参数
 
 - 服务生产者对外提供 test01 接口，此接口有两个参数： `name` 和 `age` ，
 
@@ -228,7 +228,7 @@ String test01(@RequestParam("name")String name, @RequestParam("age")String age);
 
 ![](./ch05-openfeign/image/1699933272698.png)
 
-##### 3.2.3. URL 中携带参数
+##### URL 中携带参数
 
 - 服务生产者对外提供 test02 接口，此接口需要在路径中携带参数 `name` 和 `age` ，
 
@@ -258,7 +258,7 @@ String test02(@PathVariable("name") String name, @PathVariable("age")Integer age
 
 ![](./ch05-openfeign/image/1699933272781.png)
 
-##### 3.2.4. 传递对象
+##### 传递对象
 
 - 服务生产者提供的接口需要使用 Student 对象进行访问，
 
@@ -295,7 +295,7 @@ public void test03() {
 
 ![](./ch05-openfeign/image/1699933272877.png)
 
-##### 3.2.5. 文件上传
+##### 文件上传
 
 - 生产者接收到文件后，返回文件的名称，
 
@@ -331,7 +331,7 @@ public String test04(MultipartFile file) {
 
 ![](./ch05-openfeign/image/1699933272953.png)
 
-##### 3.2.6. 文件下载
+##### 文件下载
 
 文件下载有多种实现方式，比如
 
@@ -428,7 +428,7 @@ public void test05(@RequestBody MyFiles myFiles, HttpServletResponse httpServlet
 
 ![](./ch05-openfeign/image/1699933273056.png)
 
-##### 3.2.7. 开启 GZIP 压缩
+##### 开启 GZIP 压缩
 
 有时为了节省网络带宽，我们需要对 OpenFeign 进行请求的压缩，其原理大概是，对请求的数据提供一种压缩算法，使用这种算法对数据进行压缩，接收到数据再使用同样的算法对数据进行解压。
 
@@ -445,7 +445,7 @@ feign:
       enabled: true # 开启响应的zip压缩
 ```
 
-##### 3.2.8. 超时控制
+##### 超时控制
 
 有时候由于网络问题，生产者提供的接口的响应时间过长，就会造成消费者接口的请求时间过长，继而响应异常，此时我们就需要修改客户端的默认链接时间：
 
@@ -461,7 +461,7 @@ feign:
 
 实验时，我们可以在生产者提供的接口中休眠 3s，就会发现消费者接口报错。然后我们通过配置消费者的客户端链接超时时间，重新启动后就会发现响应正常。
 
-##### 3.2.9. 替换默认的客户端
+##### 替换默认的客户端
 
 OpenFeign 底层用的是 JDK 原生的 URLConnection 作为客户端的，但是我们可以自定义客户端，如可以配置 Apache 的 HttpClient 或者 Okhttp。
 
@@ -486,7 +486,7 @@ feign:
     enabled: true # 启用okhttp
 ```
 
-##### 3.2.10. 其他
+##### 其他
 
 此外 OpenFeign 还有其他高级特性，有兴趣的读者可以自行实践一下：
 
@@ -494,13 +494,13 @@ feign:
 2. Feign 调用时透传特定请求头
 3. ...
 
-## 4. OpenFeign 的原理
+## OpenFeign 的原理
 
 1. 由于启动类上添加了 @EnableFeignClients 注解，并标注了需要扫描@FeignClients 客户端所在的包路径，程序启动时会扫描包路径，并把这些信息注入到 Spring 的容器中；
 2. 当发生调用时，Spring 会通过 JDK 代理的方式，为客户端生成具体的 RestTemplate；
 3. 在把 RestTemplate 生成的 Request 交给具体的 Client，最后 Client 被封装到 LoadBalanceClient 类，这个类会结合 Ribbon 负载均衡发起服务的调用；
 
-## 5. 总结
+## 总结
 
 1. 介绍了 SpringCloud 的远程调用组件及在调用过程中的两个服务角色： 生产者 和 消费者；
 2. 实践了 OpenFeign 的几种高级特性；
