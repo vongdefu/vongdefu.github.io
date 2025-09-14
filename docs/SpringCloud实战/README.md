@@ -230,3 +230,6 @@ springcloud 中的全链路监控中间件： pinpoint、skywalking 等。
   - [如何设计一个安全可靠的 API 接口 other_create-a-niubi-api)
   - [多租户 SaaS 实战 other_una-saas-toturial)
   - [统一响应体+Nacos 可配置全局异常 other_global-exception)
+
+Rabbitmq
+监控等；
