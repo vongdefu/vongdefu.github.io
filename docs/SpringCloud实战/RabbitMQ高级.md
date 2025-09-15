@@ -9,7 +9,11 @@
 
 # 1.发送者的可靠性
 
-首先，我们一起分析一下消息丢失的可能性有哪些。消息从发送者发送消息，到消费者处理消息，需要经过的流程是这样的：![](RabbitMQ%E9%AB%98%E7%BA%A7/image/1750380177195-7f609d2e-8ada-40ad-859c-bce46de31b8c.jpg.jpeg)消息从生产者到消费者的每一步都可能导致消息丢失：
+首先，我们一起分析一下消息丢失的可能性有哪些。消息从发送者发送消息，到消费者处理消息，需要经过的流程是这样的：
+
+![](RabbitMQ%E9%AB%98%E7%BA%A7/image/1750380177195-7f609d2e-8ada-40ad-859c-bce46de31b8c.jpg.jpeg)
+
+消息从生产者到消费者的每一步都可能导致消息丢失：
 
 - 发送消息时丢失：
   - 生产者发送消息时连接 MQ 失败
@@ -38,7 +42,7 @@
 
 修改 publisher 模块的 application.yaml 文件，添加下面的内容：
 
-```plain
+```txt
 spring:
   rabbitmq:
     connection-timeout: 1s # 设置MQ的连接超时时间
@@ -52,13 +56,13 @@ spring:
 
 我们利用命令停掉 RabbitMQ 服务：
 
-```plain
+```txt
 docker stop mq
 ```
 
 然后测试发送一条消息，会发现会每隔 1 秒重试 1 次，总共重试了 3 次。消息发送的超时重试机制配置成功了！
 
-<br/>warning**注意**：当网络不稳定的时候，利用重试机制可以有效提高消息发送的成功率。不过 SpringAMQP 提供的重试机制是**阻塞式**的重试，也就是说多次重试等待的过程中，当前线程是被阻塞的。如果对于业务性能有要求，建议禁用重试机制。如果一定要使用，请合理配置等待时长和重试次数，当然也可以考虑使用异步线程来执行发送消息的代码。<br/>
+warning**注意**：当网络不稳定的时候，利用重试机制可以有效提高消息发送的成功率。不过 SpringAMQP 提供的重试机制是**阻塞式**的重试，也就是说多次重试等待的过程中，当前线程是被阻塞的。如果对于业务性能有要求，建议禁用重试机制。如果一定要使用，请合理配置等待时长和重试次数，当然也可以考虑使用异步线程来执行发送消息的代码。
 
 ## 1.2.生产者确认机制
 
@@ -83,7 +87,7 @@ docker stop mq
 
 在 publisher 模块的 application.yaml 中添加配置：
 
-```plain
+```txt
 spring:
   rabbitmq:
     publisher-confirm-type: correlated # 开启publisher confirm机制，并设置confirm类型
@@ -102,7 +106,7 @@ spring:
 
 每个 RabbitTemplate 只能配置一个 ReturnCallback，因此我们可以在配置类中统一设置。我们在 publisher 模块定义一个配置类：![](RabbitMQ%E9%AB%98%E7%BA%A7/image/1750380177200-d7eb0ee5-2ef8-4f96-8ae3-7e5bdc940d80.png)内容如下：
 
-```plain
+```txt
 package com.itheima.publisher.config;
 
 import lombok.AllArgsConstructor;
@@ -149,7 +153,7 @@ public class MqConfig {
 
 我们新建一个测试，向系统自带的交换机发送消息，并且添加 ConfirmCallback：
 
-```plain
+```txt
 @Test
 void testPublisherConfirm() {
     // 1.创建CorrelationData
@@ -178,11 +182,11 @@ void testPublisherConfirm() {
 
 执行结果如下：![](RabbitMQ%E9%AB%98%E7%BA%A7/image/1750380177981-0c177826-1580-421f-8696-cbf3310f72ea.png)可以看到，由于传递的 RoutingKey 是错误的，路由失败后，触发了 return callback，同时也收到了 ack。当我们修改为正确的 RoutingKey 以后，就不会触发 return callback 了，只收到 ack。而如果连交换机都是错误的，则只会收到 nack。
 
-<br/>warning**注意**：开启生产者确认比较消耗 MQ 性能，一般不建议开启。而且大家思考一下触发确认的几种情况：
+warning**注意**：开启生产者确认比较消耗 MQ 性能，一般不建议开启。而且大家思考一下触发确认的几种情况：
 
 - 路由失败：一般是因为 RoutingKey 错误导致，往往是编程导致
 - 交换机名称错误：同样是编程错误导致
-- MQ 内部故障：这种需要处理，但概率往往较低。因此只有对消息可靠性要求非常高的业务才需要开启，而且仅仅需要开启 ConfirmCallback 处理 nack 就可以了。<br/>
+- MQ 内部故障：这种需要处理，但概率往往较低。因此只有对消息可靠性要求非常高的业务才需要开启，而且仅仅需要开启 ConfirmCallback 处理 nack 就可以了。
 
 # 2.MQ 的可靠性
 
@@ -210,7 +214,7 @@ void testPublisherConfirm() {
 
 在控制台发送消息的时候，可以添加很多参数，而消息的持久化是要配置一个 properties：![](RabbitMQ%E9%AB%98%E7%BA%A7/image/1750380178167-f88a1447-19e7-43d7-93ad-b4c25f910739.png)
 
-<br/>warning**说明**：在开启持久化机制以后，如果同时还开启了生产者确认，那么 MQ 会在消息持久化以后才发送 ACK 回执，进一步确保消息的可靠性。不过出于性能考虑，为了减少 IO 次数，发送到 MQ 的消息并不是逐条持久化到数据库的，而是每隔一段时间批量持久化。一般间隔在 100 毫秒左右，这就会导致 ACK 有一定的延迟，因此建议生产者确认全部采用异步方式。<br/>
+warning**说明**：在开启持久化机制以后，如果同时还开启了生产者确认，那么 MQ 会在消息持久化以后才发送 ACK 回执，进一步确保消息的可靠性。不过出于性能考虑，为了减少 IO 次数，发送到 MQ 的消息并不是逐条持久化到数据库的，而是每隔一段时间批量持久化。一般间隔在 100 毫秒左右，这就会导致 ACK 有一定的延迟，因此建议生产者确认全部采用异步方式。
 
 ## 2.2.LazyQueue
 
@@ -238,7 +242,7 @@ void testPublisherConfirm() {
 
 在利用 SpringAMQP 声明队列的时候，添加 x-queue-mod=lazy 参数也可设置队列为 Lazy 模式：
 
-```plain
+```txt
 @Bean
 public Queue lazyQueue(){
     return QueueBuilder
@@ -252,7 +256,7 @@ public Queue lazyQueue(){
 
 当然，我们也可以基于注解来声明队列并设置为 Lazy 模式：
 
-```plain
+```txt
 @RabbitListener(queuesToDeclare = @Queue(
         name = "lazy.queue",
         durable = "true",
@@ -267,7 +271,7 @@ public void listenLazyQueue(String msg){
 
 对于已经存在的队列，也可以配置为 lazy 模式，但是要通过设置 policy 实现。可以基于命令行设置 policy：
 
-```plain
+```txt
 rabbitmqctl set_policy Lazy "^lazy-queue$" '{"queue-mode":"lazy"}' --apply-to queues
 ```
 
@@ -326,7 +330,7 @@ Starting with version 1.3.2, the default ErrorHandler is now a ConditionalReject
 
 通过下面的配置可以修改 SpringAMQP 的 ACK 处理方式：
 
-```plain
+```txt
 spring:
   rabbitmq:
     listener:
@@ -336,7 +340,7 @@ spring:
 
 修改 consumer 服务的 SpringRabbitListener 类中的方法，模拟一个消息处理的异常：
 
-```plain
+```txt
 @RabbitListener(queues = "simple.queue")
 public void listenSimpleQueueMessage(String msg) throws InterruptedException {
     log.info("spring 消费者接收到消息：【" + msg + "】");
@@ -351,7 +355,7 @@ public void listenSimpleQueueMessage(String msg) throws InterruptedException {
 
 我们再次把确认机制修改为 auto：
 
-```plain
+```txt
 spring:
   rabbitmq:
     listener:
@@ -363,7 +367,7 @@ spring:
 
 我们将异常改为 RuntimeException 类型：
 
-```plain
+```txt
 @RabbitListener(queues = "simple.queue")
 public void listenSimpleQueueMessage(String msg) throws InterruptedException {
     log.info("spring 消费者接收到消息：【" + msg + "】");
@@ -384,7 +388,7 @@ public void listenSimpleQueueMessage(String msg) throws InterruptedException {
 
 修改 consumer 服务的 application.yml 文件，添加内容：
 
-```plain
+```txt
 spring:
   rabbitmq:
     listener:
@@ -419,7 +423,7 @@ spring:
 
 1）在 consumer 服务中定义处理失败消息的交换机和队列
 
-```plain
+```txt
 @Bean
 public DirectExchange errorMessageExchange(){
     return new DirectExchange("error.direct");
@@ -436,7 +440,7 @@ public Binding errorBinding(Queue errorQueue, DirectExchange errorMessageExchang
 
 2）定义一个 RepublishMessageRecoverer，关联队列和交换机
 
-```plain
+```txt
 @Bean
 public MessageRecoverer republishMessageRecoverer(RabbitTemplate rabbitTemplate){
     return new RepublishMessageRecoverer(rabbitTemplate, "error.direct", "error");
@@ -445,7 +449,7 @@ public MessageRecoverer republishMessageRecoverer(RabbitTemplate rabbitTemplate)
 
 完整代码如下：
 
-```plain
+```txt
 package com.itheima.consumer.config;
 
 import org.springframework.amqp.core.Binding;
@@ -521,7 +525,7 @@ public class ErrorMessageConfig {
 
 我们该如何给消息添加唯一 ID 呢？其实很简单，SpringAMQP 的 MessageConverter 自带了 MessageID 的功能，我们只要开启这个功能即可。以 Jackson 的消息转换器为例：
 
-```plain
+```txt
 @Bean
 public MessageConverter messageConverter(){
     // 1.定义消息转换器
@@ -540,7 +544,7 @@ public MessageConverter messageConverter(){
 
 以支付修改订单的业务为例，我们需要修改 OrderServiceImpl 中的 markOrderPaySuccess 方法：
 
-```plain
+```txt
 @Override
     public void markOrderPaySuccess(Long orderId) {
         // 1.查询订单
@@ -563,7 +567,7 @@ public MessageConverter messageConverter(){
 
 我们可以合并上述操作为这样：
 
-```plain
+```txt
 @Override
 public void markOrderPaySuccess(Long orderId) {
     // UPDATE `order` SET status = ? , pay_time = ? WHERE id = ? AND status = 1
@@ -578,7 +582,7 @@ public void markOrderPaySuccess(Long orderId) {
 
 注意看，上述代码等同于这样的 SQL 语句：
 
-```plain
+```txt
 UPDATE `order` SET status = ? , pay_time = ? WHERE id = ? AND status = 1
 ```
 
@@ -653,13 +657,13 @@ UPDATE `order` SET status = ? , pay_time = ? WHERE id = ? AND status = 1
 
 而最后一种场景，大家设想一下这样的场景：如图，有一组绑定的交换机（ttl.fanout）和队列（ttl.queue）。但是 ttl.queue 没有消费者监听，而是设定了死信交换机 hmall.direct，而队列 direct.queue1 则与死信交换机绑定，RoutingKey 是 blue：![](RabbitMQ%E9%AB%98%E7%BA%A7/image/1750380179794-58c57089-f983-45f2-af77-9a485e3959ac.png)
 
-假如我们现在发送一条消息到 ttl.fanout，RoutingKey 为 blue，并设置消息的**有效期**为 5000 毫秒：![](RabbitMQ%E9%AB%98%E7%BA%A7/image/1750380179805-37ed0a9e-1f79-46bc-951b-95d7b4319c58.png)<br/>warning**注意**：尽管这里的 ttl.fanout 不需要 RoutingKey，但是当消息变为死信并投递到死信交换机时，会沿用之前的 RoutingKey，这样 hmall.direct 才能正确路由消息。<br/>
+假如我们现在发送一条消息到 ttl.fanout，RoutingKey 为 blue，并设置消息的**有效期**为 5000 毫秒：![](RabbitMQ%E9%AB%98%E7%BA%A7/image/1750380179805-37ed0a9e-1f79-46bc-951b-95d7b4319c58.png)warning**注意**：尽管这里的 ttl.fanout 不需要 RoutingKey，但是当消息变为死信并投递到死信交换机时，会沿用之前的 RoutingKey，这样 hmall.direct 才能正确路由消息。
 
 消息肯定会被投递到 ttl.queue 之后，由于没有消费者，因此消息无人消费。5 秒之后，消息的有效期到期，成为死信：![](RabbitMQ%E9%AB%98%E7%BA%A7/image/1750380180510-66e4fce4-d855-47b2-a0d9-a860c1014f07.png)死信被再次投递到死信交换机 hmall.direct，并沿用之前的 RoutingKey，也就是 blue：![](RabbitMQ%E9%AB%98%E7%BA%A7/image/1750380180482-63f61f53-9c3c-4991-9d68-095c4fd4dc5b.png)由于 direct.queue1 与 hmall.direct 绑定的 key 是 blue，因此最终消息被成功路由到 direct.queue1，如果此时有消费者与 direct.queue1 绑定， 也就能成功消费消息了。但此时已经是 5 秒钟以后了：![](RabbitMQ%E9%AB%98%E7%BA%A7/image/1750380180523-efd54467-f0ef-453a-ac41-e6ae57e23063.png)也就是说，publisher 发送了一条消息，但最终 consumer 在 5 秒后才收到消息。我们成功实现了**延迟消息**。
 
 ### 4.1.3.总结
 
-<br/>warning**注意：**RabbitMQ 的消息过期是基于追溯方式来实现的，也就是说当一个消息的 TTL 到期以后不一定会被移除或投递到死信交换机，而是在消息恰好处于队首时才会被处理。当队列中消息堆积很多的时候，过期消息可能不会被按时处理，因此你设置的 TTL 时间不一定准确。<br/>
+warning**注意：**RabbitMQ 的消息过期是基于追溯方式来实现的，也就是说当一个消息的 TTL 到期以后不一定会被移除或投递到死信交换机，而是在消息恰好处于队首时才会被处理。当队列中消息堆积很多的时候，过期消息可能不会被按时处理，因此你设置的 TTL 时间不一定准确。
 
 ## 4.2.DelayExchange 插件
 
@@ -673,13 +677,13 @@ UPDATE `order` SET status = ? , pay_time = ? WHERE id = ? AND status = 1
 
 因为我们是基于 Docker 安装，所以需要先查看 RabbitMQ 的插件目录对应的数据卷。
 
-```plain
+```txt
 docker volume inspect mq-plugins
 ```
 
 结果如下：
 
-```plain
+```txt
 [
     {
         "CreatedAt": "2024-06-19T09:22:59+08:00",
@@ -697,7 +701,7 @@ docker volume inspect mq-plugins
 
 接下来执行命令，安装插件：
 
-```plain
+```txt
 docker exec -it mq rabbitmq-plugins enable rabbitmq_delayed_message_exchange
 ```
 
@@ -707,7 +711,7 @@ docker exec -it mq rabbitmq-plugins enable rabbitmq_delayed_message_exchange
 
 基于注解方式：
 
-```plain
+```txt
 @RabbitListener(bindings = @QueueBinding(
         value = @Queue(name = "delay.queue", durable = "true"),
         exchange = @Exchange(name = "delay.direct", delayed = "true"),
@@ -720,7 +724,7 @@ public void listenDelayMessage(String msg){
 
 基于@Bean 的方式：
 
-```plain
+```txt
 package com.itheima.consumer.config;
 
 import lombok.extern.slf4j.Slf4j;
@@ -757,7 +761,7 @@ public class DelayExchangeConfig {
 
 发送消息时，必须通过 x-delay 属性设定延迟时间：
 
-```plain
+```txt
 @Test
 void testPublisherDelayMessage() {
     // 1.创建消息
@@ -774,7 +778,7 @@ void testPublisherDelayMessage() {
 }
 ```
 
-<br/>warning**注意：**延迟消息插件内部会维护一个本地数据库表，同时使用 Elang Timers 功能实现计时。如果消息的延迟时间设置较长，可能会导致堆积的延迟消息非常多，会带来较大的 CPU 开销，同时延迟消息的时间会存在误差。因此，**不建议设置延迟时间过长的延迟消息**。<br/>
+warning**注意：**延迟消息插件内部会维护一个本地数据库表，同时使用 Elang Timers 功能实现计时。如果消息的延迟时间设置较长，可能会导致堆积的延迟消息非常多，会带来较大的 CPU 开销，同时延迟消息的时间会存在误差。因此，**不建议设置延迟时间过长的延迟消息**。
 
 ## 4.5.订单状态同步问题
 
@@ -786,7 +790,7 @@ void testPublisherDelayMessage() {
 
 由于我们要多次发送延迟消息，因此需要先定义一个记录消息延迟时间的消息体，处于通用性考虑，我们将其定义到 hm-common 模块下：![](RabbitMQ%E9%AB%98%E7%BA%A7/image/1750380181506-7afae27a-fbf9-48d9-ae34-db24c17e27f7.png)代码如下：
 
-```plain
+```txt
 package com.hmall.common.domain;
 
 import com.hmall.common.utils.CollUtils;
@@ -834,7 +838,7 @@ public class MultiDelayMessage<T> {
 
 无论是消息发送还是接收都是在交易服务完成，因此我们在 trade-service 中定义一个常量类，用于记录交换机、队列、RoutingKey 等常量：![](RabbitMQ%E9%AB%98%E7%BA%A7/image/1750380181509-ca5bcdcf-5cac-4d07-9f1a-2e5db9a65668.png)内容如下：
 
-```plain
+```txt
 package com.hmall.trade.constants;
 
 public interface MqConstants {
@@ -848,7 +852,7 @@ public interface MqConstants {
 
 我们将 mq 的配置抽取到 nacos 中，方便各个微服务共享配置。在 nacos 中定义一个名为 shared-mq.xml 的配置文件，内容如下：
 
-```plain
+```txt
 spring:
   rabbitmq:
     host: ${hm.mq.host:192.168.150.101} # 主机名
@@ -871,7 +875,7 @@ spring:
 
 1）引入依赖在 trade-service 模块的 pom.xml 中引入 amqp 的依赖：
 
-```plain
+```txt
 <!--amqp-->
   <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -891,7 +895,7 @@ spring:
 
 PayOrderDTO 代码如下：
 
-```plain
+```txt
 package com.hmall.api.dto;
 
 import io.swagger.annotations.ApiModel;
@@ -945,7 +949,7 @@ public class PayOrderDTO {
 
 PayClient 代码如下：
 
-```plain
+```txt
 package com.hmall.api.client;
 
 import com.hmall.api.client.fallback.PayClientFallback;
@@ -968,7 +972,7 @@ public interface PayClient {
 
 PayClientFallback 代码如下：
 
-```plain
+```txt
 package com.hmall.api.client.fallback;
 
 import com.hmall.api.client.PayClient;
@@ -992,7 +996,7 @@ public class PayClientFallback implements FallbackFactory<PayClient> {
 
 最后，在 pay-service 模块的 PayController 中实现该接口：
 
-```plain
+```txt
 @ApiOperation("根据id查询支付单")
 @GetMapping("/biz/{id}")
 public PayOrderDTO queryPayOrderByBizOrderNo(@PathVariable("id") Long id){
@@ -1005,7 +1009,7 @@ public PayOrderDTO queryPayOrderByBizOrderNo(@PathVariable("id") Long id){
 
 接下来，我们在 trader-service 编写一个监听器，监听延迟消息，查询订单支付状态：![](RabbitMQ%E9%AB%98%E7%BA%A7/image/1750380182507-54b387ea-ccd3-474c-888d-48f76b342eb6.png)代码如下：
 
-```plain
+```txt
 package com.hmall.trade.listener;
 
 import com.hmall.api.client.PayClient;
@@ -1087,7 +1091,7 @@ public class OrderStatusListener {
 
 这部分功能尚未实现。大家要在 IOrderService 接口中定义 cancelOrder 方法：
 
-```plain
+```txt
 void cancelOrder(Long orderId);
 ```
 
@@ -1107,7 +1111,7 @@ MQ 在企业开发中的常见应用我们就学习完毕了，除了收发消�
 
 RabbitMqHelper 的结构如下：
 
-```plain
+```txt
 public class RabbitMqHelper {
 
     private final RabbitTemplate rabbitTemplate;

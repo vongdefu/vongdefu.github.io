@@ -107,7 +107,7 @@ RabbitMQ 是基于 Erlang 语言开发的开源消息通信中间件，官网地
 
 我们同样基于 Docker 来安装 RabbitMQ，使用下面的命令即可：
 
-```plain
+```txt
 docker run \
  -e RABBITMQ_DEFAULT_USER=itheima \
  -e RABBITMQ_DEFAULT_PASS=123321 \
@@ -203,7 +203,7 @@ SpringAmqp 的官方地址：[Spring AMQP](https://spring.io/projects/spring-amq
 
 在 mq-demo 这个父工程中，已经配置好了 SpringAMQP 相关的依赖：
 
-```plain
+```txt
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -259,7 +259,7 @@ SpringAmqp 的官方地址：[Spring AMQP](https://spring.io/projects/spring-amq
 - publisher 直接发送消息到队列
 - 消费者监听并处理队列中的消息
 
-<br/>warning**注意**：这种模式一般测试使用，很少在生产中使用。<br/>
+warning**注意**：这种模式一般测试使用，很少在生产中使用。
 
 为了方便测试，我们现在控制台新建一个队列：simple.queue![](RabbitMQ%E5%9F%BA%E7%A1%80/image/1750380002543-30833355-196e-4a4e-a178-765a13955c12.png)添加成功：![](RabbitMQ%E5%9F%BA%E7%A1%80/image/1750380002560-bffe31e9-3465-4f52-a999-bd22ffc322d2.png)接下来，我们就可以利用 Java 代码收发消息了。
 
@@ -267,7 +267,7 @@ SpringAmqp 的官方地址：[Spring AMQP](https://spring.io/projects/spring-amq
 
 首先配置 MQ 地址，在 publisher 服务的 application.yml 中添加配置：
 
-```plain
+```txt
 spring:
   rabbitmq:
     host: 192.168.150.101 # 你的虚拟机IP
@@ -279,7 +279,7 @@ spring:
 
 然后在 publisher 服务中编写测试类 SpringAmqpTest，并利用 RabbitTemplate 实现消息发送：
 
-```plain
+```txt
 package com.itheima.publisher.amqp;
 
 import org.junit.jupiter.api.Test;
@@ -311,7 +311,7 @@ public class SpringAmqpTest {
 
 首先配置 MQ 地址，在 consumer 服务的 application.yml 中添加配置：
 
-```plain
+```txt
 spring:
   rabbitmq:
     host: 192.168.150.101 # 你的虚拟机IP
@@ -323,7 +323,7 @@ spring:
 
 然后在 consumer 服务的 com.itheima.consumer.listener 包中新建一个类 SpringRabbitListener，代码如下：
 
-```plain
+```txt
 package com.itheima.consumer.listener;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -357,7 +357,7 @@ Work queues，任务模型。简单来说就是**让多个消费者绑定到一�
 
 这次我们循环发送，模拟大量消息堆积现象。在 publisher 服务中的 SpringAmqpTest 类中添加一个测试方法：
 
-```plain
+```txt
 /**
      * workQueue
      * 向队列中不停发送消息，模拟消息堆积。
@@ -380,7 +380,7 @@ public void testWorkQueue() throws InterruptedException {
 
 要模拟多个消费者绑定同一个队列，我们在 consumer 服务的 SpringRabbitListener 中添加 2 个新的方法：
 
-```plain
+```txt
 @RabbitListener(queues = "work.queue")
 public void listenWorkQueue1(String msg) throws InterruptedException {
     System.out.println("消费者1接收到消息：【" + msg + "】" + LocalTime.now());
@@ -403,7 +403,7 @@ public void listenWorkQueue2(String msg) throws InterruptedException {
 
 启动 ConsumerApplication 后，在执行 publisher 服务中刚刚编写的发送测试方法 testWorkQueue。最终结果如下：
 
-```plain
+```txt
 消费者1接收到消息：【hello, message_0】21:06:00.869555300
 消费者2........接收到消息：【hello, message_1】21:06:00.884518
 消费者1接收到消息：【hello, message_2】21:06:00.907454400
@@ -467,7 +467,7 @@ public void listenWorkQueue2(String msg) throws InterruptedException {
 
 在 spring 中有一个简单的配置，可以解决这个问题。我们修改 consumer 服务的 application.yml 文件，添加配置：
 
-```plain
+```txt
 spring:
   rabbitmq:
     listener:
@@ -477,7 +477,7 @@ spring:
 
 再次测试，发现结果如下：
 
-```plain
+```txt
 消费者1接收到消息：【hello, message_0】21:12:51.659664200
 消费者2........接收到消息：【hello, message_1】21:12:51.680610
 消费者1接收到消息：【hello, message_2】21:12:51.703625
@@ -582,7 +582,7 @@ Fanout，英文翻译是扇出，我觉得在 MQ 中叫广播更合适。在广�
 
 在 publisher 服务的 SpringAmqpTest 类中添加测试方法：
 
-```plain
+```txt
 @Test
 public void testFanoutExchange() {
     // 交换机名称
@@ -597,7 +597,7 @@ public void testFanoutExchange() {
 
 在 consumer 服务的 SpringRabbitListener 中添加两个方法，作为消费者：
 
-```plain
+```txt
 @RabbitListener(queues = "fanout.queue1")
 public void listenFanoutQueue1(String msg) {
     System.out.println("消费者1接收到Fanout消息：【" + msg + "】");
@@ -644,7 +644,7 @@ public void listenFanoutQueue2(String msg) {
 
 在 consumer 服务的 SpringRabbitListener 中添加方法：
 
-```plain
+```txt
 @RabbitListener(queues = "direct.queue1")
 public void listenDirectQueue1(String msg) {
     System.out.println("消费者1接收到direct.queue1的消息：【" + msg + "】");
@@ -660,7 +660,7 @@ public void listenDirectQueue2(String msg) {
 
 在 publisher 服务的 SpringAmqpTest 类中添加测试方法：
 
-```plain
+```txt
 @Test
 public void testSendDirectExchange() {
     // 交换机名称
@@ -674,7 +674,7 @@ public void testSendDirectExchange() {
 
 由于使用的 red 这个 key，所以两个消费者都收到了消息：![](RabbitMQ%E5%9F%BA%E7%A1%80/image/1750380007773-57fa3fca-3868-41f9-9251-3d12c95a098e.png)我们再切换为 blue 这个 key：
 
-```plain
+```txt
 @Test
 public void testSendDirectExchange() {
     // 交换机名称
@@ -736,7 +736,7 @@ BindingKey 一般都是有一个或多个单词组成，多个单词之间以.�
 
 在 publisher 服务的 SpringAmqpTest 类中添加测试方法：
 
-```plain
+```txt
 /**
  * topicExchange
  */
@@ -755,7 +755,7 @@ public void testSendTopicExchange() {
 
 在 consumer 服务的 SpringRabbitListener 中添加方法：
 
-```plain
+```txt
 @RabbitListener(queues = "topic.queue1")
 public void listenTopicQueue1(String msg){
     System.out.println("消费者1接收到topic.queue1的消息：【" + msg + "】");
@@ -790,7 +790,7 @@ SpringAMQP 还提供了一个 Exchange 接口，来表示所有不同类型的�
 
 在 consumer 中创建一个类，声明队列和交换机：
 
-```plain
+```txt
 package com.itheima.consumer.config;
 
 import org.springframework.amqp.core.Binding;
@@ -849,7 +849,7 @@ public class FanoutConfig {
 
 direct 模式由于要绑定多个 KEY，会非常麻烦，每一个 Key 都要编写一个 binding：
 
-```plain
+```txt
 package com.itheima.consumer.config;
 
 import org.springframework.amqp.core.*;
@@ -922,7 +922,7 @@ public class DirectConfig {
 
 例如，我们同样声明 Direct 模式的交换机和队列：
 
-```plain
+```txt
 @RabbitListener(bindings = @QueueBinding(
     value = @Queue(name = "direct.queue1"),
     exchange = @Exchange(name = "hmall.direct", type = ExchangeTypes.DIRECT),
@@ -944,7 +944,7 @@ public void listenDirectQueue2(String msg){
 
 是不是简单多了。再试试 Topic 模式：
 
-```plain
+```txt
 @RabbitListener(bindings = @QueueBinding(
     value = @Queue(name = "topic.queue1"),
     exchange = @Exchange(name = "hmall.topic", type = ExchangeTypes.TOPIC),
@@ -978,7 +978,7 @@ Spring 的消息发送代码接收的消息体是一个 Object：![](RabbitMQ%E5
 
 1）创建测试队列首先，我们在 consumer 服务中声明一个新的配置类：![](RabbitMQ%E5%9F%BA%E7%A1%80/image/1750380009743-f7dc1e18-7ec7-45d0-9d68-270b3e24c217.png)利用@Bean 的方式创建一个队列，具体代码：
 
-```plain
+```txt
 package com.itheima.consumer.config;
 
 import org.springframework.amqp.core.Queue;
@@ -1001,7 +1001,7 @@ public class MessageConfig {
 
 2）发送消息我们在 publisher 模块的 SpringAmqpTest 中新增一个消息发送的代码，发送一个 Map 对象：
 
-```plain
+```txt
 @Test
 public void testSendMap() throws InterruptedException {
     // 准备消息
@@ -1021,7 +1021,7 @@ public void testSendMap() throws InterruptedException {
 
 在 publisher 和 consumer 两个服务中都引入依赖：
 
-```plain
+```txt
 <dependency>
     <groupId>com.fasterxml.jackson.dataformat</groupId>
     <artifactId>jackson-dataformat-xml</artifactId>
@@ -1033,7 +1033,7 @@ public void testSendMap() throws InterruptedException {
 
 配置消息转换器，在 publisher 和 consumer 两个服务的启动类中添加一个 Bean 即可：
 
-```plain
+```txt
 @Bean
 public MessageConverter messageConverter(){
     // 1.定义消息转换器
@@ -1052,7 +1052,7 @@ public MessageConverter messageConverter(){
 
 我们在 consumer 服务中定义一个新的消费者，publisher 是用 Map 发送，那么消费者也一定要用 Map 接收，格式如下：
 
-```plain
+```txt
 @RabbitListener(queues = "object.queue")
 public void listenSimpleQueueMessage(Map<String, Object> msg) throws InterruptedException {
     System.out.println("消费者接收到object.queue消息：【" + msg + "】");
@@ -1073,7 +1073,7 @@ public void listenSimpleQueueMessage(Map<String, Object> msg) throws Interrupted
 
 不管是生产者还是消费者，都需要配置 MQ 的基本信息。分为两步：1）添加依赖：
 
-```plain
+```txt
 <!--消息发送-->
   <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -1083,7 +1083,7 @@ public void listenSimpleQueueMessage(Map<String, Object> msg) throws Interrupted
 
 2）配置 MQ 地址：
 
-```plain
+```txt
 spring:
   rabbitmq:
     host: 192.168.150.101 # 你的虚拟机IP
@@ -1097,7 +1097,7 @@ spring:
 
 在 trade-service 服务中定义一个消息监听类：![](RabbitMQ%E5%9F%BA%E7%A1%80/image/1750380010538-ecda480b-b343-460d-be23-7810a7cbcc9a.png)其代码如下：
 
-```plain
+```txt
 package com.hmall.trade.listener;
 
 import com.hmall.trade.service.IOrderService;
@@ -1130,7 +1130,7 @@ public class PayStatusListener {
 
 修改 pay-service 服务下的 com.hmall.pay.service.impl.PayOrderServiceImpl 类中的 tryPayOrderByBalance 方法：
 
-```plain
+```txt
 private final RabbitTemplate rabbitTemplate;
 
 @Override
