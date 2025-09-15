@@ -30,7 +30,7 @@ export const springcloudsidebar: DefaultTheme.Sidebar = [
       {
         text: "RabbitMQ消息队列",
         items: [
-          { text: "RabbitMQ基础", link: "/RabbitMQ基础" },
+          // { text: "RabbitMQ基础", link: "/RabbitMQ基础" },
           // { text: "RabbitMQ高级", link: "/RabbitMQ高级" },
         ],
       },
