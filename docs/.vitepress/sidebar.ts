@@ -2,6 +2,7 @@ import { DefaultTheme } from "vitepress"
 import { mianzhasidebar } from "./sidebar/mianzhasidebar"
 import { springcloudsidebar } from "./sidebar/springcloudsidebar"
 import { websitemaintainsidebar } from "./sidebar/websitemaintainsidebar"
+import { devopssidebar } from "./sidebar/devopssidebar"
 
 export const sidebar: DefaultTheme.Config["sidebar"] = {
   "/面渣/": mianzhasidebar,
@@ -308,5 +309,6 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
   //   },
   // ],
 
+  "/DevOps/": devopssidebar,
   "/网站维护/": websitemaintainsidebar,
 }
