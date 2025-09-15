@@ -1,3 +1,403 @@
+### 使用 U 盘安装 centos7
+
+参考：
+
+1. [https://www.cnblogs.com/w1sh/p/18286154](https://www.cnblogs.com/w1sh/p/18286154)
+2. 制作启动盘时，要注意几点内容：
+   1. 管理员启动；
+   2. 格式化时，使用 u 盘的默认方式即可： kingsoft u 盘的格式为 fat32；
+3. 重启系统后按 f12 进入引导页面，选择 uefi 的方式启动；
+4. 进入启动页面后，选择 install 进行安装
+5. 遇到 timeout 问题，输入： bldik 找到 u 盘的盘符，然后重启，再在启动页面按 e 进入编辑模式，修改后按 ctrl+x 进行启动；
+
+ip： 192.168.0.150
+
+用户名和密码： root root1003
+
+### 一些基本信息
+
+```plain
+[root@home ~]# cat /etc/centos-release
+CentOS Linux release 7.9.2009 (Core)
+[root@home ~]# uname -a
+Linux home.zeanzai 3.10.0-1160.el7.x86_64 #1 SMP Mon Oct 19 16:18:59 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+```
+
+### 网络
+
+```plain
+[root@home ~]# vi/etc/sysconfig/network-scripts/ifcfg-enp2s0
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="static" # 设置为 静态 地址
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="yes"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="enp2s0"
+UUID="71a995f2-f595-4516-82a4-b0b3bf53cb80"
+DEVICE="enp2s0"
+ONBOOT="yes"
+IPADDR="192.168.0.150"
+PREFIX="24"
+GATEWAY="192.168.0.1"
+IPV6_PRIVACY="no"
+DNS1=8.8.8.8	# 添加DNS
+DNS2=114.114.114.114 # 添加DNS
+```
+
+### ssh 免密码登陆
+
+1. 直接在客户端命令行登陆： ssh root@192.168.0.150
+2. 把客户端的公钥丢给服务端： ssh-copy-id -i id_ed25519.pub root@192.168.0.150
+
+### 修改 yum 源及使用 yum 安装软件
+
+```plain
+[root@home ~]# mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo_bak
+[root@home ~]# curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+[root@home ~]# yum clean all
+```
+
+```plain
+[root@home ~]# yum install -y wget
+[root@home ~]# yum install -y gcc
+```
+
+### 终端显示为中文
+
+```plain
+
+[root@home ~]# locale -a | grep 'zh_CN.utf8'
+zh_CN.utf8
+
+
+[root@home ~]# vi /etc/locale.conf
+LANG="zh_CN.utf8"
+LC_ALL="zh_CN.utf8"
+LC_CTYPE="zh_CN.utf8"
+
+[root@home ~]# source /etc/locale.conf
+```
+
+### 对 ntfs 硬盘进行分区和格式化
+
+```plain
+[root@home ~]# fdisk -l
+WARNING: fdisk GPT support is currently new, and therefore in an experimental phase. Use at your own discretion.
+
+磁盘 /dev/sda：120.0 GB, 120034123776 字节，234441648 个扇区
+Units = 扇区 of 1 * 512 = 512 bytes
+扇区大小(逻辑/物理)：512 字节 / 512 字节
+I/O 大小(最小/最佳)：512 字节 / 512 字节
+磁盘标签类型：gpt
+Disk identifier: 8CAAF60E-CE8B-4FB1-8362-11358305ED5C
+
+
+#         Start          End    Size  Type            Name
+ 1         2048       411647    200M  EFI System      EFI System Partition
+ 2       411648      2508799      1G  Microsoft basic
+ 3      2508800    234440703  110.6G  Linux LVM
+
+磁盘 /dev/sdb：128.0 GB, 128035676160 字节，250069680 个扇区
+Units = 扇区 of 1 * 512 = 512 bytes
+扇区大小(逻辑/物理)：512 字节 / 512 字节
+I/O 大小(最小/最佳)：512 字节 / 512 字节
+磁盘标签类型：dos
+磁盘标识符：0x7eadcdcf
+
+   设备 Boot      Start         End      Blocks   Id  System
+/dev/sdb1            2048   250068991   125033472    7  HPFS/NTFS/exFAT
+
+磁盘 /dev/mapper/centos_home-root：53.7 GB, 53687091200 字节，104857600 个扇区
+Units = 扇区 of 1 * 512 = 512 bytes
+扇区大小(逻辑/物理)：512 字节 / 512 字节
+I/O 大小(最小/最佳)：512 字节 / 512 字节
+
+
+磁盘 /dev/mapper/centos_home-swap：12.0 GB, 12004098048 字节，23445504 个扇区
+Units = 扇区 of 1 * 512 = 512 bytes
+扇区大小(逻辑/物理)：512 字节 / 512 字节
+I/O 大小(最小/最佳)：512 字节 / 512 字节
+
+
+磁盘 /dev/mapper/centos_home-home：53.1 GB, 53053751296 字节，103620608 个扇区
+Units = 扇区 of 1 * 512 = 512 bytes
+扇区大小(逻辑/物理)：512 字节 / 512 字节
+I/O 大小(最小/最佳)：512 字节 / 512 字节
+
+[root@home ~]# blkid
+/dev/sda1: SEC_TYPE="msdos" UUID="E901-9F48" TYPE="vfat" PARTLABEL="EFI System Partition" PARTUUID="3e464077-71bb-4591-b33a-76cbe63d2a47"
+/dev/sda2: UUID="ee311bbc-3221-4f52-8e06-cee71f3f85fd" TYPE="xfs" PARTUUID="31203d97-969a-406f-90f0-d43a9aee0320"
+/dev/sda3: UUID="fIheeY-D4ju-GX92-aRSg-6szE-w9ro-nUFa9R" TYPE="LVM2_member" PARTUUID="30ce5c69-4215-4f30-af60-ab1d808a015f"
+/dev/sdb1: LABEL="ZEANZAI" UUID="287C36557C361E4E" TYPE="ntfs"
+/dev/mapper/centos_home-root: UUID="12f8ea5d-3566-4be0-bb55-7e990a6a4512" TYPE="xfs"
+/dev/mapper/centos_home-swap: UUID="72cd84a4-3e77-4e62-8805-56673ea29c4e" TYPE="swap"
+/dev/mapper/centos_home-home: UUID="682c9bc6-d436-43fa-a156-c0c542faadf3" TYPE="xfs"
+[root@home ~]# df -Th
+文件系统                     类型      容量  已用  可用 已用% 挂载点
+devtmpfs                     devtmpfs   12G     0   12G    0% /dev
+tmpfs                        tmpfs      12G     0   12G    0% /dev/shm
+tmpfs                        tmpfs      12G  8.9M   12G    1% /run
+tmpfs                        tmpfs      12G     0   12G    0% /sys/fs/cgroup
+/dev/mapper/centos_home-root xfs        50G  1.7G   49G    4% /
+/dev/sda2                    xfs      1014M  144M  871M   15% /boot
+/dev/sda1                    vfat      200M   12M  189M    6% /boot/efi
+/dev/mapper/centos_home-home xfs        50G   33M   50G    1% /home
+tmpfs                        tmpfs     2.4G     0  2.4G    0% /run/user/0
+[root@home ~]# lsblk
+NAME                 MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda                    8:0    0 111.8G  0 disk
+├─sda1                 8:1    0   200M  0 part /boot/efi
+├─sda2                 8:2    0     1G  0 part /boot
+└─sda3                 8:3    0 110.6G  0 part
+  ├─centos_home-root 253:0    0    50G  0 lvm  /
+  ├─centos_home-swap 253:1    0  11.2G  0 lvm  [SWAP]
+  └─centos_home-home 253:2    0  49.4G  0 lvm  /home
+sdb                    8:16   0 119.2G  0 disk
+└─sdb1                 8:17   0 119.2G  0 part
+
+
+```
+
+```plain
+
+# 使用fdisk工具进行分区和格式化
+[root@home ~]# fdisk /dev/sdb
+欢迎使用 fdisk (util-linux 2.23.2)。
+
+更改将停留在内存中，直到您决定将更改写入磁盘。
+使用写入命令前请三思。
+
+
+命令(输入 m 获取帮助)：m
+命令操作
+   a   toggle a bootable flag
+   b   edit bsd disklabel
+   c   toggle the dos compatibility flag
+   d   delete a partition
+   g   create a new empty GPT partition table
+   G   create an IRIX (SGI) partition table
+   l   list known partition types
+   m   print this menu
+   n   add a new partition
+   o   create a new empty DOS partition table
+   p   print the partition table
+   q   quit without saving changes
+   s   create a new empty Sun disklabel
+   t   change a partition's system id
+   u   change display/entry units
+   v   verify the partition table
+   w   write table to disk and exit
+   x   extra functionality (experts only)
+
+命令(输入 m 获取帮助)：n
+
+[root@home ~]# fdisk /dev/sdb
+欢迎使用 fdisk (util-linux 2.23.2)。
+
+更改将停留在内存中，直到您决定将更改写入磁盘。
+使用写入命令前请三思。
+
+
+命令(输入 m 获取帮助)：d
+已选择分区 1
+分区 1 已删除
+
+命令(输入 m 获取帮助)：n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p): p
+分区号 (1-4，默认 1)：
+起始 扇区 (2048-250069679，默认为 2048)：
+将使用默认值 2048
+Last 扇区, +扇区 or +size{K,M,G} (2048-250069679，默认为 250069679)：+50G
+分区 1 已设置为 Linux 类型，大小设为 50 GiB
+
+命令(输入 m 获取帮助)：n
+Partition type:
+   p   primary (1 primary, 0 extended, 3 free)
+   e   extended
+Select (default p): p
+分区号 (2-4，默认 2)：
+起始 扇区 (104859648-250069679，默认为 104859648)：
+将使用默认值 104859648
+Last 扇区, +扇区 or +size{K,M,G} (104859648-250069679，默认为 250069679)：
+将使用默认值 250069679
+分区 2 已设置为 Linux 类型，大小设为 69.2 GiB
+
+命令(输入 m 获取帮助)：w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+正在同步磁盘。
+[root@home ~]# lsblk
+NAME                 MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda                    8:0    0 111.8G  0 disk
+├─sda1                 8:1    0   200M  0 part /boot/efi
+├─sda2                 8:2    0     1G  0 part /boot
+└─sda3                 8:3    0 110.6G  0 part
+  ├─centos_home-root 253:0    0    50G  0 lvm  /
+  ├─centos_home-swap 253:1    0  11.2G  0 lvm  [SWAP]
+  └─centos_home-home 253:2    0  49.4G  0 lvm  /home
+
+sdb                    8:16   0 119.2G  0 disk
+├─sdb1                 8:17   0    50G  0 part
+└─sdb2                 8:18   0  69.2G  0 part
+[root@home ~]# mkfs.ext4 /dev/sdb1
+mke2fs 1.42.9 (28-Dec-2013)
+Discarding device blocks: 完成
+文件系统标签=
+OS type: Linux
+块大小=4096 (log=2)
+分块大小=4096 (log=2)
+Stride=0 blocks, Stripe width=0 blocks
+3276800 inodes, 13107200 blocks
+655360 blocks (5.00%) reserved for the super user
+第一个数据块=0
+Maximum filesystem blocks=2162163712
+400 block groups
+32768 blocks per group, 32768 fragments per group
+8192 inodes per group
+Superblock backups stored on blocks:
+	32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+	4096000, 7962624, 11239424
+
+Allocating group tables: 完成
+正在写入inode表: 完成
+Creating journal (32768 blocks): 完成
+Writing superblocks and filesystem accounting information: 完成
+
+[root@home ~]# mkfs.ext4 /dev/sdb2
+mke2fs 1.42.9 (28-Dec-2013)
+Discarding device blocks: 完成
+文件系统标签=
+OS type: Linux
+块大小=4096 (log=2)
+分块大小=4096 (log=2)
+Stride=0 blocks, Stripe width=0 blocks
+4538368 inodes, 18151254 blocks
+907562 blocks (5.00%) reserved for the super user
+第一个数据块=0
+Maximum filesystem blocks=2166358016
+554 block groups
+32768 blocks per group, 32768 fragments per group
+8192 inodes per group
+Superblock backups stored on blocks:
+	32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+	4096000, 7962624, 11239424
+
+Allocating group tables: 完成
+正在写入inode表: 完成
+Creating journal (32768 blocks): 完成
+Writing superblocks and filesystem accounting information: 完成
+
+[root@home ~]# mkdir /mnt/log
+[root@home ~]# mkdir /mnt/userfiles
+[root@home ~]# vi /etc/fstab
+
+添加以下两行
+/dev/sdb1 /mnt/log ext4 defaults 0 0
+/dev/sdb2 /mnt/userfiles ext4 defaults 0 0
+
+[root@home ~]# reboot
+
+```
+
+参考这里：[https://developer.aliyun.com/article/1633309](https://developer.aliyun.com/article/1633309)
+
+```plain
+
+[root@home ~]#  mount | grep sdb
+/dev/sdb1 on /mnt/log type ext4 (rw,relatime,seclabel,data=ordered)
+/dev/sdb2 on /mnt/userfiles type ext4 (rw,relatime,seclabel,data=ordered)
+
+[root@home ~]# fdisk -l
+
+磁盘 /dev/sdb：128.0 GB, 128035676160 字节，250069680 个扇区
+Units = 扇区 of 1 * 512 = 512 bytes
+扇区大小(逻辑/物理)：512 字节 / 512 字节
+I/O 大小(最小/最佳)：512 字节 / 512 字节
+磁盘标签类型：dos
+磁盘标识符：0x7eadcdcf
+
+   设备 Boot      Start         End      Blocks   Id  System
+/dev/sdb1            2048   104859647    52428800   83  Linux
+/dev/sdb2       104859648   250069679    72605016   83  Linux
+WARNING: fdisk GPT support is currently new, and therefore in an experimental phase. Use at your own discretion.
+
+磁盘 /dev/sda：120.0 GB, 120034123776 字节，234441648 个扇区
+Units = 扇区 of 1 * 512 = 512 bytes
+扇区大小(逻辑/物理)：512 字节 / 512 字节
+I/O 大小(最小/最佳)：512 字节 / 512 字节
+磁盘标签类型：gpt
+Disk identifier: 8CAAF60E-CE8B-4FB1-8362-11358305ED5C
+
+
+#         Start          End    Size  Type            Name
+ 1         2048       411647    200M  EFI System      EFI System Partition
+ 2       411648      2508799      1G  Microsoft basic
+ 3      2508800    234440703  110.6G  Linux LVM
+
+磁盘 /dev/mapper/centos_home-root：53.7 GB, 53687091200 字节，104857600 个扇区
+Units = 扇区 of 1 * 512 = 512 bytes
+扇区大小(逻辑/物理)：512 字节 / 512 字节
+I/O 大小(最小/最佳)：512 字节 / 512 字节
+
+
+磁盘 /dev/mapper/centos_home-swap：12.0 GB, 12004098048 字节，23445504 个扇区
+Units = 扇区 of 1 * 512 = 512 bytes
+扇区大小(逻辑/物理)：512 字节 / 512 字节
+I/O 大小(最小/最佳)：512 字节 / 512 字节
+
+
+磁盘 /dev/mapper/centos_home-home：53.1 GB, 53053751296 字节，103620608 个扇区
+Units = 扇区 of 1 * 512 = 512 bytes
+扇区大小(逻辑/物理)：512 字节 / 512 字节
+I/O 大小(最小/最佳)：512 字节 / 512 字节
+
+
+[root@home ~]# blkid
+/dev/mapper/centos_home-root: UUID="12f8ea5d-3566-4be0-bb55-7e990a6a4512" TYPE="xfs"
+/dev/sda3: UUID="fIheeY-D4ju-GX92-aRSg-6szE-w9ro-nUFa9R" TYPE="LVM2_member" PARTUUID="30ce5c69-4215-4f30-af60-ab1d808a015f"
+/dev/sdb1: UUID="96f4d339-a80c-40fa-a211-8d52364eefbc" TYPE="ext4"
+/dev/sdb2: UUID="480ec054-9974-44c5-adb2-748dbfa1dcc5" TYPE="ext4"
+/dev/sda1: SEC_TYPE="msdos" UUID="E901-9F48" TYPE="vfat" PARTLABEL="EFI System Partition" PARTUUID="3e464077-71bb-4591-b33a-76cbe63d2a47"
+/dev/sda2: UUID="ee311bbc-3221-4f52-8e06-cee71f3f85fd" TYPE="xfs" PARTUUID="31203d97-969a-406f-90f0-d43a9aee0320"
+/dev/mapper/centos_home-swap: UUID="72cd84a4-3e77-4e62-8805-56673ea29c4e" TYPE="swap"
+/dev/mapper/centos_home-home: UUID="682c9bc6-d436-43fa-a156-c0c542faadf3" TYPE="xfs"
+[root@home ~]# df -Th
+文件系统                     类型      容量  已用  可用 已用% 挂载点
+devtmpfs                     devtmpfs   12G     0   12G    0% /dev
+tmpfs                        tmpfs      12G     0   12G    0% /dev/shm
+tmpfs                        tmpfs      12G  8.9M   12G    1% /run
+tmpfs                        tmpfs      12G     0   12G    0% /sys/fs/cgroup
+/dev/mapper/centos_home-root xfs        50G  1.6G   49G    4% /
+/dev/sda2                    xfs      1014M  144M  871M   15% /boot
+/dev/sdb1                    ext4       50G   53M   47G    1% /mnt/log
+/dev/sdb2                    ext4       69G   53M   65G    1% /mnt/userfiles
+/dev/sda1                    vfat      200M   12M  189M    6% /boot/efi
+/dev/mapper/centos_home-home xfs        50G   33M   50G    1% /home
+tmpfs                        tmpfs     2.4G     0  2.4G    0% /run/user/0
+[root@home ~]# lsblk
+NAME                 MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda                    8:0    0 111.8G  0 disk
+├─sda1                 8:1    0   200M  0 part /boot/efi
+├─sda2                 8:2    0     1G  0 part /boot
+└─sda3                 8:3    0 110.6G  0 part
+  ├─centos_home-root 253:0    0    50G  0 lvm  /
+  ├─centos_home-swap 253:1    0  11.2G  0 lvm  [SWAP]
+  └─centos_home-home 253:2    0  49.4G  0 lvm  /home
+sdb                    8:16   0 119.2G  0 disk
+├─sdb1                 8:17   0    50G  0 part /mnt/log
+└─sdb2                 8:18   0  69.2G  0 part /mnt/userfiles
+```
+
 ## 常用命令
 
 ```bash

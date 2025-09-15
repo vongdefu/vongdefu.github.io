@@ -20,6 +20,8 @@ export const springcloudsidebar: DefaultTheme.Sidebar = [
       { text: "依赖管理", link: "/依赖管理" },
       { text: "SAAS多租户", link: "/SAAS多租户" },
       { text: "Logback日志", link: "/Logback日志" },
+      { text: "RabbitMQ基础", link: "/RabbitMQ基础" },
+      { text: "RabbitMQ高级", link: "/RabbitMQ高级" },
     ],
   },
 ]
