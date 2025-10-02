@@ -125,6 +125,34 @@ select count(\*) from `seata_tcc_order`.`transactional_record`;
 5.  处理幂等性问题
 6.  查看 GitHub 上的 samples，对服务调用也要进行幂等的问题？会不会可以处理压测时出现的问题
 
+service.vgroupMapping.seata-tcc-order-tx-group=default
+service.vgroupMapping.seata-tcc-account-tx-group=default
+service.vgroupMapping.seata-tcc-storage-tx-group=default
+service.vgroupMapping.seata-tcc-transactional-record-tx-group=default
+
+实验：
+
+1. 在没有集成 Seata 前，测试在只启动 storage 和 order 服务的情况下，/order/deduct 接口的运行结果：发现 storage 依然能够扣除成功、account 和 order 没有成功；
+2. 集成 seata 之后，测试/order/deductTcc 接口是否成功调用
+
+```
+2025-09-16 14:43:48.893  INFO --- [LoggerPrint_1_1] i.s.c.r.p.server.BatchLogHandler         : timeout=60000,transactionName=createTcc(java.lang.String, java.lang.Long, java.lang.Long),clientIp:192.168.0.106,vgroup:seata-tcc-order-tx-group
+2025-09-16 14:43:48.908  INFO --- [Thread_1_12_500] i.s.s.coordinator.DefaultCoordinator     : Begin new global transaction applicationId: seata-tcc-order,transactionServiceGroup: seata-tcc-order-tx-group, transactionName: createTcc(java.lang.String, java.lang.Long, java.lang.Long),timeout:60000,xid:192.168.0.150:8091:711227411605839872
+2025-09-16 14:43:48.914  INFO --- [LoggerPrint_1_1] i.s.c.r.p.server.BatchLogHandler         : xid=192.168.0.150:8091:711227411605839872,branchType=TCC,resourceId=tccService,lockKey=null,clientIp:192.168.0.106,vgroup:seata-tcc-order-tx-group
+2025-09-16 14:43:48.920  INFO --- [Thread_1_13_500] i.seata.server.coordinator.AbstractCore  : Register branch successfully, xid = 192.168.0.150:8091:711227411605839872, branchId = 711227411693920257, resourceId = tccService ,lockKeys = null
+2025-09-16 14:43:48.979  INFO --- [LoggerPrint_1_1] i.s.c.r.p.server.BatchLogHandler         : xid=192.168.0.150:8091:711227411605839872,branchType=AT,resourceId=jdbc:mysql://192.168.0.150:3306/seata_tcc_storage,lockKey=storage:1,clientIp:192.168.0.106,vgroup:seata-tcc-storage-tx-group
+2025-09-16 14:43:48.990  INFO --- [Thread_1_14_500] i.seata.server.coordinator.AbstractCore  : Register branch successfully, xid = 192.168.0.150:8091:711227411605839872, branchId = 711227411970744321, resourceId = jdbc:mysql://192.168.0.150:3306/seata_tcc_storage ,lockKeys = storage:1
+2025-09-16 14:43:49.301  INFO --- [LoggerPrint_1_1] i.s.c.r.p.server.BatchLogHandler         : xid=192.168.0.150:8091:711227411605839872,branchType=AT,resourceId=jdbc:mysql://192.168.0.150:3306/seata_tcc_account,lockKey=account:1,clientIp:192.168.0.106,vgroup:seata-tcc-account-tx-group
+2025-09-16 14:43:49.310  INFO --- [Thread_1_15_500] i.seata.server.coordinator.AbstractCore  : Register branch successfully, xid = 192.168.0.150:8091:711227411605839872, branchId = 711227413317115905, resourceId = jdbc:mysql://192.168.0.150:3306/seata_tcc_account ,lockKeys = account:1
+2025-09-16 14:43:49.495  INFO --- [LoggerPrint_1_1] i.s.c.r.p.server.BatchLogHandler         : xid=192.168.0.150:8091:711227411605839872,extraData=null,clientIp:192.168.0.106,vgroup:seata-tcc-order-tx-group
+2025-09-16 14:43:49.662  INFO --- [Thread_1_16_500] io.seata.server.coordinator.DefaultCore  : Committing global transaction is successfully done, xid = 192.168.0.150:8091:711227411605839872.
+
+```
+
+发现成功
+
+3. 测试空回滚异常：集成 seata 之后，依然调用 /order/deductTcc 接口，只不过要在执行过程中
+
 ---
 
 ### TCC 模式

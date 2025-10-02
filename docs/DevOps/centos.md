@@ -16,7 +16,7 @@ ip： 192.168.0.150
 
 ### 一些基本信息
 
-```plain
+```sh
 [root@home ~]# cat /etc/centos-release
 CentOS Linux release 7.9.2009 (Core)
 [root@home ~]# uname -a

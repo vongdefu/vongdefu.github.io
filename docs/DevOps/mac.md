@@ -319,6 +319,10 @@ export LC_CTYPE='C'
 
 ```
 /usr/libexec/java_home -V
+Matching Java Virtual Machines (2):
+    1.8.411.09 (arm64) "Oracle Corporation" - "Java" /Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home
+    1.8.0_411 (arm64) "Oracle Corporation" - "Java SE 8" /Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home
+/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home
 
 /Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home
 ```

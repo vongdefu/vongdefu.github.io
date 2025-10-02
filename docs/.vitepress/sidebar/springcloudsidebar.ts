@@ -27,14 +27,20 @@ export const springcloudsidebar: DefaultTheme.Sidebar = [
       { text: "依赖管理", link: "/依赖管理" },
       { text: "SAAS多租户", link: "/SAAS多租户" },
       { text: "Logback日志", link: "/Logback日志" },
+      { text: "RabbitMQ消息队列", link: "/RabbitMQ消息队列" },
+      { text: "ES分布式搜索引擎", link: "/ES分布式搜索引擎" },
+      { text: "Oauth2实现", link: "/Oauth2实现" },
       {
-        text: "RabbitMQ消息队列",
-        items: [
-          // { text: "RabbitMQ基础", link: "/RabbitMQ基础" },
-          // { text: "RabbitMQ高级", link: "/RabbitMQ高级" },
-        ],
+        text: "gateway+swagger+knife4j实现接口文档聚合",
+        link: "/gateway+swagger+knife4j实现接口文档聚合",
       },
+      { text: "Redis分布式缓存", link: "/Redis分布式缓存" },
       { text: "Skywalking链路追踪", link: "/Skywalking链路追踪" },
+      {
+        text: "Sleuth+Zipkin链路追踪",
+        link: "/Sleuth+Zipkin链路追踪",
+      },
+      { text: "ShardingSphere分库分表", link: "/ShardingSphere分库分表" },
     ],
   },
 ]

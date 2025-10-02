@@ -19,3 +19,5 @@ docker run --name sentinel -p 8858:8858 -d bladex/sentinel-dashboard:1.7.1
 docker update sentinel --restart=always
 
 ```
+
+参考： https://mp.weixin.qq.com/s/Q7Xv8cypQFrrOQhbd9BOXw
