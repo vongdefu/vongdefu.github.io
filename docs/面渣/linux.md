@@ -26,6 +26,13 @@
 - `mkdir`：创建新目录。
 - `cat`：查看文件内容。`cat file1 file2`合并文件内容显示。
 
+#### 找出大文件，并清除其中内容
+
+- df -h 找到大文件所在没去
+- df -sh /var/ 查看某一文件夹所占大小
+- df -sh /var/log/
+- echo > /var/log/message.log 比 rm -rf /var/log/message.log 直接删除文件 更加高效；
+
 #### Windows 下如何创建空文件
 
 Windows 下我还是比较习惯使用右键菜单新建一个文件，然后重命名。

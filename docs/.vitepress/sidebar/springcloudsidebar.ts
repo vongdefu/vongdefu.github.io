@@ -41,6 +41,8 @@ export const springcloudsidebar: DefaultTheme.Sidebar = [
         link: "/Sleuth+Zipkin链路追踪",
       },
       { text: "ShardingSphere分库分表", link: "/ShardingSphere分库分表" },
+      { text: "自制一个starter", link: "/自制一个starter" },
+      { text: "设计模式", link: "/设计模式" },
     ],
   },
 ]

@@ -105,6 +105,7 @@ Vagrant 将在一个一致的环境中隔离依赖关系及其配置，而不会
   - 重启 ssh 服务： systemctl restart sshd
   - 生成 sshkey ： ssh-keygen -t ed25519 -C "zeanzai.me@gmail.com" 。 目的是生成 .ssh 文件夹，因为 windows 分发的 key 是放到这个目录下的。
   - 把 Windows 的 key 分发到 centos 上： ssh-copy-id -i /c/Users/zeanzai/.ssh/id_ed25519.pub root@192.168.56.12
+  - 在 windows 的~/.ssh/config 文件中添加对应的 host，之后就可以在终端使用 ssh hostname 进行登陆了；
 - 其他操作
   - 关机： vagrant halt
   - 修改了 vagrantfile 后重启： vagrant reload
@@ -112,6 +113,32 @@ Vagrant 将在一个一致的环境中隔离依赖关系及其配置，而不会
   - 同步文件夹：
     - 方式一：【不建议】修改 vagrantfile ，具体参考下面的参考链接；
     - 方式二：【建议】使用 scp -r 命令；
+
+### 使用 ssh hostname 登陆的配置过程
+
+```sh
+Host home
+  HostName 192.168.0.150
+  User root
+
+Host node1
+  HostName 192.168.0.201
+  Port 22
+  User root
+  IdentityFile ~/.ssh/id_ed25519
+
+Host node2
+  HostName 192.168.0.202
+  Port 22
+  User root
+  IdentityFile ~/.ssh/id_ed25519
+
+Host node3
+  HostName 192.168.0.203
+  Port 22
+  User root
+  IdentityFile ~/.ssh/id_ed25519
+```
 
 ## 参考
 

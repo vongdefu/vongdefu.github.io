@@ -62,7 +62,7 @@ javac
 [root@home jdk1.8.0_144]# vi /etc/profile
 
 // 最后一行添加
-export JAVA_HOME=/usr/setup/jdk1.8.0_144
+export JAVA_HOME=/usr/setup/jdk1.8.0_461
 export JRE_HOME=$JAVA_HOME/jre
 export CLASSPATH=./:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
 export PATH=$PATH:$JAVA_HOME/bin
