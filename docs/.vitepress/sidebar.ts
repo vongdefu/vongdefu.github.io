@@ -1,29 +1,86 @@
-import { DefaultTheme } from "vitepress"
-import { generateSidebar } from "vitepress-sidebar"
+import { withSidebar } from "vitepress-sidebar"
 
-export const sidebar: DefaultTheme.Config["sidebar"] = {
-  "/面渣/": generateSidebar({
+/**
+ * 多侧边栏配置（使用 withSidebar 官方推荐方式）
+ *
+ * 每个分区必须同时配置：
+ *   - basePath:    侧边栏条目链接的前缀（生成正确的 href）
+ *   - resolvePath: 当前 URL 匹配规则（决定哪个侧边栏被激活）
+ * 两者通常设置为相同的值。
+ */
+const sidebarConfigs: Parameters<typeof withSidebar>[1] = [
+  {
     documentRootPath: "docs",
-    scanStartPath: "/面渣",
-    collapsed: true,
+    scanStartPath: "面渣",
+    basePath: "/面渣/",
+    resolvePath: "/面渣/",
+    useTitleFromFileHeading: true,
+    removePrefixAfterOrdering: true,
+    prefixSeparator: "-",
     sortMenusByName: true,
-  }),
-  "/SpringCloud实战/": generateSidebar({
+    sortMenusOrderNumericallyFromTitle: true,
+    collapsed: true,
+  },
+  {
     documentRootPath: "docs",
-    scanStartPath: "/SpringCloud实战",
-    collapsed: true,
+    scanStartPath: "SpringCloud实战",
+    basePath: "/SpringCloud实战/",
+    resolvePath: "/SpringCloud实战/",
+    useTitleFromFileHeading: true,
+    removePrefixAfterOrdering: true,
+    prefixSeparator: "-",
     sortMenusByName: true,
-  }),
-  "/DevOps/": generateSidebar({
+    sortMenusOrderNumericallyFromTitle: true,
+    collapsed: true,
+  },
+  {
     documentRootPath: "docs",
-    scanStartPath: "/DevOps",
-    collapsed: true,
+    scanStartPath: "DevOps",
+    basePath: "/DevOps/",
+    resolvePath: "/DevOps/",
+    useTitleFromFileHeading: true,
+    removePrefixAfterOrdering: true,
+    prefixSeparator: "-",
     sortMenusByName: true,
-  }),
-  "/网站维护/": generateSidebar({
+    sortMenusOrderNumericallyFromTitle: true,
+    collapsed: true,
+  },
+  {
     documentRootPath: "docs",
-    scanStartPath: "/网站维护",
-    collapsed: true,
+    scanStartPath: "网站维护",
+    basePath: "/网站维护/",
+    resolvePath: "/网站维护/",
+    useTitleFromFileHeading: true,
+    removePrefixAfterOrdering: true,
+    prefixSeparator: "-",
     sortMenusByName: true,
-  }),
-}
+    sortMenusOrderNumericallyFromTitle: true,
+    collapsed: true,
+  },
+  {
+    documentRootPath: "docs",
+    scanStartPath: "test",
+    basePath: "/test/",
+    resolvePath: "/test/",
+    useTitleFromFileHeading: true,
+    removePrefixAfterOrdering: true,
+    prefixSeparator: "-",
+    sortMenusByName: true,
+    sortMenusOrderNumericallyFromTitle: true,
+    collapsed: true,
+  },
+  {
+    documentRootPath: "docs",
+    scanStartPath: "test",
+    basePath: "/test/",
+    resolvePath: "/test/",
+    useTitleFromFileHeading: true,
+    removePrefixAfterOrdering: true,
+    prefixSeparator: "-",
+    sortMenusByName: true,
+    sortMenusOrderNumericallyFromTitle: true,
+    collapsed: true,
+  },
+]
+
+export { sidebarConfigs }
