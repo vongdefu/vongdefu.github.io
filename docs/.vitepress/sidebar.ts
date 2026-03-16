@@ -57,30 +57,6 @@ const sidebarConfigs: Parameters<typeof withSidebar>[1] = [
     sortMenusOrderNumericallyFromTitle: true,
     collapsed: true,
   },
-  {
-    documentRootPath: "docs",
-    scanStartPath: "test",
-    basePath: "/test/",
-    resolvePath: "/test/",
-    useTitleFromFileHeading: true,
-    removePrefixAfterOrdering: true,
-    prefixSeparator: "-",
-    sortMenusByName: true,
-    sortMenusOrderNumericallyFromTitle: true,
-    collapsed: true,
-  },
-  {
-    documentRootPath: "docs",
-    scanStartPath: "test",
-    basePath: "/test/",
-    resolvePath: "/test/",
-    useTitleFromFileHeading: true,
-    removePrefixAfterOrdering: true,
-    prefixSeparator: "-",
-    sortMenusByName: true,
-    sortMenusOrderNumericallyFromTitle: true,
-    collapsed: true,
-  },
 ]
 
 export { sidebarConfigs }
