@@ -271,7 +271,7 @@ systemctl start grafana-server
 admin/admin
 
 ## 配置
-1. 配置datasource
+1. 配置 datasource
 2. 添加看板： https://grafana.com/grafana/dashboards/?search=mysql 打开网址，找到自己喜欢的看板，然后点击一下，在url中可以看到一个ID
 3. 拿着上面那个ID，直接导入即可
 
