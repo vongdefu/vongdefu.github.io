@@ -1,11 +1,12 @@
-import { defineConfig } from "vitepress";
-import { nav } from "./nav.ts";
-import { sidebar } from "./sidebar.ts";
-import { fileURLToPath, URL } from "node:url";
-import markdownItTextualUml from "markdown-it-textual-uml";
+import { defineConfig } from "vitepress"
+import { withSidebar } from "vitepress-sidebar"
+import { nav } from "./nav.ts"
+import { sidebarConfigs } from "./sidebar.ts"
+import { fileURLToPath, URL } from "node:url"
+import markdownItTextualUml from "markdown-it-textual-uml"
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+const vitePressConfig = {
   base: "/",
   title: "cs-tips",
   description: "cs 面试 提示",
@@ -16,7 +17,7 @@ export default defineConfig({
     math: true,
     config: (md) => {
       // 使用更多的 Markdown-it 插件！
-      md.use(markdownItTextualUml);
+      md.use(markdownItTextualUml)
     },
   },
   // 重写内部组件： https://vitepress.dev/zh/guide/extending-default-theme#overriding-internal-components
@@ -26,13 +27,16 @@ export default defineConfig({
         {
           find: /^.*\/VPDocOutlineItem\.vue$/,
           replacement: fileURLToPath(
-            new URL("./theme/components/VPDocOutlineItem.vue", import.meta.url)
+            new URL("./theme/components/VPDocOutlineItem.vue", import.meta.url),
           ),
         },
         {
           find: /^.*\/VPDocAsideOutline\.vue$/,
           replacement: fileURLToPath(
-            new URL("./theme/components/VPDocAsideOutline.vue", import.meta.url)
+            new URL(
+              "./theme/components/VPDocAsideOutline.vue",
+              import.meta.url,
+            ),
           ),
         },
       ],
@@ -72,7 +76,7 @@ export default defineConfig({
     },
     // https://vitepress.dev/reference/default-theme-config
     nav,
-    sidebar,
+    // sidebar,
 
     socialLinks: [
       { icon: "github", link: "https://github.com/vongdefu/cs-tips" },
@@ -110,4 +114,8 @@ export default defineConfig({
       provider: "local",
     },
   },
-});
+}
+
+// withSidebar 将 sidebarConfigs 注入到 vitePressConfig 中
+// config.mts 本身无需感知侧边栏细节，只负责组合
+export default defineConfig(withSidebar(vitePressConfig, sidebarConfigs))
