@@ -36,7 +36,7 @@ Seata 的用法其实很简单，我们类比于在 SpringBoot 项目中使用 M
 
 安装包下载完成之后，上传到服务器上，并完成解压。解压后的文件目录如下：
 
-![](./ch08-seata/image/1699933291740.png)
+![](./ch08-seata/image/1699933291740.pngg)
 
 ### 执行脚本
 
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `lock_table`
 
 ```
 
-![](./ch08-seata/image/1699933291836.png)
+![](./ch08-seata/image/1699933291836.pngg)
 
 步骤二，导入 Seata 项目的一些配置信息到 nacso 上去，由于配置项比较多，官方提供了使用脚本进行导入的方式，这个过程可能需要具备一些 Nacos 的基本知识。
 
@@ -145,7 +145,7 @@ sh nacos-config.sh -h 192.168.0.150 -p 8848 -g SEATA_GROUP -t 86567a8e-6af1-4596
 
 执行后的效果如下：
 
-![](./ch08-seata/image/1699933291925.png)
+![](./ch08-seata/image/1699933291925.pngg)
 
 ### 修改项目中的配置文件
 
@@ -250,12 +250,12 @@ config {
 
 进入安装包下面的 bin 目录，在命令行里面直接运行 seata-server.sh 即可。
 
-![](./ch08-seata/image/1699933292028.png)
+![](./ch08-seata/image/1699933292028.pngg)
 
 查看日志中，已经成功启动。
 
-![](./ch08-seata/image/1699933292129.png)
+![](./ch08-seata/image/1699933292129.pngg)
 
 再去 nacos 上看看，服务实例已经启动，并注册到了 Nacos 上了。
 
-![](./ch08-seata/image/1699933292251.png)
+![](./ch08-seata/image/1699933292251.pngg)
