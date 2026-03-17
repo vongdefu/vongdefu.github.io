@@ -20,7 +20,3 @@ features:
   - title: 体系化
     details: 知识库成体系化、简介、一库在手，天下我有、
 ---
-
-## TODO
-
-- [ ] 使用 Seata 实现 TCC 模式；以及 Seata 各个模式的基本原理；
