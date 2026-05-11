@@ -1,10 +1,4 @@
----
-title: "西部数码配置https"
-category:
-  - "linux"
-tag:
-  - "software"
----
+# 西部数码配置https
 
 ## https 配置
 
