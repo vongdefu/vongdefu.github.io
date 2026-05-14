@@ -33,7 +33,7 @@ const sidebarConfigs: Parameters<typeof withSidebar>[1] = [
     sortMenusOrderNumericallyFromTitle: true,
     collapsed: false,
     useFolderLinkFromSameNameSubFile: true,
-    sortFolderTo: "top",
+    sortFolderTo: "bottom",
   },
   {
     documentRootPath: "docs",

@@ -5,8 +5,6 @@
 [https://juejin.cn/post/7045944869642043422](https://juejin.cn/post/7045944869642043422)
 
 ```shell
-
-
 # 使用docker安装
 https://github.com/apache/rocketmq-docker
 
